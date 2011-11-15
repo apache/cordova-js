@@ -1,0 +1,3 @@
+[submodule "thirdparty/browser-require"]
+	path = thirdparty/browser-require
+	url = https://github.com/rsms/browser-require.git

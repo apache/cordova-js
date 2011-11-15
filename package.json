@@ -1,0 +1,15 @@
+{
+  "author": "Gord Tanner <gtanner@gmail.com> (http://github.com/gtanner)",
+  "name": "phonegap",
+  "description": "PhoneGap Javascript",
+  "version": "0.0.1",
+  "homepage": "www.phonegap.com",
+  "repository": {
+    "url": ""
+  },
+  "engines": {
+    "node": "~0.5.10"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}
