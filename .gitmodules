@@ -1,3 +1,6 @@
 [submodule "thirdparty/browser-require"]
 	path = thirdparty/browser-require
 	url = https://github.com/rsms/browser-require.git
+[submodule "node_modules/uglify-js"]
+	path = node_modules/uglify-js
+	url = https://github.com/mishoo/UglifyJS.git
