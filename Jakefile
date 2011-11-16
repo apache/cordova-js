@@ -19,7 +19,11 @@ task('build', ['clean'], function () {
     var util = require('util'),
         fs = require('fs'),
         files = [
+            "lib/platform/blackberry.js",
+            "lib/plugin/navigator.js",
+            "lib/plugin/notification.js",
             "lib/Channel.js",
+            "lib/builder.js",
             "lib/utils.js",
             "lib/exec/blackberry.js"
         ],
@@ -31,6 +35,11 @@ task('build', ['clean'], function () {
             }).join('\n');
         }
         output = "";
+
+    //include LICENSE
+    output += include("LICENSE", function (file) {
+        return "/*\n" + file + "\n*/\n";
+    });
 
     //include require
     output += include("thirdparty/browser-require/require.js");
@@ -46,6 +55,9 @@ task('build', ['clean'], function () {
         return "require.define('phonegap'" +
                ", function (require, module, exports) {\n" + file + "});\n";
     });
+
+    //include bootstrap
+    output += include('lib/bootstrap.js');
 
     fs.writeFileSync(__dirname + "/pkg/phonegap.js", output);
 
