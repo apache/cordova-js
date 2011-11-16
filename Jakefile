@@ -22,6 +22,7 @@ task('build', ['clean'], function () {
             "lib/platform/blackberry.js",
             "lib/plugin/navigator.js",
             "lib/plugin/notification.js",
+            "lib/plugin/accelerometer.js",
             "lib/Channel.js",
             "lib/builder.js",
             "lib/utils.js",

@@ -16,14 +16,23 @@ Just make sure you have node, npm and jake installed and run:
 it will build into the pkg folder.  You can load up test/smoke.htm 
 as it includes the build copy.
 
-all you can do right now is require in some modules:
+Load this in ripple to play with it. You will have to use the phonegap
+prototype branch to better simulate the phone environment and use this
+javascript rather than Ripples emulated code.
 
-     var PhoneGap = require("phonegap");
+    git clone git@github.com:blackberry-webworks/Ripple-UI.git
+    git checkout winnie.the.pooh
+    ./configure
+    jake
 
-and .... thats about it. 
+and then load the upacked extension in chrome in the pkg/chromium folder.
+Use the phonegap.proto platform in ripple.
 
 #todo
 
 - figure out the bootstrap
 - add in a platform builder to build up navigator
 - think more about what it means to run in node
+- think about weather to select and load the platform specific modules at
+  runtime or at buildtime.
+
