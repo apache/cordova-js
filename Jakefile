@@ -18,49 +18,10 @@ task('build', ['clean'], function () {
 
     var util = require('util'),
         fs = require('fs'),
-        files = [
-            "lib/platform/blackberry.js",
-            "lib/plugin/navigator.js",
-            "lib/plugin/notification.js",
-            "lib/plugin/accelerometer.js",
-            "lib/Channel.js",
-            "lib/builder.js",
-            "lib/utils.js",
-            "lib/exec/blackberry.js"
-        ],
-        include = function (files, transform) {
-            files = files.map ? files : [files];
-            return files.map(function (file) {
-                var str = fs.readFileSync(file, "utf-8") + "\n";
-                return transform ? transform(str, file) : str;
-            }).join('\n');
-        }
-        output = "";
+        packager = require("./build/packager");
 
-    //include LICENSE
-    output += include("LICENSE", function (file) {
-        return "/*\n" + file + "\n*/\n";
-    });
-
-    //include require
-    output += include("thirdparty/browser-require/require.js");
-
-    //include modules
-    output += include(files, function (file, path) {
-        return "require.define('" + path.replace(/lib\//, "phonegap/").replace(/\.js$/, '') +
-               "', function (require, module, exports) {\n" + file + "});\n";
-    });
-
-    //include phonegap
-    output += include('lib/phonegap.js', function (file, path) {
-        return "require.define('phonegap'" +
-               ", function (require, module, exports) {\n" + file + "});\n";
-    });
-
-    //include bootstrap
-    output += include('lib/bootstrap.js');
-
-    fs.writeFileSync(__dirname + "/pkg/phonegap.js", output);
+    packager.bundle("blackberry");
+    packager.bundle("ios");
 
     util.puts(fs.readFileSync("build/dalek", "utf-8"));
 });
