@@ -60,6 +60,7 @@ Use the phonegap.proto platform in ripple.
 
 # TODO / Hacking / Contributing
 
+- figure out the unit tests
 - figure out the bootstrap
 - think more about what it means to run in node
 - think about whether to select and load the platform specific modules at
