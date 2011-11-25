@@ -1,0 +1,57 @@
+
+----------------
+Jakefile
+
+    A lot of work needs to happen here. Currently it is a hardcoded list
+    of files to bundle together.  I would like this to be more dynamic
+    and pick up plugins as they are dropped into the folders (npm like).
+
+build/
+    Will contain any build modules (currently nothing here as it is all 
+    hacked into the JakeFile)
+
+lib/
+
+    bootstrap.js
+        code to bootstrap the phonegap platform, inject APIs and fire events
+
+    builder.js
+        injects in our classes onto navigator (or wherever else is needed)
+
+    exec/
+        will contain the platform specific definitaions of the exec method.
+        thinking of maybe renaming/repurposing this for any other platform
+        specific quirks
+
+    platform/
+        definitions of each platform (a-la Ripple) that help us describe where
+        and what to put on the window object
+
+    plugin/
+        all API definitions as plugins
+
+----------------
+
+Some refactoring thoughts:
+
+the PhoneGap object currently is also the gateway to the bridge to native:
+
+    PhoneGap.exec
+    PhoneGap.callbackSuccess
+
+    Realistically we should have a phonegap/bridge module that would house these
+    methods and such.
+
+Build time vrs runtime.
+
+    We can easily select and load modules based on the runtime platform, or we can do this all at 
+    buildtime and generate phonegap.blackberry.js, phonegap.ios.js, etc.  I am on the fence but
+    I can see people getting weirded out with having code that is in their app that won't run, which
+    is a very valid argument.
+
+3rd party plugins could be interesting.
+
+    Need a little bit more thought about how these will fit into the system. I am thinking a package.json type file to
+    handle per plugin.
+
+

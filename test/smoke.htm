@@ -1,0 +1,37 @@
+<html>
+	<head>
+        <script type="text/javascript" src="../pkg/phonegap.blackberry.js"></script>
+        <!--<script type="text/javascript" src="phonegap.1.0.0.js"></script>-->
+        <!--<script type="text/javascript" src="phonegap-1.1.0.js"></script>-->
+        <!--<script type="text/javascript" src="phonegap-1.2.0.js"></script>-->
+	</head>
+    <body>
+        <div>
+            So this file is just something to include phonegap.js and play with it. I know right! #EPIC
+            This is an update
+        </div>
+        <button id="refresh">Refresh me!!</button>
+        <div id="x">0</div>
+        <div id="y">0</div>
+        <div id="z">0</div>
+    </body>
+        <script type="text/javascript">
+        
+            document.addEventListener("deviceready", function () {
+                navigator.accelerometer.watchAcceleration(function (a) { 
+                    document.getElementById("x").innerText = a.x;
+                    document.getElementById("y").innerText = a.y;
+                    document.getElementById("z").innerText = a.z;
+                }, function (a) {
+                    alert(a);
+                }, {frequency: 1000});
+            });
+
+
+            document.getElementById("refresh").addEventListener("click", function () {
+                location.reload();
+            });
+        
+        
+        </script>
+</html>
