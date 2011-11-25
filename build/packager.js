@@ -11,7 +11,6 @@ module.exports = {
                 "lib/plugin/accelerometer.js",
                 "lib/plugin/Connection.js",
                 "lib/plugin/network.js",
-                "lib/plugin/Camera.js",
                 "lib/plugin/" + platform + "/device.js",
                 "lib/Channel.js",
                 "lib/builder.js",
