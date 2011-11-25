@@ -1,30 +1,31 @@
 A unified JavaScript layer for Callback projects.
 
-# Structure
+# Project Structure
 
-build/
-    Will contain any build modules (currently nothing here as it is all 
-    hacked into the JakeFile)
-
-lib/
-
-    bootstrap.js
-        code to bootstrap the phonegap platform, inject APIs and fire events
-
-    builder.js
-        injects in our classes onto navigator (or wherever else is needed)
-
-    exec/
-        will contain the platform specific definitaions of the exec method.
-        thinking of maybe renaming/repurposing this for any other platform
-        specific quirks
-
-    platform/
-        definitions of each platform (a-la Ripple) that help us describe where
-        and what to put on the window object
-
-    plugin/
-        all API definitions as plugins
+    callback-js
+      |
+      |-build/
+      | Will contain any build modules (currently nothing here as it is all hacked
+      | into the JakeFile)
+      |
+      |-lib
+      |  |-bootstrap.js
+      |  | Code to bootstrap the phonegap platform, inject APIs and fire events
+      |  |
+      |  |-builder.js
+      |  | Injects in our classes onto navigator (or wherever else is needed)
+      |  |
+      |  |-exec/
+      |  | Will contain the platform specific definitaions of the exec method. 
+      |  | Thinking of maybe renaming/repurposing this for any other platform
+      |  | specific quirks.
+      |  |
+      |  |-platform/
+      |  | Definitions of each platform (a-la Ripple) that help us describe where
+      |  | and what to put on the window object.
+      |  |
+      |  |-plugin/
+      |  | All API definitions as plugins.
 
 # Building
 
