@@ -10,7 +10,7 @@ A unified JavaScript layer for Callback projects.
       |
       |-lib
       |  |-bootstrap.js
-      |  | Code to bootstrap the phonegap platform, inject APIs and fire events
+      |  | Code to bootstrap the Callback platform, inject APIs and fire events
       |  |
       |  |-builder.js
       |  | Injects in our classes onto navigator (or wherever else is needed)
@@ -21,8 +21,9 @@ A unified JavaScript layer for Callback projects.
       |  | specific quirks.
       |  |
       |  |-platform/
-      |  | Definitions of each platform (a-la Ripple) that help us describe where
-      |  | and what to put on the window object.
+      |  | Definitions of each platform that help us describe where
+      |  | and what to put on the window object, and what to run to
+      |  | initialize the platform.
       |  |
       |  |-plugin/
       |  | All API definitions as plugins.
@@ -58,6 +59,10 @@ javascript rather than Ripples emulated code.
 
 and then load the upacked extension in chrome in the pkg/chromium folder.
 Use the phonegap.proto platform in ripple.
+
+# Adding a New Platform
+
+FILL THIS OUT YO!
 
 # TODO / Hacking / Contributing
 
