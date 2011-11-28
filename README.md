@@ -23,7 +23,23 @@ A unified JavaScript layer for Callback projects.
       |  |-platform/
       |  | Definitions of each platform that help us describe where
       |  | and what to put on the window object, and what to run to
-      |  | initialize the platform.
+      |  | initialize the platform. Each file is a JSON object with the
+      |  | following properties:
+      |  | 
+      |  | 
+      |  |  {
+      |  |    id:"atari", // a string representing the platform id
+      |  |    initialize:function(){}, // function to run any platform-specific initialization
+      |  |    objects:{ // properties of this object define globals that get either injected onto `window` or mixed into existing `window` objects.
+      |  |      PhoneGap:{
+      |  |        path:"phonegap", // a requirejs-compatible path to the .js file to use for the object.
+      |  |        children:{ // properties of this object are added to the parent object, i.e. in this example the defined children will be added to the `PhoneGap` global.
+      |  |          path:"phonegap/somedir/other", // specify either a path to the .js file to use for the child, or...
+      |  |          value:false // a straight JavaScript literal to use for the child
+      |  |        }
+      |  |      }
+      |  |    }
+      |  |  }
       |  |
       |  |-plugin/
       |  | All API definitions as plugins.
