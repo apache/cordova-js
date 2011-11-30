@@ -23,6 +23,7 @@ task('build', ['clean'], function () {
     packager.bundle("blackberry");
     packager.bundle("ios");
     packager.bundle("wp7");
+    packager.bundle("android");
 
     util.puts(fs.readFileSync("build/dalek", "utf-8"));
 });
