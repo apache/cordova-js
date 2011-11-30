@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>EXTERMINATE!</title>
+
+  <link rel="shortcut icon" type="image/png" href="../thirdparty/jasmine/jasmine_favicon.png">
+
+  <link rel="stylesheet" type="text/css" href="../thirdparty/jasmine/jasmine.css">
+  <script type="text/javascript" src="../thirdparty/jasmine/jasmine.js"></script>
+  <script type="text/javascript" src="../thirdparty/jasmine/jasmine-html.js"></script>
+  <script type="text/javascript" src="../thirdparty/browser-require/require.js"></script>
+
+
+  <script type="text/javascript" src="../pkg/phonegap.blackberry.js"></script>
+
+  <!-- include tests files here... -->
+  <script type="text/javascript" src="test.accelerometer.js"></script>
+
+  <script type="text/javascript">
+    (function() {
+      var jasmineEnv = jasmine.getEnv();
+      jasmineEnv.updateInterval = 1000;
+
+      var trivialReporter = new jasmine.TrivialReporter();
+
+      jasmineEnv.addReporter(trivialReporter);
+
+      jasmineEnv.specFilter = function(spec) {
+        return trivialReporter.specFilter(spec);
+      };
+
+      window.addEventListener("load", function () {
+          //HACK: until we clean up and modulerize the bridge
+          window.PhoneGap = {
+              exec: jasmine.createSpy("PhoneGap.exec")
+          };
+          jasmineEnv.execute();
+      });
+
+    })();
+  </script>
+
+</head>
+
+<body>
+</body>
+</html>
