@@ -38,7 +38,12 @@ It will build into the pkg folder.
 
 # Testing
 
-Figure this out... mobile-spec?
+launch tests/index.html to run the suite of tests for each module / plugin.
+
+Coming soon, nodeJS running of tasks!
+
+Final testing should always be done with https://github.com/callback/callback-test
+
 
 # Integration
 
@@ -66,7 +71,6 @@ FILL THIS OUT YO!
 
 # TODO / Hacking / Contributing
 
-- figure out the unit tests
 - figure out the bootstrap
 - think more about what it means to run in node
 - think about whether to select and load the platform specific modules at
