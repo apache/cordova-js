@@ -26,7 +26,6 @@ A unified JavaScript layer for Callback projects.
       |  | initialize the platform. Each file is a JSON object with the
       |  | following properties:
       |  | 
-      |  | 
       |  |  {
       |  |    id:"atari", // a string representing the platform id
       |  |    initialize:function(){}, // function to run any platform-specific initialization
@@ -54,12 +53,11 @@ It will build into the pkg folder.
 
 # Testing
 
-launch tests/index.html to run the suite of tests for each module / plugin.
+Launch test/index.html to run the suite of tests for each module / plugin.
 
 Coming soon, nodeJS running of tasks!
 
 Final testing should always be done with https://github.com/callback/callback-test
-
 
 # Integration
 
