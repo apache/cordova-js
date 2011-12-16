@@ -1,11 +1,17 @@
 var util = require('util'),
     fs = require('fs');
 
+function include(files, transform) {
+    files = files.map ? files : [files];
+    return files.map(function (file) {
+        var str = fs.readFileSync(file, "utf-8") + "\n";
+        return transform ? transform(str, file) : str;
+    }).join('\n');
+}
+
 module.exports = {
-    bundle: function (platform) {
-        var util = require('util'),
-            fs = require('fs'),
-            files = [
+    modules: function (platform) {
+        var files = [
                 "lib/utils.js",
                 "lib/plugin/navigator.js",
                 "lib/plugin/notification.js",
@@ -16,15 +22,26 @@ module.exports = {
                 "lib/channel.js",
                 "lib/builder.js",
                 "lib/exec/" +platform + ".js"
-            ],
-            include = function (files, transform) {
-                files = files.map ? files : [files];
-                return files.map(function (file) {
-                    var str = fs.readFileSync(file, "utf-8") + "\n";
-                    return transform ? transform(str, file) : str;
-                }).join('\n');
-            }
+            ]
             output = "";
+
+        //include modules
+        output += include(files, function (file, path) {
+            var id = path.replace(/lib\//, "phonegap/").replace(/\.js$/, ''); 
+            return "define('" + id + "', function (require, exports, module) {\n" + file + "});\n";
+        });
+
+        //include phonegap
+        output += include('lib/phonegap.js', function (file, path) {
+            return "define('phonegap'" +
+                   ", function (require, exports, module) {\n" + file + "});\n";
+        });
+
+        return output;
+    },
+
+    bundle: function (platform) {
+    	var output = "";
 
         //include LICENSE
         output += include("LICENSE", function (file) {
@@ -35,22 +52,7 @@ module.exports = {
         output += include("thirdparty/almond.js");
 
         //include modules
-        output += include(files, function (file, path) {
-            var id = path.replace(/lib\//, "phonegap/").replace(/\.js$/, ''); 
-            return "define('" + id + "', function (require, exports, module) {\n" + file + "});\n";
-        });
-
-        //include platform
-        output += include('lib/platform/' + platform + '.js', function (file, path) {
-            return "define('phonegap/platform'" +
-                   ", function (require, exports, module) {\n" + file + "});\n";
-        });
-
-        //include phonegap
-        output += include('lib/phonegap.js', function (file, path) {
-            return "define('phonegap'" +
-                   ", function (require, exports, module) {\n" + file + "});\n";
-        });
+        output += this.modules(platform);
 
         //include bootstrap
         output += include('lib/bootstrap.js');
