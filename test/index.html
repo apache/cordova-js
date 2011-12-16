@@ -8,13 +8,6 @@
   <link rel="stylesheet" type="text/css" href="../thirdparty/jasmine/jasmine.css">
   <script type="text/javascript" src="../thirdparty/jasmine/jasmine.js"></script>
   <script type="text/javascript" src="../thirdparty/jasmine/jasmine-html.js"></script>
-  <script type="text/javascript" src="../thirdparty/browser-require/require.js"></script>
-
-
-  <script type="text/javascript" src="../pkg/phonegap.blackberry.js"></script>
-
-  <!-- include tests files here... -->
-  <script type="text/javascript" src="test.accelerometer.js"></script>
 
   <script type="text/javascript">
     (function() {
@@ -29,16 +22,27 @@
         return trivialReporter.specFilter(spec);
       };
 
+      //HACK: until we clean up and modulerize the bridge
+      window.PhoneGap = {
+          exec: jasmine.createSpy("PhoneGap.exec")
+      };
+
+      window.phonegap = {
+         platform: ""
+      };
+
       window.addEventListener("load", function () {
-          //HACK: until we clean up and modulerize the bridge
-          window.PhoneGap = {
-              exec: jasmine.createSpy("PhoneGap.exec")
-          };
           jasmineEnv.execute();
       });
 
     })();
   </script>
+
+  <script type="text/javascript" src="../pkg/phonegap.ios.js"></script>
+
+  <!-- include tests files here... -->
+  <script type="text/javascript" src="test.accelerometer.js"></script>
+
 
 </head>
 

@@ -6,15 +6,15 @@ module.exports = {
         var util = require('util'),
             fs = require('fs'),
             files = [
+                "lib/utils.js",
                 "lib/plugin/navigator.js",
                 "lib/plugin/notification.js",
                 "lib/plugin/accelerometer.js",
                 "lib/plugin/Connection.js",
                 "lib/plugin/network.js",
                 "lib/plugin/" + platform + "/device.js",
-                "lib/Channel.js",
+                "lib/channel.js",
                 "lib/builder.js",
-                "lib/utils.js",
                 "lib/exec/" +platform + ".js"
             ],
             include = function (files, transform) {
@@ -32,24 +32,24 @@ module.exports = {
         });
 
         //include require
-        output += include("thirdparty/browser-require/require.js");
+        output += include("thirdparty/almond.js");
 
         //include modules
         output += include(files, function (file, path) {
-            return "require.define('" + path.replace(/lib\//, "phonegap/").replace(/\.js$/, '') +
-                   "', function (require, module, exports) {\n" + file + "});\n";
+            var id = path.replace(/lib\//, "phonegap/").replace(/\.js$/, ''); 
+            return "define('" + id + "', function (require, exports, module) {\n" + file + "});\n";
         });
 
         //include platform
         output += include('lib/platform/' + platform + '.js', function (file, path) {
-            return "require.define('phonegap/platform'" +
-                   ", function (require, module, exports) {\n" + file + "});\n";
+            return "define('phonegap/platform'" +
+                   ", function (require, exports, module) {\n" + file + "});\n";
         });
 
         //include phonegap
         output += include('lib/phonegap.js', function (file, path) {
-            return "require.define('phonegap'" +
-                   ", function (require, module, exports) {\n" + file + "});\n";
+            return "define('phonegap'" +
+                   ", function (require, exports, module) {\n" + file + "});\n";
         });
 
         //include bootstrap
