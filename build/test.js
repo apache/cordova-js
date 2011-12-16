@@ -33,20 +33,20 @@ module.exports = function () {
                         "Cache-Control": "no-cache",
                         "Content-Type": "text/html"
                     });
+                    tests = [];
+                    collect(__dirname + "/../test", tests);
+
+                    specs = tests.map(function (file, path) {
+                        return '<script src="' + file.replace(/^.*test/, "test") +
+                            '" type="text/javascript" charset="utf-8"></script>';
+                    }).join();
+                    modules = packager.modules('ios');
+
+                    doc = html.replace(/<!-- TESTS -->/g, specs).replace(/"##MODULES##"/g, modules);
                     res.end(doc);
                 });
             })
         );
-
-    collect(__dirname + "/../test", tests);
-
-    specs = tests.map(function (file, path) {
-        return '<script src="' + file.replace(/^.*test/, "test") +
-            '" type="text/javascript" charset="utf-8"></script>';
-    }).join();
-    modules = packager.modules('ios');
-
-    doc = html.replace(/<!-- TESTS -->/g, specs).replace(/"##MODULES##"/g, modules);
 
     app.listen(3000);
 
