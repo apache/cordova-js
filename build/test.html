@@ -9,8 +9,11 @@
   <script type="text/javascript" src="../thirdparty/jasmine/jasmine.js"></script>
   <script type="text/javascript" src="../thirdparty/jasmine/jasmine-html.js"></script>
 
+  <script type="text/javascript" src="../thirdparty/almond.js"></script>
+
   <script type="text/javascript">
     (function() {
+      require.unordered = true;
       var jasmineEnv = jasmine.getEnv();
       jasmineEnv.updateInterval = 1000;
 
@@ -38,12 +41,11 @@
     })();
   </script>
 
-  <script type="text/javascript" src="../pkg/phonegap.ios.js"></script>
+  <script type="text/javascript">
+      "##MODULES##"
+  </script>
 
-  <!-- include tests files here... -->
-  <script type="text/javascript" src="test.accelerometer.js"></script>
-
-
+  <!-- TESTS -->
 </head>
 
 <body>

@@ -27,3 +27,6 @@ task('build', ['clean'], function () {
 
     util.puts(fs.readFileSync("build/dalek", "utf-8"));
 });
+
+desc("starts a webserver to point at to run the unit tests");
+task('test', [], require('./build/test'));
