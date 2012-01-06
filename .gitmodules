@@ -4,3 +4,6 @@
 [submodule "node_modules/uglify-js"]
 	path = node_modules/uglify-js
 	url = https://github.com/mishoo/UglifyJS.git
+[submodule "thirdparty/microevent"]
+	path = thirdparty/microevent
+	url = https://github.com/jeromeetienne/microevent.js.git
