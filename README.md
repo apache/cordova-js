@@ -45,15 +45,15 @@ A unified JavaScript layer for Callback projects.
 
 # Building
 
-Just make sure you have node, npm and jake installed and run:
+Just make sure you have `node`, `npm` and `jake` installed and run:
 
     jake
 
-It will build into the pkg folder.
+It will build into the `./pkg` folder.
 
 # Testing
 
-Launch test/index.html to run the suite of tests for each module / plugin.
+Launch `./test/index.html` to run the suite of tests for each module / plugin.
 
 Coming soon, nodeJS running of tasks!
 
