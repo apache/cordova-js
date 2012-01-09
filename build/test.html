@@ -25,11 +25,6 @@
         return trivialReporter.specFilter(spec);
       };
 
-      //HACK: until we clean up and modulerize the bridge
-      window.PhoneGap = {
-          exec: jasmine.createSpy("PhoneGap.exec")
-      };
-
       window.phonegap = {
          platform: ""
       };
