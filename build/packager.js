@@ -4,8 +4,12 @@ var util = require('util'),
 function include(files, transform) {
     files = files.map ? files : [files];
     return files.map(function (file) {
-        var str = fs.readFileSync(file, "utf-8") + "\n";
-        return transform ? transform(str, file) : str;
+        try {
+            var str = fs.readFileSync(file, "utf-8") + "\n";
+            return transform ? transform(str, file) : str;
+        } catch (e) {
+            //do nothing
+        }
     }).join('\n');
 }
 

@@ -40,7 +40,7 @@ module.exports = function () {
                         return '<script src="' + file.replace(/^.*test/, "test") +
                             '" type="text/javascript" charset="utf-8"></script>';
                     }).join();
-                    modules = packager.modules('ios');
+                    modules = packager.modules('test');
 
                     doc = html.replace(/<!-- TESTS -->/g, specs).replace(/"##MODULES##"/g, modules);
                     res.end(doc);
