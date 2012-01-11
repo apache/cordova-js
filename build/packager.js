@@ -1,4 +1,5 @@
 var util = require('util'),
+    debug = false,
     fs = require('fs');
 
 function include(files, transform) {
@@ -6,7 +7,9 @@ function include(files, transform) {
     return files.map(function (file) {
         try {
             var str = fs.readFileSync(file, "utf-8") + "\n";
-            return transform ? transform(str, file) : str;
+            str = transform ? transform(str, file) : str;
+            str = debug ? "try {" + str + "} catch (e) { alert('" + file + ":' + e);}" : str;
+            return str;
         } catch (e) {
             //do nothing
         }
@@ -30,8 +33,11 @@ module.exports = {
 
         //HACK: this seem suspect to include like this
         if (platform === "blackberry") {
-            files.unshift("lib/plugin/blackberry/PluginManager.js");
-            files.unshift("lib/plugin/blackberry/WebWorksPluginManager.js");
+            output += include(['lib/plugin/blackberry/manager/webworks.js',
+                               'lib/plugin/blackberry/manager/blackberry.js'], function (file, path) {
+                var id = path.replace(/lib\//, "phonegap/").replace(/\.js$/, ''); 
+                return "define('" + id + "', function (require, exports, module) {\n" + file + "});\n";
+            });
         }
 
         //include exec
