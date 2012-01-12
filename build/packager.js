@@ -28,7 +28,7 @@ module.exports = {
                 "lib/plugin/Connection.js",
                 "lib/plugin/" + platform + "/device.js",
                 "lib/builder.js"
-            ]
+            ],
             output = "";
 
         //HACK: this seem suspect to include like this
@@ -64,7 +64,7 @@ module.exports = {
         //include modules
         output += include(files, function (file, path) {
             var id = path.replace(/lib\//, "phonegap/").replace(/\.js$/, ''); 
-            return "define('" + id + "', function (require, exports, module) {\n" + file + "});\n";
+            return "console.log('defining " + id + "');define('" + id + "', function (require, exports, module) {\n" + file + "});\n console.log('defined " + id + "');";
         });
 
         return output;
