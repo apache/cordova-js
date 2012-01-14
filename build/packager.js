@@ -15,6 +15,12 @@ function include(files, transform) {
         }
     }).join('\n');
 }
+function drop(files, id) {
+  return include(files, function(file, path) {
+    var id = (id?id:path.replace(/lib\//, "phonegap/").replace(/\.js$/, ''));
+    return "define('" + id + "', function(require, exports, module) {\n" + file + "});\n";
+  });
+}
 
 module.exports = {
     modules: function (platform) {
@@ -25,6 +31,7 @@ module.exports = {
                 "lib/plugin/network.js",
                 "lib/plugin/notification.js",
                 "lib/plugin/accelerometer.js",
+                "lib/plugin/Acceleration.js",
                 "lib/plugin/Connection.js",
                 "lib/plugin/" + platform + "/device.js",
                 "lib/builder.js"
@@ -32,46 +39,38 @@ module.exports = {
             output = "";
 
         //HACK: this seem suspect to include like this
+        //suggestion: list directory contents of lib/plugin/<platform>/ and include that way?
         if (platform === "blackberry") {
-            output += include(['lib/plugin/blackberry/manager/webworks.js',
-                               'lib/plugin/blackberry/manager/blackberry.js'], function (file, path) {
-                var id = path.replace(/lib\//, "phonegap/").replace(/\.js$/, ''); 
-                return "define('" + id + "', function (require, exports, module) {\n" + file + "});\n";
-            });
+            output += drop(['lib/plugin/blackberry/manager/webworks.js',
+                       'lib/plugin/blackberry/manager/blackberry.js']);
+        } else if (platform === 'android') {
+            output += drop(['lib/plugin/android/callback.js',
+                            'lib/plugin/android/callbackpolling.js']);
         }
 
         //include exec
-        output += include('lib/exec/' + platform + '.js', function (file, path) {
-            return "define('phonegap/exec'" +
-                   ", function (require, exports, module) {\n" + file + "});\n";
-        });
+        output += drop('lib/exec/' + platform + '.js', 'phonegap/exec');
 
         //include phonegap
-        output += include('lib/phonegap.js', function (file, path) {
-            return "define('phonegap'" +
-                   ", function (require, exports, module) {\n" + file + "});\n";
-        });
+        output += drop('lib/phonegap.js', 'phonegap');
+
+        //include common platform base
+        output += drop('lib/platform/common.js', 'phonegap/common');
 
         //include platform
-        output += include('lib/platform/' + platform + '.js', function (file, path) {
-            return "define('phonegap/platform'" +
-                   ", function (require, exports, module) {\n" + file + "});\n";
-        });
+        output += drop('lib/platform/' + platform + '.js', 'phonegap/platform');
 
         //HACK: Get this in soon so we have access to it for the native layer
         output += "window.PhoneGap = require('phonegap');";
 
         //include modules
-        output += include(files, function (file, path) {
-            var id = path.replace(/lib\//, "phonegap/").replace(/\.js$/, ''); 
-            return "console.log('defining " + id + "');define('" + id + "', function (require, exports, module) {\n" + file + "});\n console.log('defined " + id + "');";
-        });
+        output += drop(files);
 
         return output;
     },
 
     bundle: function (platform) {
-    	var output = "";
+        var output = "";
 
         //include LICENSE
         output += include("LICENSE", function (file) {
