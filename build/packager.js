@@ -17,8 +17,8 @@ function include(files, transform) {
 }
 function drop(files, id) {
   return include(files, function(file, path) {
-    var id = (id?id:path.replace(/lib\//, "phonegap/").replace(/\.js$/, ''));
-    return "define('" + id + "', function(require, exports, module) {\n" + file + "});\n";
+    var define_id = (typeof id != 'undefined' && id.length > 0 ? id : path.replace(/lib\//, "phonegap/").replace(/\.js$/, ''));
+    return "define('" + define_id + "', function(require, exports, module) {\n" + file + "});\n";
   });
 }
 
