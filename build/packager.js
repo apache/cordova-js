@@ -31,6 +31,8 @@ module.exports = {
                 "lib/plugin/notification.js",
                 "lib/plugin/accelerometer.js",
                 "lib/plugin/Acceleration.js",
+                "lib/plugin/CameraConstants.js",
+                "lib/plugin/camera.js",
                 "lib/plugin/Connection.js",
                 "lib/plugin/" + platform + "/device.js",
                 "lib/plugin/blackberry/manager/webworks.js",

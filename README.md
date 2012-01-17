@@ -99,6 +99,8 @@ FILL THIS OUT YO!
 # TODO / Hacking / Contributing
 
 - figure out the bootstrap
+- docs: adding new platform, `require('path')` pathing transformation
+  from `./build/packager.js`
 - think more about what it means to run in node
 - think about whether to select and load the platform specific modules at
   runtime or at buildtime.
