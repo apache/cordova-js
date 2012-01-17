@@ -33,16 +33,12 @@ module.exports = {
                 "lib/plugin/Acceleration.js",
                 "lib/plugin/Connection.js",
                 "lib/plugin/" + platform + "/device.js",
+                "lib/plugin/blackberry/manager/webworks.js",
+                "lib/plugin/blackberry/manager/" + platform + ".js",
                 "lib/builder.js"
             ],
             output = "";
 
-        //HACK: this seem suspect to include like this
-        //suggestion: list directory contents of lib/plugin/<platform>/ and include that way?
-        if (platform === "blackberry") {
-            output += drop(['lib/plugin/blackberry/manager/webworks.js',
-                       'lib/plugin/blackberry/manager/blackberry.js']);
-        } 
         //include phonegap
         output += drop('lib/phonegap.js', 'phonegap');
 
@@ -80,7 +76,7 @@ module.exports = {
 
         //include require
         output += include("thirdparty/almond.js");
-        output += "require.unordered = true;";
+        output += "define.unordered = true;";
 
         // include channel - this one is needed early
         output += drop('lib/channel.js');
@@ -93,6 +89,7 @@ module.exports = {
 
         //include bootstrap
         output += include('lib/bootstrap.js');
+        output += include('lib/bootstrap/' + platform + '.js');
 
         fs.writeFileSync(__dirname + "/../pkg/phonegap." + platform + ".js", output);
     }

@@ -21,6 +21,7 @@ task('build', ['clean'], function () {
         packager = require("./build/packager");
 
     packager.bundle("blackberry");
+    packager.bundle("playbook");
     packager.bundle("ios");
     packager.bundle("wp7");
     packager.bundle("android");
