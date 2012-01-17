@@ -33,8 +33,7 @@ A unified JavaScript layer for Callback projects.
       |  |      PhoneGap:{
       |  |        path:"phonegap", // a requirejs-compatible path to the .js file to use for the object.
       |  |        children:{ // properties of this object are added to the parent object, i.e. in this example the defined children will be added to the `PhoneGap` global.
-      |  |          path:"phonegap/somedir/other", // specify either a path to the .js file to use for the child, or...
-      |  |          value:false // a straight JavaScript literal to use for the child
+      |  |          path:"phonegap/somedir/other" // specify either a path to the .js file to use for the child
       |  |        }
       |  |      }
       |  |    }
@@ -89,7 +88,4 @@ FILL THIS OUT YO!
 - think more about what it means to run in node
 - think about whether to select and load the platform specific modules at
   runtime or at buildtime.
-- modularize phonegap.js, thoughts/examples/potentials:
-  - PhoneGap.exec, PhoneGap.callbackSuccess, Realistically we should have a phonegap/bridge module that would house these
-    methods and such.
 - 3rd party plugins could be interesting. Need a little bit more thought about how these will fit into the system. I am thinking a package.json type file to handle per plugin.
