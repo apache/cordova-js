@@ -15,6 +15,20 @@ A unified JavaScript layer for Callback projects.
       |  |-builder.js
       |  | Injects in our classes onto navigator (or wherever else is needed)
       |  |
+      |  |-channel.js
+      |  | A pub/sub implementation to handle custom framework events 
+      |  |
+      |  |-hijacks.js
+      |  | We need to hijack `add/removeEventListener` - this is where
+      |  | we do it.
+      |  |
+      |  |-phonegap.js
+      |  | Common phonegap stuff such as callback handling. 
+      |  | 
+      |  |-utils.js
+      |  | General purpose JS utility stuff: closures, uuids, object
+      |  | cloning.
+      |  |
       |  |-exec/
       |  | Will contain the platform specific definitaions of the exec method. 
       |  | Thinking of maybe renaming/repurposing this for any other platform
