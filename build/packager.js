@@ -26,7 +26,6 @@ module.exports = {
     modules: function (platform) {
         var files = [
                 "lib/utils.js",
-                "lib/channel.js",
                 "lib/plugin/navigator.js",
                 "lib/plugin/network.js",
                 "lib/plugin/notification.js",
@@ -43,16 +42,18 @@ module.exports = {
         if (platform === "blackberry") {
             output += drop(['lib/plugin/blackberry/manager/webworks.js',
                        'lib/plugin/blackberry/manager/blackberry.js']);
-        } else if (platform === 'android') {
-            output += drop(['lib/plugin/android/callback.js',
-                            'lib/plugin/android/callbackpolling.js']);
-        }
+        } 
+        //include phonegap
+        output += drop('lib/phonegap.js', 'phonegap');
 
         //include exec
         output += drop('lib/exec/' + platform + '.js', 'phonegap/exec');
 
-        //include phonegap
-        output += drop('lib/phonegap.js', 'phonegap');
+        // this is really bad, im so sorry. order is important. need to figure this out better dawg
+        if (platform === 'android') {
+            output += drop(['lib/plugin/android/callback.js',
+                            'lib/plugin/android/polling.js']);
+        }
 
         //include common platform base
         output += drop('lib/platform/common.js', 'phonegap/common');
@@ -80,6 +81,12 @@ module.exports = {
         //include require
         output += include("thirdparty/almond.js");
         output += "require.unordered = true;";
+
+        // include channel - this one is needed early
+        output += drop('lib/channel.js');
+
+        // include the event listener hijacks (needs to happen early)
+        output += include("lib/hijacks.js");
 
         //include modules
         output += this.modules(platform);
