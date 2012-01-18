@@ -47,10 +47,11 @@ module.exports = {
         //include exec
         output += drop('lib/exec/' + platform + '.js', 'phonegap/exec');
 
-        // this is really bad, im so sorry. order is important. need to figure this out better dawg
+        // HACK: this is really bad, im so sorry. order is important (exec before the callback + polling mechnisms below). need to figure this out better dawg
         if (platform === 'android') {
             output += drop(['lib/plugin/android/callback.js',
                             'lib/plugin/android/polling.js']);
+            files.push('lib/plugin/android/app.js');
         }
 
         //include common platform base
