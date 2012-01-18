@@ -1,5 +1,6 @@
 describe("accelerometer", function () {
-    var accelerometer = require("phonegap/plugin/accelerometer");
+    var accelerometer = require("phonegap/plugin/accelerometer"),
+        exec = require('phonegap/exec');
 
     describe("when getting the current acceleration", function () {
         describe("when passing in bad data", function () {
@@ -27,7 +28,7 @@ describe("accelerometer", function () {
                 error = function () {};
 
             accelerometer.getCurrentAcceleration(success, error, "options");
-            expect(PhoneGap.exec).toHaveBeenCalledWith(success, error, "Accelerometer", "getAcceleration", []);
+            expect(exec).toHaveBeenCalledWith(success, error, "Accelerometer", "getAcceleration", []);
         });
     });
 
@@ -60,7 +61,7 @@ describe("accelerometer", function () {
                 spyOn(window, "setInterval");
                 accelerometer.watchAcceleration(success, fail);
 
-                expect(PhoneGap.exec).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function), "Accelerometer", "getTimeout", []);
+                expect(exec).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function), "Accelerometer", "getTimeout", []);
             });
 
             it("it sets it to 10 seconds greater than the frequency", function () {
@@ -71,9 +72,9 @@ describe("accelerometer", function () {
                 accelerometer.watchAcceleration(success, fail, {frequency: 5000});
 
                 //execute the success callback ;)
-                PhoneGap.exec.mostRecentCall.args[0](5000);
+                exec.mostRecentCall.args[0](5000);
 
-                expect(PhoneGap.exec).toHaveBeenCalledWith(null, null, "Accelerometer", "setTimeout", [15000]);
+                expect(exec).toHaveBeenCalledWith(null, null, "Accelerometer", "setTimeout", [15000]);
             });
 
             it("doesn't set it if timeout is less than freq + 10sec", function () {
@@ -84,9 +85,9 @@ describe("accelerometer", function () {
                 accelerometer.watchAcceleration(success, fail, {frequency: 1000});
 
                 //execute the success callback ;)
-                PhoneGap.exec.mostRecentCall.args[0](20000);
+                exec.mostRecentCall.args[0](20000);
 
-                expect(PhoneGap.exec).not.toHaveBeenCalledWith(null, null, "Accelerometer", "setTimeout", [11000]);
+                expect(exec).not.toHaveBeenCalledWith(null, null, "Accelerometer", "setTimeout", [11000]);
             });
         });
 
@@ -145,7 +146,7 @@ describe("accelerometer", function () {
             //exec the interval callback!
             window.setInterval.mostRecentCall.args[0]();
 
-            expect(PhoneGap.exec).toHaveBeenCalledWith(success, fail, "Accelerometer", "getAcceleration", []);
+            expect(exec).toHaveBeenCalledWith(success, fail, "Accelerometer", "getAcceleration", []);
         });
     });
 

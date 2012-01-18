@@ -1,5 +1,6 @@
 describe("network", function () {
-    var network = require('phonegap/plugin/network');
+    var network = require('phonegap/plugin/network'),
+        exec = require('phonegap/exec');
 
     //TODO: There is a lot of code executed on the first require call to this plugin
     //      we should refactor or find a good way to call and test this code.
@@ -13,6 +14,6 @@ describe("network", function () {
             error = jasmine.createSpy();
 
         network.getInfo(success, error);
-        expect(PhoneGap.exec).toHaveBeenCalledWith(success, error, "Network Status", "getConnectionInfo", []);
+        expect(exec).toHaveBeenCalledWith(success, error, "Network Status", "getConnectionInfo", []);
     });
 });
