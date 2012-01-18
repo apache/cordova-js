@@ -2,6 +2,22 @@ var util = require('util'),
     debug = false,
     fs = require('fs');
 
+// Recursively list contents of a directory
+function walk(dir) {
+  var results = [];
+  var list = fs.readdirSync(dir);
+  for (var i = 0, l = list.length; i < l; i++) {
+    var file = list[i];
+    file = dir + '/' + file;
+    var stat = fs.statSync(file);
+    if (stat && stat.isDirectory()) {
+      results = results.concat(walk(file));
+    } else {
+      results.push(file);
+    }
+  }
+  return results;
+}
 function include(files, transform) {
     files = files.map ? files : [files];
     return files.map(function (file) {
@@ -24,7 +40,7 @@ function drop(files, id) {
 
 module.exports = {
     modules: function (platform) {
-        var files = [
+        var baseFiles = [
                 "lib/utils.js",
                 "lib/plugin/navigator.js",
                 "lib/plugin/network.js",
@@ -34,11 +50,9 @@ module.exports = {
                 "lib/plugin/CameraConstants.js",
                 "lib/plugin/camera.js",
                 "lib/plugin/Connection.js",
-                "lib/plugin/" + platform + "/device.js",
-                "lib/plugin/blackberry/manager/webworks.js",
-                "lib/plugin/blackberry/manager/" + platform + ".js",
                 "lib/builder.js"
             ],
+            platformFiles = walk('lib/plugin/' + platform),
             output = "";
 
         //include phonegap
@@ -47,24 +61,17 @@ module.exports = {
         //include exec
         output += drop('lib/exec/' + platform + '.js', 'phonegap/exec');
 
-        // HACK: this is really bad, im so sorry. order is important (exec before the callback + polling mechnisms below). need to figure this out better dawg
-        if (platform === 'android') {
-            output += drop(['lib/plugin/android/callback.js',
-                            'lib/plugin/android/polling.js']);
-            files.push('lib/plugin/android/app.js');
-        }
-
         //include common platform base
         output += drop('lib/platform/common.js', 'phonegap/common');
 
         //include platform
         output += drop('lib/platform/' + platform + '.js', 'phonegap/platform');
 
-        //HACK: Get this in soon so we have access to it for the native layer
-        output += "window.PhoneGap = require('phonegap');";
+        //include common modules
+        output += drop(baseFiles);
 
-        //include modules
-        output += drop(files);
+        //include platform specific modules
+        output += drop(platformFiles);
 
         return output;
     },
@@ -79,7 +86,7 @@ module.exports = {
 
         //include require
         output += include("thirdparty/almond.js");
-        output += "define.unordered = true;";
+        output += "define.unordered = true;\n";
 
         // include channel - this one is needed early
         output += drop('lib/channel.js');
@@ -89,6 +96,9 @@ module.exports = {
 
         //include modules
         output += this.modules(platform);
+
+        // HACK: this gets done in bootstrap.js anyways, once native side is ready + domcontentloaded is fired. Do we need it?
+        output += "window.PhoneGap = require('phonegap');\n"; 
 
         //include bootstrap
         output += include('lib/bootstrap.js');
