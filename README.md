@@ -15,6 +15,20 @@ A unified JavaScript layer for Callback projects.
       |  |-builder.js
       |  | Injects in our classes onto navigator (or wherever else is needed)
       |  |
+      |  |-channel.js
+      |  | A pub/sub implementation to handle custom framework events 
+      |  |
+      |  |-hijacks.js
+      |  | We need to hijack `add/removeEventListener` - this is where
+      |  | we do it.
+      |  |
+      |  |-phonegap.js
+      |  | Common phonegap stuff such as callback handling. 
+      |  | 
+      |  |-utils.js
+      |  | General purpose JS utility stuff: closures, uuids, object
+      |  | cloning.
+      |  |
       |  |-exec/
       |  | Will contain the platform specific definitaions of the exec method. 
       |  | Thinking of maybe renaming/repurposing this for any other platform
@@ -33,8 +47,7 @@ A unified JavaScript layer for Callback projects.
       |  |      PhoneGap:{
       |  |        path:"phonegap", // a requirejs-compatible path to the .js file to use for the object.
       |  |        children:{ // properties of this object are added to the parent object, i.e. in this example the defined children will be added to the `PhoneGap` global.
-      |  |          path:"phonegap/somedir/other", // specify either a path to the .js file to use for the child, or...
-      |  |          value:false // a straight JavaScript literal to use for the child
+      |  |          path:"phonegap/somedir/other" // specify either a path to the .js file to use for the child
       |  |        }
       |  |      }
       |  |    }
@@ -89,7 +102,4 @@ FILL THIS OUT YO!
 - think more about what it means to run in node
 - think about whether to select and load the platform specific modules at
   runtime or at buildtime.
-- modularize phonegap.js, thoughts/examples/potentials:
-  - PhoneGap.exec, PhoneGap.callbackSuccess, Realistically we should have a phonegap/bridge module that would house these
-    methods and such.
 - 3rd party plugins could be interesting. Need a little bit more thought about how these will fit into the system. I am thinking a package.json type file to handle per plugin.
