@@ -91,9 +91,6 @@ module.exports = {
         // include channel - this one is needed early
         output += drop('lib/channel.js');
 
-        // include the event listener hijacks (needs to happen early)
-        output += include("lib/hijacks.js");
-
         //include modules
         output += this.modules(platform);
 
