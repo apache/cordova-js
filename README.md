@@ -1,4 +1,4 @@
-A unified JavaScript layer for Callback projects.
+A unified JavaScript layer for [Apache Cordova](http://incubator.apache.org/projects/callback.html) projects.
 
 # Project Structure
 
@@ -10,7 +10,7 @@ A unified JavaScript layer for Callback projects.
       |
       |-lib
       |  |-bootstrap.js
-      |  | Code to bootstrap the Callback platform, inject APIs and fire events
+      |  | Code to bootstrap the Cordova platform, inject APIs and fire events
       |  |
       |  |-builder.js
       |  | Injects in our classes onto navigator (or wherever else is needed)
@@ -23,7 +23,7 @@ A unified JavaScript layer for Callback projects.
       |  | we do it
       |  |
       |  |-phonegap.js
-      |  | Common phonegap stuff such as callback handling and
+      |  | Common Cordova stuff such as callback handling and
       |  | window/document add/removeEventListener hijacking 
       |  | 
       |  |-utils.js
@@ -38,13 +38,14 @@ A unified JavaScript layer for Callback projects.
       |  |-platform/
       |  | Definitions of each platform that help us describe where
       |  | and what to put on the window object, and what to run to
-      |  | initialize the platform. Each file is a JSON object with the
+      |  | initialize the platform. A common set of globals are also
+      |  | defined (common.js). Each file is a JSON object with the
       |  | following properties:
       |  | 
       |  |  {
       |  |    id:"atari", // a string representing the platform id
       |  |    initialize:function(){}, // function to run any platform-specific initialization
-      |  |    objects:{ // properties of this object define globals that get either injected onto `window` or mixed into existing `window` objects.
+      |  |    objects:{ // properties of this object define globals that get either injected onto `window` or mixed into existing `window` objects
       |  |      PhoneGap:{
       |  |        path:"phonegap", // a requirejs-compatible path to the .js file to use for the object.
       |  |        children:{ // properties of this object are added to the parent object, i.e. in this example the defined children will be added to the `PhoneGap` global.
