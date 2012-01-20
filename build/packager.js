@@ -5,17 +5,21 @@ var util = require('util'),
 // (Recursively) list contents of a directory
 function walk(dir, doRecursive) {
   var results = [];
-  var list = fs.readdirSync(dir);
-  for (var i = 0, l = list.length; i < l; i++) {
-    var file = list[i];
-    file = dir + '/' + file;
-    var stat = fs.statSync(file);
-    if (stat && doRecursive && stat.isDirectory()) {
-      results = results.concat(walk(file,doRecursive));
-    } else {
-      results.push(file);
+  try {
+    var list = fs.readdirSync(dir);
+    for (var i = 0, l = list.length; i < l; i++) {
+      var file = list[i];
+      file = dir + '/' + file;
+      var stat = fs.statSync(file);
+      if (stat && doRecursive && stat.isDirectory()) {
+        results = results.concat(walk(file,doRecursive));
+      } else {
+        results.push(file);
+      }
     }
-  }
+    } catch (e) {
+      //do nothing
+    }
   return results;
 }
 function include(files, transform) {
