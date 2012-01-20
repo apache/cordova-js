@@ -60,10 +60,10 @@ module.exports = {
         //include exec
         output += drop('lib/exec/' + platform + '.js', 'phonegap/exec');
 
-        //include common platform base
+        //include common platform defn 
         output += drop('lib/platform/common.js', 'phonegap/common');
 
-        //include platform
+        //include platform defn
         output += drop('lib/platform/' + platform + '.js', 'phonegap/platform');
 
         //include common modules
