@@ -102,6 +102,12 @@ Use the phonegap.proto platform in ripple.
 
 FILL THIS OUT YO!
 
+# Cordova-specific TODOs Before Final Integration
+
+- Make sure all of the service + action parameters in each `exec` call
+  is consistent across all platforms. Specifically, iOS needs to update
+  to the Android and BlackBerry plugin labels.
+
 # TODO / Hacking / Contributing
 
 - figure out the bootstrap
