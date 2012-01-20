@@ -2,16 +2,16 @@ var util = require('util'),
     debug = false,
     fs = require('fs');
 
-// Recursively list contents of a directory
-function walk(dir) {
+// (Recursively) list contents of a directory
+function walk(dir, doRecursive) {
   var results = [];
   var list = fs.readdirSync(dir);
   for (var i = 0, l = list.length; i < l; i++) {
     var file = list[i];
     file = dir + '/' + file;
     var stat = fs.statSync(file);
-    if (stat && stat.isDirectory()) {
-      results = results.concat(walk(file));
+    if (stat && doRecursive && stat.isDirectory()) {
+      results = results.concat(walk(file,doRecursive));
     } else {
       results.push(file);
     }
@@ -42,18 +42,13 @@ module.exports = {
     modules: function (platform) {
         var baseFiles = [
                 "lib/utils.js",
-                "lib/plugin/navigator.js",
-                "lib/plugin/network.js",
-                "lib/plugin/notification.js",
-                "lib/plugin/accelerometer.js",
-                "lib/plugin/Acceleration.js",
-                "lib/plugin/CameraConstants.js",
-                "lib/plugin/camera.js",
-                "lib/plugin/Connection.js",
                 "lib/builder.js"
             ],
-            platformFiles = walk('lib/plugin/' + platform),
+            platformFiles = walk('lib/plugin/' + platform, true),
             output = "";
+
+        //include all common platform files that are under lib/plugin
+        baseFiles = baseFiles.concat(walk('lib/plugin'));
 
         //include phonegap
         output += drop('lib/phonegap.js', 'phonegap');
