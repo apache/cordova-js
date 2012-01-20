@@ -20,19 +20,20 @@ A unified JavaScript layer for Callback projects.
       |  |
       |  |-hijacks.js
       |  | We need to hijack `add/removeEventListener` - this is where
-      |  | we do it.
+      |  | we do it
       |  |
       |  |-phonegap.js
-      |  | Common phonegap stuff such as callback handling. 
+      |  | Common phonegap stuff such as callback handling and
+      |  | window/document add/removeEventListener hijacking 
       |  | 
       |  |-utils.js
       |  | General purpose JS utility stuff: closures, uuids, object
-      |  | cloning.
+      |  | cloning
       |  |
       |  |-exec/
       |  | Will contain the platform specific definitaions of the exec method. 
       |  | Thinking of maybe renaming/repurposing this for any other platform
-      |  | specific quirks.
+      |  | specific quirks
       |  |
       |  |-platform/
       |  | Definitions of each platform that help us describe where
@@ -54,7 +55,11 @@ A unified JavaScript layer for Callback projects.
       |  |  }
       |  |
       |  |-plugin/
-      |  | All API definitions as plugins.
+      |  |  | All API definitions as plugins, ones common to all
+      |  |  | platforms reside at the top level...
+      |  |  `-<platform>
+      |  |    ... and platform-specific ones reside in their respective
+      |  |    folders
 
 # Building
 
