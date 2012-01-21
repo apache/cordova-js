@@ -18,10 +18,6 @@ A unified JavaScript layer for [Apache Cordova](http://incubator.apache.org/proj
       |  |-channel.js
       |  | A pub/sub implementation to handle custom framework events 
       |  |
-      |  |-hijacks.js
-      |  | We need to hijack `add/removeEventListener` - this is where
-      |  | we do it
-      |  |
       |  |-phonegap.js
       |  | Common Cordova stuff such as callback handling and
       |  | window/document add/removeEventListener hijacking 
@@ -107,6 +103,8 @@ FILL THIS OUT YO!
 - Make sure all of the service + action parameters in each `exec` call
   is consistent across all platforms. Specifically, iOS needs to update
   to the Android and BlackBerry plugin labels.
+- Normalize `Entry.toURL` return values. iOS returns `"file://localhost" +
+  fullPath`, Android returns `"file://" + fullPath`, BlackBerry returns just `fullPath`
 
 # TODO / Hacking / Contributing
 
