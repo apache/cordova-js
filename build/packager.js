@@ -4,23 +4,23 @@ var util = require('util'),
 
 // (Recursively) list contents of a directory
 function walk(dir, doRecursive) {
-  var results = [];
-  try {
-    var list = fs.readdirSync(dir);
-    for (var i = 0, l = list.length; i < l; i++) {
-      var file = list[i];
-      file = dir + '/' + file;
-      var stat = fs.statSync(file);
-      if (stat && doRecursive && stat.isDirectory()) {
-        results = results.concat(walk(file,doRecursive));
-      } else {
-        results.push(file);
-      }
-    }
+    var results = [];
+    try {
+        var list = fs.readdirSync(dir);
+        for (var i = 0, l = list.length; i < l; i++) {
+            var file = list[i];
+            file = dir + '/' + file;
+            var stat = fs.statSync(file);
+            if (stat && doRecursive && stat.isDirectory()) {
+                results = results.concat(walk(file,doRecursive));
+            } else {
+                results.push(file);
+            }
+        }
     } catch (e) {
-      //do nothing
+        //do nothing
     }
-  return results;
+    return results;
 }
 function include(files, transform) {
     files = files.map ? files : [files];
@@ -36,10 +36,10 @@ function include(files, transform) {
     }).join('\n');
 }
 function drop(files, id) {
-  return include(files, function(file, path) {
-    var define_id = (typeof id != 'undefined' && id.length > 0 ? id : path.replace(/lib\//, "phonegap/").replace(/\.js$/, ''));
-    return "define('" + define_id + "', function(require, exports, module) {\n" + file + "});\n";
-  });
+    return include(files, function(file, path) {
+        var define_id = (typeof id != 'undefined' && id.length > 0 ? id : path.replace(/lib\//, "phonegap/").replace(/\.js$/, ''));
+        return "define('" + define_id + "', function(require, exports, module) {\n" + file + "});\n";
+    });
 }
 
 module.exports = {

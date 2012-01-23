@@ -136,8 +136,7 @@ describe("accelerometer", function () {
         });
 
         it("gets the acceleration for the provided interval", function () {
-            var utils = require('phonegap/utils'),
-                success = jasmine.createSpy(),
+            var success = jasmine.createSpy(),
                 fail = jasmine.createSpy();
 
             spyOn(window, "setInterval");
