@@ -72,7 +72,7 @@ Launch `./test/index.html` to run the suite of tests for each module / plugin.
 
 Coming soon, nodeJS running of tasks!
 
-Final testing should always be done with https://github.com/callback/callback-test
+Final testing should always be done with the [Mobile Spec test application](https://github.com/apache/incubator-cordova-mobile-spec).
 
 # Integration
 
@@ -105,10 +105,11 @@ FILL THIS OUT YO!
   to the Android and BlackBerry plugin labels.
 - Normalize `Entry.toURL` return values. iOS returns `"file://localhost" +
   fullPath`, Android returns `"file://" + fullPath`, BlackBerry returns just `fullPath`
+- Android has a set of `Crypto` APIs that are not cross-platform - what
+  to do with these?
 
 # TODO / Hacking / Contributing
 
-- figure out the bootstrap
 - docs: adding new platform, `require('path')` pathing transformation
   from `./build/packager.js`
 - think more about what it means to run in node
