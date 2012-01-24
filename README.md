@@ -107,6 +107,10 @@ FILL THIS OUT YO!
   fullPath`, Android returns `"file://" + fullPath`, BlackBerry returns just `fullPath`
 - Android has a set of `Crypto` APIs that are not cross-platform - what
   to do with these?
+- Need to normalize native return values as much as possible across
+  platforms. For example, error objects. Should we return JSON objects
+  from native or minimal primitives (i.e. error codes as numbers)? Both
+  are in use today, we need to decide on a standard.
 
 # TODO / Hacking / Contributing
 
