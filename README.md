@@ -76,7 +76,7 @@ Final testing should always be done with the [Mobile Spec test application](http
 
 # Integration
 
-## Callback
+## Cordova
 
 Build the .js file and drop it in as a replacement for phonegap.js!
 
@@ -113,8 +113,10 @@ FILL THIS OUT YO!
   to the Android and BlackBerry plugin labels.
 - Normalize `Entry.toURL` return values. iOS returns `"file://localhost" +
   fullPath`, Android returns `"file://" + fullPath`, BlackBerry returns just `fullPath`
-- Android has a set of `Crypto` APIs that are not cross-platform - what
+- APIs that are not cross-platform - what
   to do with these?
+  - Crypto on Android
+  - SMS, telephony, splashscreen on iOS
 - Need to normalize native return values as much as possible across
   platforms. For example, error objects. Should we return JSON objects
   from native or minimal primitives (i.e. error codes as numbers)? Both
@@ -127,9 +129,14 @@ FILL THIS OUT YO!
 
 # TODO / Hacking / Contributing
 
+- implementations: geolocation + position/error (all), storage (Android), console
+  (iOS), button + app + contact + file +  (BB), everything for WP7,
+everything for Bada, any other platforms I missed...
 - docs: adding new platform, `require('path')` pathing transformation
   from `./build/packager.js`
 - think more about what it means to run in node
 - think about whether to select and load the platform specific modules at
-  runtime or at buildtime.
+  runtime or at buildtime. what about platform-specific overrides? can
+we at buildtime decide to include only the overrides (to save a few
+kb?)
 - 3rd party plugins could be interesting. Need a little bit more thought about how these will fit into the system. I am thinking a package.json type file to handle per plugin.
