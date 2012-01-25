@@ -100,6 +100,14 @@ FILL THIS OUT YO!
 
 # Cordova-specific TODOs Before Final Integration
 
+- Consolidate the native geolocation plugin implementation; need a
+  consistent native API. (post to dev list about this). Perhaps review
+  how necessary this plugin is now on modern platform versions?
+- Media (and other plugin) implementations across platforms need to use the established
+  phonegap/exec callback method (instead of triggering globally-accessible functions to 
+  dispatch listeners). On iOS and Android, grep for "cast" in the native
+  code - you'll see a bunch of invoked JavaScript from native, which
+  shouldn't be there.
 - Make sure all of the service + action parameters in each `exec` call
   is consistent across all platforms. Specifically, iOS needs to update
   to the Android and BlackBerry plugin labels.
@@ -111,6 +119,11 @@ FILL THIS OUT YO!
   platforms. For example, error objects. Should we return JSON objects
   from native or minimal primitives (i.e. error codes as numbers)? Both
   are in use today, we need to decide on a standard.
+- Port all of the unit-testy stuff from mobile spec over to this
+  project. Have mobile spec as a defacto functional/integration test.
+- Once-over all of the cordova-docs with the APIs defined in here to
+  make sure all is consistent. There were function signature tweaks,
+  undocumented procedures, etc.
 
 # TODO / Hacking / Contributing
 
