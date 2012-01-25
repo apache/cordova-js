@@ -103,6 +103,12 @@ FILL THIS OUT YO!
 - Consolidate the native geolocation plugin implementation; need a
   consistent native API. (post to dev list about this). Perhaps review
   how necessary this plugin is now on modern platform versions?
+- Related to above, come up with a consistent sensor plugin API.
+  Functions like `getCurrent<data>` and `watch<data>` can be abstracted
+  into a nice plugin. Compass, Accel, Geo should all be basically the
+  same implementation. For example, on Android geo + accel handle
+  calling `start` (starting the listener) in the native code on its own.
+  However, Compass requires that JS initiates a `start`. This is dumb.
 - Media (and other plugin) implementations across platforms need to use the established
   phonegap/exec callback method (instead of triggering globally-accessible functions to 
   dispatch listeners). On iOS and Android, grep for "cast" in the native
@@ -135,8 +141,9 @@ FILL THIS OUT YO!
 
 # TODO / Hacking / Contributing
 
-- implementations: geolocation + position/error (all), console
-  (iOS), button + app + contact + file +  (BB), everything for WP7,
+- implementations: geolocation + position/error (all), backHistory (from
+  mobile spec) on Android,
+  button + app + contact + file +  (BB), everything for WP7,
   everything for Bada, any other platforms I missed...
 - docs: adding new platform, `require('path')` pathing transformation
   from `./build/packager.js`
