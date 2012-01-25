@@ -129,12 +129,15 @@ FILL THIS OUT YO!
 - Once-over all of the cordova-docs with the APIs defined in here to
   make sure all is consistent. There were function signature tweaks,
   undocumented procedures, etc.
+- Initialization of `device` in iOS needs to be upgraded. No more
+  `DeviceInfo` global object if possible. Also need to make sure to fire
+  the appropriate phonegap channel after `device` is ready on iOS.
 
 # TODO / Hacking / Contributing
 
 - implementations: geolocation + position/error (all), console
   (iOS), button + app + contact + file +  (BB), everything for WP7,
-everything for Bada, any other platforms I missed...
+  everything for Bada, any other platforms I missed...
 - docs: adding new platform, `require('path')` pathing transformation
   from `./build/packager.js`
 - think more about what it means to run in node
