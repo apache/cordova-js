@@ -108,6 +108,9 @@ FILL THIS OUT YO!
   dispatch listeners). On iOS and Android, grep for "cast" in the native
   code - you'll see a bunch of invoked JavaScript from native, which
   shouldn't be there.
+- Storage shim on Android needs to change its win/fail callbacks to
+  `require('phonegap/plugin/android/storage').failQuery / completeQuery`
+  (away from droiddb.fail / completeQuery)
 - Make sure all of the service + action parameters in each `exec` call
   is consistent across all platforms. Specifically, iOS needs to update
   to the Android and BlackBerry plugin labels.
@@ -129,7 +132,7 @@ FILL THIS OUT YO!
 
 # TODO / Hacking / Contributing
 
-- implementations: geolocation + position/error (all), storage (Android), console
+- implementations: geolocation + position/error (all), console
   (iOS), button + app + contact + file +  (BB), everything for WP7,
 everything for Bada, any other platforms I missed...
 - docs: adding new platform, `require('path')` pathing transformation
