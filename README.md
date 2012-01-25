@@ -142,7 +142,7 @@ FILL THIS OUT YO!
 # TODO / Hacking / Contributing
 
 - implementations: geolocation + position/error (all), backHistory (from
-  mobile spec) on Android,
+  mobile spec) + menu + search buttons (add to platform init) on Android,
   button + app + contact + file +  (BB), everything for WP7,
   everything for Bada, any other platforms I missed...
 - docs: adding new platform, `require('path')` pathing transformation
