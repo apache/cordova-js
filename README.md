@@ -114,6 +114,10 @@ FILL THIS OUT YO!
   dispatch listeners). On iOS and Android, grep for "cast" in the native
   code - you'll see a bunch of invoked JavaScript from native, which
   shouldn't be there.
+- Media needs updates across all platforms. Methods need fixing with
+  respect to timing: some methods use milliseconds, some use seconds.
+  Some methods not documented (setVolume on Android). Consolidate /
+  implement properly across platforms.
 - Storage shim on Android needs to change its win/fail callbacks to
   `require('phonegap/plugin/android/storage').failQuery / completeQuery`
   (away from droiddb.fail / completeQuery)
