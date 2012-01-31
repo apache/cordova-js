@@ -8,14 +8,14 @@ describe("compass", function () {
             spyOn(console, "log");
             compass.getCurrentHeading();
             expect(console.log).toHaveBeenCalledWith("Compass Error: successCallback is not a function");
-            expect(exec).not.toHaveBeenCalledWith(jasmine.any(Function), undefined, "Compass", "getCurrentHeading", []);
+            expect(exec).not.toHaveBeenCalledWith(jasmine.any(Function), undefined, "Compass", "getHeading", []);
         });
 
         it("logs an error and doesn't call exec when success isn't a function", function () {
             spyOn(console, "log");
             compass.getCurrentHeading(12);
             expect(console.log).toHaveBeenCalledWith("Compass Error: successCallback is not a function");
-            expect(exec).not.toHaveBeenCalledWith(jasmine.any(Function), undefined, "Compass", "getCurrentHeading", []);
+            expect(exec).not.toHaveBeenCalledWith(jasmine.any(Function), undefined, "Compass", "getHeading", []);
         });
 
         it("logs an error and doesn't call exec when error isn't a function", function () {
@@ -23,7 +23,7 @@ describe("compass", function () {
             spyOn(console, "log");
             compass.getCurrentHeading(func, 12);
             expect(console.log).toHaveBeenCalledWith("Compass Error: errorCallback is not a function");
-            expect(exec).not.toHaveBeenCalledWith(func, 12, "Compass", "getCurrentHeading", []);
+            expect(exec).not.toHaveBeenCalledWith(func, 12, "Compass", "getHeading", []);
         });
 
         it("calls exec", function () {
@@ -31,7 +31,7 @@ describe("compass", function () {
                 f = function () {};
 
             compass.getCurrentHeading(s, f);
-            expect(exec).toHaveBeenCalledWith(s, f, "Compass", "getCurrentHeading", []);
+            expect(exec).toHaveBeenCalledWith(s, f, "Compass", "getHeading", []);
         });
     });
 
@@ -44,14 +44,14 @@ describe("compass", function () {
             spyOn(console, "log");
             compass.watchHeading();
             expect(console.log).toHaveBeenCalledWith("Compass Error: successCallback is not a function");
-            expect(exec).not.toHaveBeenCalledWith(jasmine.any(Function), undefined, "Compass", "getCurrentHeading", []);
+            expect(exec).not.toHaveBeenCalledWith(jasmine.any(Function), undefined, "Compass", "getHeading", []);
         });
 
         it("logs an error and doesn't call exec when success isn't a function", function () {
             spyOn(console, "log");
             compass.watchHeading(12);
             expect(console.log).toHaveBeenCalledWith("Compass Error: successCallback is not a function");
-            expect(exec).not.toHaveBeenCalledWith(jasmine.any(Function), undefined, "Compass", "getCurrentHeading", []);
+            expect(exec).not.toHaveBeenCalledWith(jasmine.any(Function), undefined, "Compass", "getHeading", []);
         });
 
         it("logs an error and doesn't call exec when error isn't a function", function () {
@@ -59,7 +59,7 @@ describe("compass", function () {
             spyOn(console, "log");
             compass.watchHeading(func, 12);
             expect(console.log).toHaveBeenCalledWith("Compass Error: errorCallback is not a function");
-            expect(exec).not.toHaveBeenCalledWith(func, 12, "Compass", "getCurrentHeading", []);
+            expect(exec).not.toHaveBeenCalledWith(func, 12, "Compass", "getHeading", []);
         });
 
         it("generates and returns a uuid for the watch", function () {
@@ -67,13 +67,6 @@ describe("compass", function () {
 
             var result = compass.watchHeading(function () {});
             expect(result).toBe(1234);
-        });
-
-        it("stores the interval id for the watch", function () {
-            spyOn(utils, "createUUID").andReturn("abc");
-
-            compass.watchHeading(function () {});
-            expect(compass.timers.abc).toBe("def");
         });
 
         describe("setting the interval", function () {
@@ -101,7 +94,7 @@ describe("compass", function () {
 
             //exec the interval callback!
             window.setInterval.mostRecentCall.args[0]();
-            expect(exec).toHaveBeenCalledWith(success, fail, "Compass", "getCurrentHeading", []);
+            expect(exec).toHaveBeenCalledWith(success, fail, "Compass", "getHeading", []);
         });
     });
 
@@ -118,12 +111,6 @@ describe("compass", function () {
         it("can be called with no args", function () {
             compass.clearWatch();
             expect(window.clearInterval).not.toHaveBeenCalled();
-        });
-
-        it("clears the interval if the id exists", function () {
-            compass.timers["frank"] = "beans";
-            compass.clearWatch("frank");
-            expect(window.clearInterval).toHaveBeenCalledWith("beans");
         });
     });
 });
