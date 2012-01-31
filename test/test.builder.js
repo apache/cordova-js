@@ -21,7 +21,8 @@ describe("builder", function () {
         var target = {},
             objects = {cat: {}};
 
-        builder.build(objects).intoAndClobberTheFOutOf(target);
+        builder.build(objects).intoButDontClobber(target);
+
         expect(target.cat).toBeDefined();
     });
 
@@ -40,7 +41,7 @@ describe("builder", function () {
                } 
             };
 
-        builder.build(objects).intoandClobberTheFOutOf(target);
+        builder.build(objects).intoButDontClobber(target);
 
         expect(target.homer.bart).toBeDefined();
         expect(target.homer.maggie).toBe(require('phonegap/plugin/compass'));
