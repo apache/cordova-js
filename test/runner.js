@@ -3,7 +3,7 @@ var fs = require('fs'),
 
 function collect(path, files, matches) {
     matches = matches || function (path) {
-        return path.match(/\.js$/);
+        return path.match(/test\.\w+\.js$/);
     };
 
     if (fs.statSync(path).isDirectory()) {
@@ -17,16 +17,16 @@ function collect(path, files, matches) {
 
 module.exports = function () { 
     var connect = require('connect'),
-        packager = require('./packager'),
+        packager = require('../build/packager'),
         tests = [],
-        html = fs.readFileSync(__dirname + "/../build/test.html", "utf-8"),
+        html = fs.readFileSync(__dirname + "/suite.html", "utf-8"),
         doc,
         modules,
         specs,
         app = connect(
             connect.static(__dirname + "/../lib/"),
             connect.static(__dirname + "/../"),
-            connect.static(__dirname + "/../test/"),
+            connect.static(__dirname),
             connect.router(function (app) {
                 app.get('/', function (req, res) {
                     res.writeHead(200, {
@@ -34,7 +34,7 @@ module.exports = function () {
                         "Content-Type": "text/html"
                     });
                     tests = [];
-                    collect(__dirname + "/../test", tests);
+                    collect(__dirname, tests);
 
                     specs = tests.map(function (file, path) {
                         return '<script src="' + file.replace(/^.*test/, "test") +
@@ -49,6 +49,6 @@ module.exports = function () {
 
     app.listen(3000);
 
-    process.stdout.write("Test Server running on:");
-    process.stdout.write("http://127.0.0.1:3000");
+    process.stdout.write("Test Server running on:\n");
+    process.stdout.write("http://127.0.0.1:3000\n");
 };

@@ -30,4 +30,4 @@ task('build', ['clean'], function () {
 });
 
 desc("starts a webserver to point at to run the unit tests");
-task('test', [], require('./build/test'));
+task('test', [], require('./test/runner'));
