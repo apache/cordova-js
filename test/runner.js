@@ -1,5 +1,6 @@
 var fs = require('fs'),
-    _path = require('path');
+    _path = require('path'),
+    exec = require('child_process').exec;
 
 function collect(path, files, matches) {
     matches = matches || function (path) {
@@ -51,4 +52,6 @@ module.exports = function () {
 
     process.stdout.write("Test Server running on:\n");
     process.stdout.write("http://127.0.0.1:3000\n");
+
+    exec('open http://127.0.0.1:3000');
 };
