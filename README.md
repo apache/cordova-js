@@ -145,14 +145,14 @@ FILL THIS OUT YO!
 
 # TODO / Hacking / Contributing
 
-- implementations: geolocation + position/error (all),
+- implementations:
   button + app + contact + file + others (need to once-over) (BB), everything for WP7,
   everything for Bada, any other platforms I missed...
 - docs: adding new platform, `require('path')` pathing transformation
   from `./build/packager.js`
-- think more about what it means to run in node
 - think about whether to select and load the platform specific modules at
   runtime or at buildtime. what about platform-specific overrides? can
-we at buildtime decide to include only the overrides (to save a few
-kb?)
+  we at buildtime decide to include only the overrides (to save a few
+  kb?). what about specifically denoting modules to include/exclude on a
+  per-platform basis?
 - 3rd party plugins could be interesting. Need a little bit more thought about how these will fit into the system. I am thinking a package.json type file to handle per plugin.
