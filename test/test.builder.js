@@ -7,22 +7,21 @@ describe("builder", function () {
         var target = {},
             objects = {
                 foo: {
-                    path: "phonegap/plugin/navigator"
+                    path: "phonegap/plugin/compass"
                 }
             };
 
         
-        builder.build(objects).into(target);
-
+        builder.build(objects).intoAndClobberTheFOutOf(target);
         expect(target.foo).toBeDefined();
-        expect(target.foo).toBe(require("phonegap/plugin/navigator"));
+        expect(target.foo).toBe(require("phonegap/plugin/compass"));
     });
 
     it("returns an empty object literal if no path", function () {
         var target = {},
             objects = {cat: {}};
 
-        builder.build(objects).into(target);
+        builder.build(objects).intoAndClobberTheFOutOf(target);
         expect(target.cat).toBeDefined();
     });
 
@@ -35,16 +34,16 @@ describe("builder", function () {
                        bart: {},
                        lisa: {},
                        maggie: {
-                           path: "phonegap/plugin/navigator"
+                           path: "phonegap/plugin/compass"
                        }
                    }
                } 
             };
 
-        builder.build(objects).into(target);
+        builder.build(objects).intoandClobberTheFOutOf(target);
 
         expect(target.homer.bart).toBeDefined();
-        expect(target.homer.maggie).toBe(require('phonegap/plugin/navigator'));
+        expect(target.homer.maggie).toBe(require('phonegap/plugin/compass'));
         expect(target.homer.lisa).toBeDefined();
     });
 });

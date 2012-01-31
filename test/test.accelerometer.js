@@ -91,30 +91,6 @@ describe("accelerometer", function () {
             });
         });
 
-        it("returns a generated interval id", function () {
-            var utils = require('phonegap/utils'),
-                success = jasmine.createSpy(),
-                fail = jasmine.createSpy();
-
-            spyOn(window, "setInterval");
-            spyOn(utils, "createUUID").andReturn(42);
-
-            expect(accelerometer.watchAcceleration(success, fail)).toBe(42);
-        });
-
-        it("returns the interval ID", function () {
-            var utils = require('phonegap/utils'),
-                success = jasmine.createSpy(),
-                fail = jasmine.createSpy();
-
-            spyOn(window, "setInterval").andReturn(1);
-            spyOn(utils, "createUUID").andReturn(42);
-
-            accelerometer.watchAcceleration(success, fail);
-
-            expect(accelerometer.timers[42]).toBe(1);
-        });
-
         it("starts the interval with the provided frequency", function () {
             var success = jasmine.createSpy(),
                 fail = jasmine.createSpy();
@@ -162,12 +138,6 @@ describe("accelerometer", function () {
         it("can be called with no args", function () {
             accelerometer.clearWatch();
             expect(window.clearInterval).not.toHaveBeenCalled();
-        });
-
-        it("clears the interval if the id exists", function () {
-            accelerometer.timers["frank"] = "beans";
-            accelerometer.clearWatch("frank");
-            expect(window.clearInterval).toHaveBeenCalledWith("beans");
         });
     });
 });

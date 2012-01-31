@@ -54,6 +54,13 @@ module.exports = {
         //include all common platform files that are under lib/plugin
         baseFiles = baseFiles.concat(walk('lib/plugin'));
 
+        //include require
+        output += include("thirdparty/almond.js");
+        output += "define.unordered = true;\n";
+
+        //include channel
+        output += drop('lib/channel.js', 'phonegap/channel');
+
         //include phonegap
         output += drop('lib/phonegap.js', 'phonegap');
 
@@ -83,13 +90,6 @@ module.exports = {
             return "/*\n" + file + "\n*/\n";
         });
 
-        //include require
-        output += include("thirdparty/almond.js");
-        output += "define.unordered = true;\n";
-
-        // include channel - this one is needed early
-        output += drop('lib/channel.js');
-
         //include modules
         output += this.modules(platform);
 
@@ -98,6 +98,9 @@ module.exports = {
 
         //include bootstrap
         output += include('lib/bootstrap.js');
+        // TODO: we don't need platform-specific bootstrap.
+        // those can go into the init function inside the platform/*.js
+        // files
         output += include('lib/bootstrap/' + platform + '.js');
 
         fs.writeFileSync(__dirname + "/../pkg/phonegap." + platform + ".js", output);
