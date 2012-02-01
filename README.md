@@ -146,8 +146,9 @@ FILL THIS OUT YO!
 # TODO / Hacking / Contributing
 
 - implementations:
-  button + app + contact + file + others (need to once-over) (BB), everything for WP7,
+  button + app + contact + file + others (need to once-over) (BB), Playbook, everything for WP7,
   everything for Bada, any other platforms I missed...
+- specs: channel, pretty much everything under lib/plugin
 - docs: adding new platform, `require('path')` pathing transformation
   from `./build/packager.js`
 - think about whether to select and load the platform specific modules at
