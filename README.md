@@ -13,7 +13,7 @@ A unified JavaScript layer for [Apache Cordova](http://incubator.apache.org/proj
       |  | Code to bootstrap the Cordova platform, inject APIs and fire events
       |  |
       |  |-builder.js
-      |  | Injects in our classes onto navigator (or wherever else is needed)
+      |  | Injects in our classes onto window and navigator (or wherever else is needed)
       |  |
       |  |-channel.js
       |  | A pub/sub implementation to handle custom framework events 
@@ -24,32 +24,16 @@ A unified JavaScript layer for [Apache Cordova](http://incubator.apache.org/proj
       |  | 
       |  |-utils.js
       |  | General purpose JS utility stuff: closures, uuids, object
-      |  | cloning
+      |  | cloning, extending prototypes
       |  |
       |  |-exec/
-      |  | Will contain the platform specific definitaions of the exec method. 
-      |  | Thinking of maybe renaming/repurposing this for any other platform
-      |  | specific quirks
+      |  | Contains the platform specific definitions of the exec method
       |  |
       |  |-platform/
       |  | Definitions of each platform that help us describe where
       |  | and what to put on the window object, and what to run to
       |  | initialize the platform. A common set of globals are also
-      |  | defined (common.js). Each file is a JSON object with the
-      |  | following properties:
-      |  | 
-      |  |  {
-      |  |    id:"atari", // a string representing the platform id
-      |  |    initialize:function(){}, // function to run any platform-specific initialization
-      |  |    objects:{ // properties of this object define globals that get either injected onto `window` or mixed into existing `window` objects
-      |  |      PhoneGap:{
-      |  |        path:"phonegap", // a requirejs-compatible path to the .js file to use for the object.
-      |  |        children:{ // properties of this object are added to the parent object, i.e. in this example the defined children will be added to the `PhoneGap` global.
-      |  |          path:"phonegap/somedir/other" // specify either a path to the .js file to use for the child
-      |  |        }
-      |  |      }
-      |  |    }
-      |  |  }
+      |  | defined (common.js)
       |  |
       |  |-plugin/
       |  |  | All API definitions as plugins, ones common to all
@@ -65,6 +49,31 @@ Just make sure you have `node`, `npm` and `jake` installed and run:
     jake
 
 It will build into the `./pkg` folder.
+
+# How It Works
+
+The `build/packager.js` tool is a node.js script that concatenates and
+wraps various .js files with a RequireJS-compatible module syntax in this
+project together to generate cordova.js files that are compatible
+to the various supported platforms. Check that script out to figure out
+how and in what order the various files are concatenated together.
+
+We end up with a script file that has a ton of `define` calls, wrapping
+each Cordova API or object into its own module. Next, the Cordova bridge is initialized with the
+help of `lib/bootstrap.js`. This file attaches the `_self.boot` function
+once the `channel.onNativeReady` event is fired - which should be fired
+from the native side (native should call `require('phonegap/channel).onNativeReady.fire()`).
+Finally, the `boot` method is where the magic happens.  First, it grabs
+the common platform definition (as defined under
+`lib/platform/common.js`) and injects all the objects defined in there
+onto `window` and other global namespaces. Next, it grabs all of the platform-specific object
+definitions (as defined under `lib/platform/<platform>.js`) and
+overrides those onto `window`. Finally, it calls the platform-specific
+`initialize` function (located in the platform definition). At this
+point, Cordova is fully initialized and ready to roll, however, before
+the `deviceready` event is fired, we still wait for the
+`DOMContentLoaded` event to fire to make sure the page has loaded
+properly.
 
 # Testing
 
@@ -96,7 +105,70 @@ Use the phonegap.proto platform in ripple.
 
 # Adding a New Platform
 
-FILL THIS OUT YO!
+1. Write a module that encapsulates your platform's `exec` method and
+   call it <platform>.js. The `exec` method is a JavaScript function
+   that enables communication from the platform's JavaScript environment
+   into the platform's native environment. Each platform uses a different
+   mechanism to enable this bridge. We recommend you check out the other
+   platform `exec` definitions for inspiration. Drop this into the
+   `lib/exec` folder. The `exec` method has the following method
+   signature: `function(success, fail, service, action, args)`, with the
+   following parameters:
+  - `success`: a success function callback
+  - `fail`: a failure function callback
+  - `service`: a string identifier that the platform can resolve to a
+    native class
+  - `action`: a string identifier that the platform can resolve to a
+    specific method inside the class pointed to by `service`
+  - `args`: an array of parameters to pass to the native method invoked
+    by the `exec` call
+   It is required that new platform additions be as consistent as
+   possible with the existing `service` and `action` labels.
+2. Define your platform definition object and name it <platform>.js.
+   Drop this into the `lib/platform` folder. This file should contain a
+   JSON object with the following properties:
+    - `id`: a string representing the platform. This should be the same
+      name the .js file has
+    - `objects`: the property names defined as children of this property
+      are injected into `window`. Each property can have the following
+      child properties:
+      - `path`: a string representing the module ID that will define
+        this object. For example, the file `lib/plugin/accelerometer.js`
+        can be accessed as `"phonegap/plugin/accelerometer"`. More details on how
+        the module IDs are defined are above under the "How It Works" section.
+      - `children`: in a recursive fashion, can have `path` and
+        `children` properties of its own that are defined as children of
+        the parent property object
+    - `initialize`: a function that fires immediately after the the
+      `objects` (see above) are defined in the global scope
+   
+   The following is a simple example of a platform definition:
+
+    <pre>
+    {
+      id:"atari",
+      initialize:function(){
+        console.log('firing up cordova in my atari, yo.');
+      },
+      objects:{
+        PhoneGap:{
+          path:"phonegap",
+          children:{
+            joystick:{
+              path:"phonegap/plugin/atari/joystick"
+            }
+          }
+        }
+      }
+    }
+    </pre>
+
+3. You should probably add a `packager.bundle('<platform>')`
+   call to the `Jakefile`.
+4. Make sure your native implementation executes the following
+   JavaScript once all of the native side is initialized and ready:
+   `require('phonegap/channel').onNativeReady.fire()`.
+
 
 # Cordova-specific TODOs Before Final Integration
 
@@ -149,8 +221,6 @@ FILL THIS OUT YO!
   button + app + contact + file + others (need to once-over) (BB), Playbook, everything for WP7,
   everything for Bada, any other platforms I missed...
 - specs: channel, pretty much everything under lib/plugin
-- docs: adding new platform, `require('path')` pathing transformation
-  from `./build/packager.js`
 - think about whether to select and load the platform specific modules at
   runtime or at buildtime. what about platform-specific overrides? can
   we at buildtime decide to include only the overrides (to save a few
