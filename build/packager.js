@@ -55,8 +55,7 @@ module.exports = {
         baseFiles = baseFiles.concat(walk('lib/plugin'));
 
         //include require
-        output += include("thirdparty/almond.js");
-        output += "define.unordered = true;\n";
+        output += include("lib/require.js");
 
         //include channel
         output += drop('lib/channel.js', 'phonegap/channel');
