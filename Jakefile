@@ -1,4 +1,4 @@
-var DEPLOY = __dirname + "/pkg/";
+
 
 desc("runs build");
 task('default', ['build'], function () {});
@@ -6,15 +6,15 @@ task('default', ['build'], function () {});
 desc("clean");
 task('clean', [], function () {
     var childProcess = require('child_process');
-
+    var path = require("path");
+    
+    var DEPLOY = path.join(__dirname,"pkg");
     var cmd = 'rm -rf ' + DEPLOY + ' && ' +
               'mkdir ' + DEPLOY;
+              
+    console.log("cmd=" + cmd);
 
-    childProcess.exec(cmd, function () {
-        // For some reason we need to do this on windowsto build. 
-        // Watch out, we are in bat country
-        complete();
-    });
+    childProcess.exec(cmd,complete);
 }, true);
 
 desc("compiles the source files for all extensions");
