@@ -11,8 +11,6 @@ task('clean', [], function () {
     var DEPLOY = path.join(__dirname,"pkg");
     var cmd = 'rm -rf ' + DEPLOY + ' && ' +
               'mkdir ' + DEPLOY;
-              
-    console.log("cmd=" + cmd);
 
     childProcess.exec(cmd,complete);
 }, true);
