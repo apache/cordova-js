@@ -10,7 +10,11 @@ task('clean', [], function () {
     var cmd = 'rm -rf ' + DEPLOY + ' && ' +
               'mkdir ' + DEPLOY;
 
-    childProcess.exec(cmd, complete);
+    childProcess.exec(cmd, function () {
+        // For some reason we need to do this on windowsto build. 
+        // Watch out, we are in bat country
+        complete();
+    });
 }, true);
 
 desc("compiles the source files for all extensions");
