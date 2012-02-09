@@ -77,7 +77,8 @@ properly.
 
 # Testing
 
-Launch `./test/index.html` to run the suite of tests for each module / plugin.
+Tests run in the browser, and you can launch them with :
+jake test
 
 Coming soon, nodeJS running of tasks!
 
