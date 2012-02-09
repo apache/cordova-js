@@ -51,6 +51,13 @@ module.exports = {
             platformFiles = walk('lib/plugin/' + platform, true),
             output = "";
 
+        //HACK: ummm .... we really need to figure out this webworks common file stuff
+        if (platform === "blackberry" || platform === "playbook") {
+            platformFiles = platformFiles.concat(walk('lib/plugin/webworks', true));
+        }
+        console.log(platform);
+        console.log(platformFiles);
+
         //include all common platform files that are under lib/plugin
         baseFiles = baseFiles.concat(walk('lib/plugin'));
 
