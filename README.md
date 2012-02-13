@@ -173,9 +173,6 @@ Use the phonegap.proto platform in ripple.
 
 # Cordova-specific TODOs Before Final Integration
 
-- Consolidate the native geolocation plugin implementation; need a
-  consistent native API. (post to dev list about this). Perhaps review
-  how necessary this plugin is now on modern platform versions?
 - Related to above, come up with a consistent sensor plugin API.
   Functions like `getCurrent<data>` and `watch<data>` can be abstracted
   into a nice plugin. Compass, Accel, Geo should all be basically the
