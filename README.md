@@ -77,8 +77,14 @@ properly.
 
 # Testing
 
-Tests run in the browser, and you can launch them with :
-jake test
+Tests run in node or the browser, and you can launch them with :
+    
+    jake test
+
+or to run in the browser:
+
+    jake btest
+
 
 Coming soon, nodeJS running of tasks!
 
