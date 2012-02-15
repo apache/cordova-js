@@ -1,7 +1,7 @@
 describe("compass", function () {
-    var compass = require('phonegap/plugin/compass'),
-        utils = require('phonegap/utils'),
-        exec = require('phonegap/exec');
+    var compass = require('cordova/plugin/compass'),
+        utils = require('cordova/utils'),
+        exec = require('cordova/exec');
 
     describe("when getting the current heading", function () {
         it("logs an error and doesn't call exec when no success callback given", function () {

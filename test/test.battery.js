@@ -1,6 +1,6 @@
 describe("battery", function () {
-    var battery = require("phonegap/plugin/battery"),
-        exec = require("phonegap/exec");
+    var battery = require("cordova/plugin/battery"),
+        exec = require("cordova/exec");
 
     describe("when handling events", function () {
         it("calls exec when subscribing", function () {
@@ -48,10 +48,10 @@ describe("battery", function () {
     });
 
     describe("when monitoring the status", function () {
-        var phonegap = require('phonegap');
+        var cordova = require('cordova');
 
         beforeEach(function () {
-            spyOn(phonegap, "fireWindowEvent");
+            spyOn(cordova, "fireWindowEvent");
         });
 
         //HACK: This is suspect that we can do this but
@@ -64,7 +64,7 @@ describe("battery", function () {
             };
 
             battery._status(info);
-            expect(phonegap.fireWindowEvent).toHaveBeenCalledWith("batterystatus", info);
+            expect(cordova.fireWindowEvent).toHaveBeenCalledWith("batterystatus", info);
         });
 
         it("doesn't fire the battery status event if the values haven't changed", function () {
@@ -75,7 +75,7 @@ describe("battery", function () {
 
             battery._status(info);
             battery._status(info);
-            expect(phonegap.fireWindowEvent.callCount).toBe(1);
+            expect(cordova.fireWindowEvent.callCount).toBe(1);
         });
 
         it("fires the battery low event when the level is 20", function () {
@@ -85,7 +85,7 @@ describe("battery", function () {
             };
 
             battery._status(info);
-            expect(phonegap.fireWindowEvent).toHaveBeenCalledWith("batterylow", info);
+            expect(cordova.fireWindowEvent).toHaveBeenCalledWith("batterylow", info);
         });
 
         it("fires the battery critical event when the level is 5", function () {
@@ -95,7 +95,7 @@ describe("battery", function () {
             };
 
             battery._status(info);
-            expect(phonegap.fireWindowEvent).toHaveBeenCalledWith("batterycritical", info);
+            expect(cordova.fireWindowEvent).toHaveBeenCalledWith("batterycritical", info);
         });
     });
 
