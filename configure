@@ -1,4 +1,2 @@
 npm install -g jake
 npm install connect jsdom
-git submodule init
-git submodule update

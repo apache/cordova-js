@@ -24,9 +24,17 @@ module.exports = {
         var jas = require("../thirdparty/jasmine/jasmine"),
             loader = require('../lib/require'),
             TerminalReporter = require('./reporter').TerminalReporter,
-            jsdom = require("jsdom").jsdom,
-            document = jsdom("<html>"),
+            jsdom, document, window;
+
+        try {
+            jsdom = require("jsdom").jsdom;
+            document = jsdom("<html>");
             window = document.createWindow();
+        } catch (e) {
+            //no jsDom (some people don't have compilers)
+            console.log("can't run tests in node: run jake btest instead");
+            return;
+        }
 
         //Put jasmine in scope
         Object.keys(jas).forEach(function (key) {
