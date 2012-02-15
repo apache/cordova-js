@@ -1,8 +1,8 @@
 describe("contacts", function () {
-    var contacts = require('phonegap/plugin/contacts'),
-        exec = require('phonegap/exec'),
-        Contact = require('phonegap/plugin/Contact'),
-        ContactError = require('phonegap/plugin/ContactError');
+    var contacts = require('cordova/plugin/contacts'),
+        exec = require('cordova/exec'),
+        Contact = require('cordova/plugin/Contact'),
+        ContactError = require('cordova/plugin/ContactError');
 
     describe("create", function () {
         it("returns a new contact", function () {

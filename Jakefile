@@ -1,7 +1,7 @@
 
 
 desc("runs build");
-task('default', ['build'], function () {});
+task('default', ['build', 'test'], function () {});
 
 desc("clean");
 task('clean', [], function () {

@@ -1,6 +1,6 @@
 describe("Contact", function () {
-    var Contact = require('phonegap/plugin/Contact'),
-        exec = require('phonegap/exec');
+    var Contact = require('cordova/plugin/Contact'),
+        exec = require('cordova/exec');
 
     describe("save", function () {
         it("calls exec when saving", function () {

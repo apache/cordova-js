@@ -1,6 +1,7 @@
 var fs = require('fs'),
     util = require('util'),
     _path = require('path'),
+    tests = [],
     packager = require('../build/packager'),
     exec = require('child_process').exec;
 
@@ -21,9 +22,8 @@ function collect(path, files, matches) {
 module.exports = {
     node: function () {
         var jas = require("../thirdparty/jasmine/jasmine"),
-            jasmine = jas.jasmine,
+            loader = require('../lib/require'),
             TerminalReporter = require('./reporter').TerminalReporter,
-            tests = [],
             jsdom = require("jsdom").jsdom,
             document = jsdom("<html>"),
             window = document.createWindow();
@@ -33,13 +33,12 @@ module.exports = {
             this[key] = window[key] = global[key] = jas[key];
         });
 
-        //load in our modules
-        console.log(this);
-        eval(packager.modules('test'));
-        console.log(this);
         //hijack require
-        require = window.require;
-        define = window.define;
+        require = loader.require;
+        define = loader.define;
+
+        //load in our modules
+        eval(packager.modules('test'));
 
         //load in our tests
         collect(__dirname, tests);
@@ -52,11 +51,13 @@ module.exports = {
             color: true,
             onComplete: process.exit
         }));
+
+        console.log("------------");
+        console.log("Unit Tests:");
         env.execute();
     },
     browser: function () {
         var connect = require('connect'),
-            tests = [],
             html = fs.readFileSync(__dirname + "/suite.html", "utf-8"),
             doc,
             modules,
