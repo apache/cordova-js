@@ -1,6 +1,6 @@
 describe("network", function () {
-    var network = require('phonegap/plugin/network'),
-        exec = require('phonegap/exec');
+    var network = require('cordova/plugin/network'),
+        exec = require('cordova/exec');
 
     //TODO: There is a lot of code executed on the first require call to this plugin
     //      we should refactor or find a good way to call and test this code.

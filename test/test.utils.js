@@ -1,5 +1,5 @@
 describe("utils", function () {
-    var utils = require('phonegap/utils');
+    var utils = require('cordova/utils');
 
     describe("when cloning", function () {
         it("can clone an array", function () {

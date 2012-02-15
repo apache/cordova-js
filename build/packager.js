@@ -37,7 +37,7 @@ function include(files, transform) {
 }
 function drop(files, id) {
     return include(files, function(file, path) {
-        var define_id = (typeof id != 'undefined' && id.length > 0 ? id : path.replace(/lib\//, "phonegap/").replace(/\.js$/, ''));
+        var define_id = (typeof id != 'undefined' && id.length > 0 ? id : path.replace(/lib\//, "cordova/").replace(/\.js$/, ''));
         return "define('" + define_id + "', function(require, exports, module) {\n" + file + "});\n";
     });
 }
@@ -63,19 +63,19 @@ module.exports = {
         output += include("lib/require.js");
 
         //include channel
-        output += drop('lib/channel.js', 'phonegap/channel');
+        output += drop('lib/channel.js', 'cordova/channel');
 
-        //include phonegap
-        output += drop('lib/phonegap.js', 'phonegap');
+        //include cordova
+        output += drop('lib/cordova.js', 'cordova');
 
         //include exec
-        output += drop('lib/exec/' + platform + '.js', 'phonegap/exec');
+        output += drop('lib/exec/' + platform + '.js', 'cordova/exec');
 
         //include common platform defn 
-        output += drop('lib/platform/common.js', 'phonegap/common');
+        output += drop('lib/platform/common.js', 'cordova/common');
 
         //include platform defn
-        output += drop('lib/platform/' + platform + '.js', 'phonegap/platform');
+        output += drop('lib/platform/' + platform + '.js', 'cordova/platform');
 
         //include common modules
         output += drop(baseFiles);
@@ -98,7 +98,7 @@ module.exports = {
         output += this.modules(platform);
 
         // HACK: this gets done in bootstrap.js anyways, once native side is ready + domcontentloaded is fired. Do we need it?
-        output += "window.PhoneGap = require('phonegap');\n"; 
+        output += "window.cordova = require('cordova');\n"; 
 
         //include bootstrap
         output += include('lib/bootstrap.js');
@@ -107,6 +107,6 @@ module.exports = {
         // files
         output += include('lib/bootstrap/' + platform + '.js');
 
-        fs.writeFileSync(__dirname + "/../pkg/phonegap." + platform + ".js", output);
+        fs.writeFileSync(__dirname + "/../pkg/cordova." + platform + ".js", output);
     }
 };

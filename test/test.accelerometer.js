@@ -1,6 +1,6 @@
 describe("accelerometer", function () {
-    var accelerometer = require("phonegap/plugin/accelerometer"),
-        exec = require('phonegap/exec');
+    var accelerometer = require("cordova/plugin/accelerometer"),
+        exec = require('cordova/exec');
 
     describe("when getting the current acceleration", function () {
         describe("when passing in bad data", function () {

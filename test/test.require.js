@@ -16,8 +16,8 @@ describe("require", function () {
 
         it("throws an error the module already exists", function () {
             expect(function () {
-                define("phonegap", function () {});
-            }).toThrow("module phonegap already defined");
+                define("cordova", function () {});
+            }).toThrow("module cordova already defined");
         });
 
         it("doesn't call the factory method when defining", function () {
