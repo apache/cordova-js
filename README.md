@@ -18,7 +18,7 @@ A unified JavaScript layer for [Apache Cordova](http://incubator.apache.org/proj
       |  |-channel.js
       |  | A pub/sub implementation to handle custom framework events 
       |  |
-      |  |-phonegap.js
+      |  |-cordova.js
       |  | Common Cordova stuff such as callback handling and
       |  | window/document add/removeEventListener hijacking 
       |  | 
@@ -62,7 +62,7 @@ We end up with a script file that has a ton of `define` calls, wrapping
 each Cordova API or object into its own module. Next, the Cordova bridge is initialized with the
 help of `lib/bootstrap.js`. This file attaches the `_self.boot` function
 once the `channel.onNativeReady` event is fired - which should be fired
-from the native side (native should call `require('phonegap/channel).onNativeReady.fire()`).
+from the native side (native should call `require('cordova/channel).onNativeReady.fire()`).
 Finally, the `boot` method is where the magic happens.  First, it grabs
 the common platform definition (as defined under
 `lib/platform/common.js`) and injects all the objects defined in there
@@ -88,7 +88,8 @@ Final testing should always be done with the [Mobile Spec test application](http
 
 ## Cordova
 
-Build the .js file and drop it in as a replacement for phonegap.js!
+Build the .js file and drop it in as a replacement for phonegap.js or
+cordova.js!
 
 ## Ripple
 
@@ -135,7 +136,7 @@ Use the phonegap.proto platform in ripple.
       child properties:
       - `path`: a string representing the module ID that will define
         this object. For example, the file `lib/plugin/accelerometer.js`
-        can be accessed as `"phonegap/plugin/accelerometer"`. More details on how
+        can be accessed as `"cordova/plugin/accelerometer"`. More details on how
         the module IDs are defined are above under the "How It Works" section.
       - `children`: in a recursive fashion, can have `path` and
         `children` properties of its own that are defined as children of
@@ -152,11 +153,11 @@ Use the phonegap.proto platform in ripple.
         console.log('firing up cordova in my atari, yo.');
       },
       objects:{
-        PhoneGap:{
-          path:"phonegap",
+        cordova:{
+          path:"cordova",
           children:{
             joystick:{
-              path:"phonegap/plugin/atari/joystick"
+              path:"cordova/plugin/atari/joystick"
             }
           }
         }
@@ -168,7 +169,7 @@ Use the phonegap.proto platform in ripple.
    call to the `Jakefile`.
 4. Make sure your native implementation executes the following
    JavaScript once all of the native side is initialized and ready:
-   `require('phonegap/channel').onNativeReady.fire()`.
+   `require('cordova/channel').onNativeReady.fire()`.
 
 
 # Cordova-specific TODOs Before Final Integration
