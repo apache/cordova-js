@@ -33,9 +33,15 @@ describe("contacts", function () {
             expect(contacts.find).toThrow("You must specify a success callback for the find command.");
         });
         
-        it("doesn't call exec with no fields", function () {
+        it("doesn't call exec with null fields", function () {
             exec.reset();
             contacts.find(null, jasmine.createSpy());
+            expect(exec).not.toHaveBeenCalled();
+        });
+
+        it("doesn't call exec with empty fields", function () {
+            exec.reset();
+            contacts.find([], jasmine.createSpy());
             expect(exec).not.toHaveBeenCalled();
         });
 
