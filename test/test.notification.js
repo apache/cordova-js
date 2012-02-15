@@ -1,6 +1,6 @@
 describe("notification", function () {
-    var notification = require('phonegap/plugin/notification'),
-        exec = require('phonegap/exec');
+    var notification = require('cordova/plugin/notification'),
+        exec = require('cordova/exec');
 
     describe("when alerting", function () {
         it("defaults the title to Alert and the button to OK", function () {

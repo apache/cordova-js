@@ -1,20 +1,20 @@
 describe("builder", function () {
 
-    var builder = require('phonegap/builder');
+    var builder = require('cordova/builder');
 
     it("includes the module into the target", function () {
 
         var target = {},
             objects = {
                 foo: {
-                    path: "phonegap/plugin/compass"
+                    path: "cordova/plugin/compass"
                 }
             };
 
         
         builder.build(objects).intoAndClobberTheFOutOf(target);
         expect(target.foo).toBeDefined();
-        expect(target.foo).toBe(require("phonegap/plugin/compass"));
+        expect(target.foo).toBe(require("cordova/plugin/compass"));
     });
 
     it("returns an empty object literal if no path", function () {
@@ -35,7 +35,7 @@ describe("builder", function () {
                        bart: {},
                        lisa: {},
                        maggie: {
-                           path: "phonegap/plugin/compass"
+                           path: "cordova/plugin/compass"
                        }
                    }
                } 
@@ -44,7 +44,7 @@ describe("builder", function () {
         builder.build(objects).intoButDontClobber(target);
 
         expect(target.homer.bart).toBeDefined();
-        expect(target.homer.maggie).toBe(require('phonegap/plugin/compass'));
+        expect(target.homer.maggie).toBe(require('cordova/plugin/compass'));
         expect(target.homer.lisa).toBeDefined();
     });
 });

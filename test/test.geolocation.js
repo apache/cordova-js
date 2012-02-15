@@ -1,7 +1,7 @@
 describe("geolocation", function () {
-    var geo = require('phonegap/plugin/geolocation'),
+    var geo = require('cordova/plugin/geolocation'),
         s, e;
-        exec = require('phonegap/exec');
+        exec = require('cordova/exec');
 
     beforeEach(function () {
         s = jasmine.createSpy("success");
@@ -31,7 +31,7 @@ describe("geolocation", function () {
     });
 
     describe("when watching the position", function () {
-        var utils = require('phonegap/utils');
+        var utils = require('cordova/utils');
 
         beforeEach(function () {
             spyOn(window, "setInterval").andReturn("2");

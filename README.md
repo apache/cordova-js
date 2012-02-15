@@ -88,12 +88,12 @@ Final testing should always be done with the [Mobile Spec test application](http
 
 ## Cordova
 
-Build the .js file and drop it in as a replacement for phonegap.js or
+Build the .js file and drop it in as a replacement for cordova.js or
 cordova.js!
 
 ## Ripple
 
-Load this in Ripple to play with it. You will have to use the phonegap
+Load this in Ripple to play with it. You will have to use the cordova
 prototype branch to better simulate the phone environment and use this
 javascript rather than Ripples emulated code.
 
@@ -103,7 +103,7 @@ javascript rather than Ripples emulated code.
     jake
 
 and then load the upacked extension in chrome in the pkg/chromium folder.
-Use the phonegap.proto platform in ripple.
+Use the cordova.proto platform in ripple.
 
 # Adding a New Platform
 
@@ -181,7 +181,7 @@ Use the phonegap.proto platform in ripple.
   calling `start` (starting the listener) in the native code on its own.
   However, Compass requires that JS initiates a `start`. This is dumb.
 - Media (and other plugin) implementations across platforms need to use the established
-  phonegap/exec callback method (instead of triggering globally-accessible functions to 
+  cordova/exec callback method (instead of triggering globally-accessible functions to 
   dispatch listeners). On iOS and Android, grep for "cast" in the native
   code - you'll see a bunch of invoked JavaScript from native, which
   shouldn't be there.
@@ -190,7 +190,7 @@ Use the phonegap.proto platform in ripple.
   Some methods not documented (setVolume on Android). Consolidate /
   implement properly across platforms.
 - Storage shim on Android needs to change its win/fail callbacks to
-  `require('phonegap/plugin/android/storage').failQuery / completeQuery`
+  `require('cordova/plugin/android/storage').failQuery / completeQuery`
   (away from droiddb.fail / completeQuery)
 - Make sure all of the service + action parameters in each `exec` call
   is consistent across all platforms. Specifically, iOS needs to update
@@ -212,7 +212,7 @@ Use the phonegap.proto platform in ripple.
   undocumented procedures, etc.
 - Initialization of `device` in iOS needs to be upgraded. No more
   `DeviceInfo` global object if possible. Also need to make sure to fire
-  the appropriate phonegap channel after `device` is ready on iOS.
+  the appropriate cordova channel after `device` is ready on iOS.
 
 # TODO / Hacking / Contributing
 

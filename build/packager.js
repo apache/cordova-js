@@ -65,7 +65,7 @@ module.exports = {
         //include channel
         output += drop('lib/channel.js', 'cordova/channel');
 
-        //include phonegap
+        //include cordova
         output += drop('lib/cordova.js', 'cordova');
 
         //include exec

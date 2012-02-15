@@ -1,9 +1,9 @@
 {
   "author": "Gord Tanner <gtanner@gmail.com> (http://github.com/gtanner)",
-  "name": "phonegap",
-  "description": "PhoneGap Javascript",
+  "name": "cordova",
+  "description": "Cordova Javascript",
   "version": "0.0.1",
-  "homepage": "www.phonegap.com",
+  "homepage": "http://incubator.apache.org/callback/",
   "repository": {
     "url": ""
   },
