@@ -198,9 +198,6 @@ Use the cordova.proto platform in ripple.
 - Storage shim on Android needs to change its win/fail callbacks to
   `require('cordova/plugin/android/storage').failQuery / completeQuery`
   (away from droiddb.fail / completeQuery)
-- Make sure all of the service + action parameters in each `exec` call
-  is consistent across all platforms. Specifically, iOS needs to update
-  to the Android and BlackBerry plugin labels.
 - Normalize `Entry.toURL` return values. iOS returns `"file://localhost" +
   fullPath`, Android returns `"file://" + fullPath`, BlackBerry returns just `fullPath`
 - APIs that are not cross-platform - what
@@ -211,21 +208,18 @@ Use the cordova.proto platform in ripple.
   platforms. For example, error objects. Should we return JSON objects
   from native or minimal primitives (i.e. error codes as numbers)? Both
   are in use today, we need to decide on a standard.
-- Port all of the unit-testy stuff from mobile spec over to this
-  project. Have mobile spec as a defacto functional/integration test.
 - Once-over all of the cordova-docs with the APIs defined in here to
   make sure all is consistent. There were function signature tweaks,
   undocumented procedures, etc.
-- Initialization of `device` in iOS needs to be upgraded. No more
-  `DeviceInfo` global object if possible. Also need to make sure to fire
-  the appropriate cordova channel after `device` is ready on iOS.
 
 # TODO / Hacking / Contributing
 
 - implementations:
-  button + app + contact + file + others (need to once-over) (BB), Playbook, everything for WP7,
-  everything for Bada, any other platforms I missed...
-- specs: channel, pretty much everything under lib/plugin
+  - BlackBerry: button + app + contact + file + others (need to once-over)
+  - all of Playbook
+  - everything for WP7
+  - everything for Bada
+- tests for channel, pretty much everything under lib/plugin
 - think about whether to select and load the platform specific modules at
   runtime or at buildtime. what about platform-specific overrides? can
   we at buildtime decide to include only the overrides (to save a few
