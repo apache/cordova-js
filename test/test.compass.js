@@ -31,7 +31,7 @@ describe("compass", function () {
                 f = function () {};
 
             compass.getCurrentHeading(s, f);
-            expect(exec).toHaveBeenCalledWith(s, f, "Compass", "getHeading", []);
+            expect(exec).toHaveBeenCalledWith(jasmine.any(Function), f, "Compass", "getHeading", []);
         });
     });
 
@@ -94,7 +94,7 @@ describe("compass", function () {
 
             //exec the interval callback!
             window.setInterval.mostRecentCall.args[0]();
-            expect(exec).toHaveBeenCalledWith(success, fail, "Compass", "getHeading", []);
+            expect(exec).toHaveBeenCalledWith(jasmine.any(Function), fail, "Compass", "getHeading", []);
         });
     });
 
