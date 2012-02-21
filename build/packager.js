@@ -16,7 +16,6 @@ function walk(dir, doRecursive) {
             } else {
                 if (list[i] != ".DS_Store") {
                     results.push(file);
-                    console.log("FILE="+file + " F="+list[i]);
                 }
             }
         }
