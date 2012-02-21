@@ -14,7 +14,10 @@ function walk(dir, doRecursive) {
             if (stat && doRecursive && stat.isDirectory()) {
                 results = results.concat(walk(file,doRecursive));
             } else {
-                results.push(file);
+                if (list[i] != ".DS_Store") {
+                    results.push(file);
+                    console.log("FILE="+file + " F="+list[i]);
+                }
             }
         }
     } catch (e) {
