@@ -2,7 +2,7 @@ A unified JavaScript layer for [Apache Cordova](http://incubator.apache.org/proj
 
 # Project Structure
 
-    callback-js
+    cordova-js
       |
       |-build/
       | Will contain any build modules (currently nothing here as it is all hacked
@@ -44,11 +44,26 @@ A unified JavaScript layer for [Apache Cordova](http://incubator.apache.org/proj
 
 # Building
 
-Just make sure you have `node`, `npm` and `jake` installed and run:
+Just make sure you have [node.js](http://nodejs.org) installed. It
+should come pre-installed with [npm](http://npmjs.org) - but if you
+install node and can't run `npm` then head over to the website and
+install it yourself. Make sure you have all of the node dependencies
+installed by running the following command from the repository root:
+
+    npm install
+
+Then all of the build tasks can be run via:
 
     jake
 
-It will build into the `./pkg` folder.
+This will run the "build" and "test" tasks by default. All of the available tasks
+are:
+
+- build: creates platform versions of cordova-js and builds them into
+  the `pkg` directory.
+- test: runs all of the unit tests inside node.
+- btest: creates a server so you can run the tests inside a browser.
+- clean: cleans out the `pkg` directory
 
 # How It Works
 
@@ -85,8 +100,6 @@ or to run in the browser:
 
     jake btest
 
-
-Coming soon, nodeJS running of tasks!
 
 Final testing should always be done with the [Mobile Spec test application](https://github.com/apache/incubator-cordova-mobile-spec).
 

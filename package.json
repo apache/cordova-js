@@ -1,15 +1,46 @@
 {
   "author": "Gord Tanner <gtanner@gmail.com> (http://github.com/gtanner)",
-  "name": "cordova",
-  "description": "Cordova Javascript",
+  "name": "cordova-js",
+  "description": "Cordova JavaScript: a unified JavaScript layer for the Cordova suite of projects enabling cross-platform native mobile development of applications using HTML, CSS and JavaScript.",
   "version": "0.0.1",
   "homepage": "http://incubator.apache.org/callback/",
   "repository": {
-    "url": ""
+    "type":"git",
+    "url": "http://git-wip-us.apache.org/repos/asf/incubator-cordova-js.git"
   },
   "engines": {
     "node": "~0.5.10"
   },
-  "dependencies": {},
+  "contributors":[
+    {
+      "name":"Fil Maj",
+      "email":"filmaj@apache.org"
+    },
+    {
+      "name":"Jesse MacFadyen",
+      "email":""
+    },
+    {
+      "name":"Bryce Curtis",
+      "email":""
+    },
+    {
+      "name":"Drew Walters",
+      "email":""
+    },
+    {
+      "name":"Patrick Mueller",
+      "email":""
+    },
+    {
+      "name":"Simon MacDonald",
+      "email":""
+    }
+  ],
+  "dependencies": {
+    "jake":"0.2.18",
+    "jsdom":"0.2.10",
+    "connect":"1.8.5"
+  },
   "devDependencies": {}
 }
