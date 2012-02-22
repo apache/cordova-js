@@ -38,7 +38,6 @@
     }
   ],
   "dependencies": {
-    "jake":"0.2.18",
     "jsdom":"0.2.10",
     "connect":"1.8.5"
   },

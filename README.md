@@ -44,7 +44,7 @@ A unified JavaScript layer for [Apache Cordova](http://incubator.apache.org/proj
 
 # Building
 
-Just make sure you have [node.js](http://nodejs.org) installed. It
+Make sure you have [node.js](http://nodejs.org) installed. It
 should come pre-installed with [npm](http://npmjs.org) - but if you
 install node and can't run `npm` then head over to the website and
 install it yourself. Make sure you have all of the node dependencies
@@ -52,7 +52,12 @@ installed by running the following command from the repository root:
 
     npm install
 
-Then all of the build tasks can be run via:
+Then all of the build tasks can be run via the `jake` node module.
+Install it globally first by running:
+
+    npm install -g jake
+
+Then from the repository root run:
 
     jake
 
