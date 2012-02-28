@@ -70,6 +70,12 @@ are:
 - btest: creates a server so you can run the tests inside a browser.
 - clean: cleans out the `pkg` directory
 
+## Known Issues
+
+- On Mac OS 10.7.3, there were issues with the contextify module not
+	being able to build properly when using node v0.6.10 and running `npm
+	install`. Using node v0.6.6 works, though.
+
 # How It Works
 
 The `build/packager.js` tool is a node.js script that concatenates and
