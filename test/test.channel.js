@@ -2,6 +2,18 @@ describe("channel", function () {
     var channel = require('cordova/channel');
 
     describe("when subscribing", function() {
+        it("should not change number of handlers if no function is provided", function() {
+            var c = channel.create('heydawg');
+            var initialLength = c.numHandlers;
+
+            c.subscribe();
+
+            expect(c.numHandlers).toEqual(initialLength);
+
+            c.subscribe(null);
+
+            expect(c.numHandlers).toEqual(initialLength);
+        });
     });
 
     describe("when unsubscribing", function() {
