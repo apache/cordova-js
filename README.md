@@ -212,26 +212,19 @@ Use the cordova.proto platform in ripple.
   However, Compass requires that JS initiates a `start`. This is dumb.
 - Media (and other plugin) implementations across platforms need to use the established
   cordova/exec callback method (instead of triggering globally-accessible functions to 
-  dispatch listeners). On iOS and Android, grep for "cast" in the native
+  dispatch listeners). On iOS, grep for "cast" in the native
   code - you'll see a bunch of invoked JavaScript from native, which
   shouldn't be there.
 - Media needs updates across all platforms. Methods need fixing with
   respect to timing: some methods use milliseconds, some use seconds.
   Some methods not documented (setVolume on Android). Consolidate /
   implement properly across platforms.
-- Storage shim on Android needs to change its win/fail callbacks to
-  `require('cordova/plugin/android/storage').failQuery / completeQuery`
-  (away from droiddb.fail / completeQuery)
 - Normalize `Entry.toURL` return values. iOS returns `"file://localhost" +
   fullPath`, Android returns `"file://" + fullPath`, BlackBerry returns just `fullPath`
 - APIs that are not cross-platform - what
   to do with these?
   - Crypto on Android
   - SMS, telephony, splashscreen on iOS
-- Need to normalize native return values as much as possible across
-  platforms. For example, error objects. Should we return JSON objects
-  from native or minimal primitives (i.e. error codes as numbers)? Both
-  are in use today, we need to decide on a standard.
 - Once-over all of the cordova-docs with the APIs defined in here to
   make sure all is consistent. There were function signature tweaks,
   undocumented procedures, etc.
