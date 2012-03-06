@@ -11,22 +11,22 @@ describe("geolocation", function () {
     describe("when getting the current position", function () {
         it("uses the default values", function () {
             geo.getCurrentPosition(s, e);
-            expect(exec).toHaveBeenCalledWith(s, e, "Geolocation", "getLocation", [false, 10000, 10000]);
+            expect(exec).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function), "Geolocation", "getLocation", [false, 10000, 10000]);
         });
 
         it("uses the maximumAge option", function () {
             geo.getCurrentPosition(s, e, {maximumAge: 10});
-            expect(exec).toHaveBeenCalledWith(s, e, "Geolocation", "getLocation", [false, 10000, 10]);
+            expect(exec).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function), "Geolocation", "getLocation", [false, 10000, 10]);
         });
 
         it("uses the enableHighAccuracy option", function () {
             geo.getCurrentPosition(s, e, {enableHighAccuracy: true, maximumAge: 100});
-            expect(exec).toHaveBeenCalledWith(s, e, "Geolocation", "getLocation", [true, 10000, 100]);
+            expect(exec).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function), "Geolocation", "getLocation", [true, 10000, 100]);
         });
 
         it("uses the timeout option", function () {
             geo.getCurrentPosition(s, e, {timeout: 1000});
-            expect(exec).toHaveBeenCalledWith(s, e, "Geolocation", "getLocation", [false, 1000, 10000]);
+            expect(exec).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function), "Geolocation", "getLocation", [false, 1000, 10000]);
         });
     });
 
