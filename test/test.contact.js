@@ -12,16 +12,16 @@ describe("Contact", function () {
             expect(c.displayName).toBe(null);
             expect(c.name).toBe(null);
             expect(c.nickname).toBe(null);
-            expect(c.phoneNumbers).toEqual([]);
-            expect(c.emails).toEqual([]);
-            expect(c.addresses).toEqual([]);
-            expect(c.ims).toEqual([]);
-            expect(c.organizations).toEqual([]);
+            expect(c.phoneNumbers).toEqual(null);
+            expect(c.emails).toEqual(null);
+            expect(c.addresses).toEqual(null);
+            expect(c.ims).toEqual(null);
+            expect(c.organizations).toEqual(null);
             expect(c.birthday).toBe(null);
             expect(c.note).toBe(null);
-            expect(c.photos).toEqual([]);
-            expect(c.categories).toEqual([]);
-            expect(c.urls).toEqual([]);
+            expect(c.photos).toEqual(null);
+            expect(c.categories).toEqual(null);
+            expect(c.urls).toEqual(null);
         });
 
         it("overrides default values with the arguments", function () {
@@ -67,14 +67,14 @@ describe("Contact", function () {
             c.id = 1;
             c.rawId = 1;
 
-            c.phoneNumbers.push({id: 1});
-            c.emails.push({id: 1});
-            c.addresses.push({id: 1});
-            c.ims.push({id: 1});
-            c.organizations.push({id: 1});
-            c.categories.push({id: 1});
-            c.photos.push({id: 1});
-            c.urls.push({id: 1});
+            c.phoneNumbers = [{id: 1}];
+            c.emails = [{id: 1}];
+            c.addresses = [{id: 1}];
+            c.ims = [{id: 1}];
+            c.organizations = [{id: 1}];
+            c.categories = [{id: 1}];
+            c.photos = [{id: 1}];
+            c.urls = [{id: 1}];
 
             var clone = c.clone();
 
@@ -98,7 +98,7 @@ describe("Contact", function () {
                 e = jasmine.createSpy();
 
             c.save(s, e);
-            expect(exec).toHaveBeenCalledWith(s, e, "Contacts", "save", [c]);
+            expect(exec).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function), "Contacts", "save", [c]);
         });
     });
 });
