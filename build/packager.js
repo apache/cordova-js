@@ -95,11 +95,13 @@ module.exports = {
     },
 
     bundle: function (platform) {
+        console.log("building platform: " + platform);
+        
         var output = "";
 
         //include LICENSE
-        output += include("LICENSE", function (file) {
-            return "/*\n" + file + "\n*/\n";
+        output += include("LICENSE-for-js-file.txt", function (file) {
+            return "/*\n" + file + "*/\n";
         });
 
         // wrap the entire thing in one more closure
