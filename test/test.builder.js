@@ -12,7 +12,7 @@ describe("builder", function () {
             };
 
         
-        builder.build(objects).intoAndClobberTheFOutOf(target);
+        builder.build(objects).intoAndClobber(target);
         expect(target.foo).toBeDefined();
         expect(target.foo).toBe(require("cordova/plugin/compass"));
     });
