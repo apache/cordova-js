@@ -3,7 +3,7 @@
   "name": "cordova-js",
   "description": "Cordova JavaScript: a unified JavaScript layer for the Cordova suite of projects enabling cross-platform native mobile development of applications using HTML, CSS and JavaScript.",
   "version": "0.0.1",
-  "homepage": "http://incubator.apache.org/callback/",
+  "homepage": "http://incubator.apache.org/cordova/",
   "repository": {
     "type":"git",
     "url": "http://git-wip-us.apache.org/repos/asf/incubator-cordova-js.git"
@@ -34,6 +34,10 @@
     },
     {
       "name":"Simon MacDonald",
+      "email":""
+    },
+    {
+      "name":"Becky Gibson",
       "email":""
     }
   ],
