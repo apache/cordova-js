@@ -21,8 +21,8 @@ function collect(path, files, matches) {
 
 module.exports = {
     node: function () {
+        console.log('starting node-based tests')
         var jas = require("../thirdparty/jasmine/jasmine"),
-            loader = require('../lib/require'),
             TerminalReporter = require('./reporter').TerminalReporter,
             jsdom, document, window;
 
@@ -41,12 +41,21 @@ module.exports = {
             this[key] = window[key] = global[key] = jas[key];
         });
 
-        //hijack require
-        require = loader.require;
-        define = loader.define;
-
         //load in our modules
-        eval(packager.modules('test'));
+        var testLibName = _path.join(__dirname, '..', 'pkg', 'cordova.test-debug.js')
+        var testLib     = fs.readFileSync(testLibName, 'utf8')
+        try {
+            eval(testLib);
+        }
+        catch (e) {
+            console.log("error eval()ing " + testLibName + ": " + e)
+            console.log(e.stack)
+            throw e
+        }
+
+        //hijack require
+        require = window.cordova.require;
+        define  = window.cordova.define;
 
         //load in our tests
         collect(__dirname, tests);
@@ -65,14 +74,14 @@ module.exports = {
         env.execute();
     },
     browser: function () {
+        console.log('starting browser-based tests')
         var connect = require('connect'),
             html = fs.readFileSync(__dirname + "/suite.html", "utf-8"),
             doc,
             modules,
             specs,
             app = connect(
-                connect.static(__dirname + "/../lib/"),
-                connect.static(__dirname + "/../"),
+                connect.static(_path.join(__dirname, '..', 'thirdparty')),
                 connect.static(__dirname),
                 connect.router(function (app) {
                     app.get('/', function (req, res) {

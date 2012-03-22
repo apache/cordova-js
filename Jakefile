@@ -22,12 +22,13 @@ task('build', ['clean'], function () {
 
     var packager = require("./build/packager");
 
-    packager.write("blackberry");
-    packager.write("playbook");
-    packager.write("ios");
-    packager.write("wp7");
-    packager.write("android");
-    packager.write("errgen");
+    packager.generate("blackberry");
+    packager.generate("playbook");
+    packager.generate("ios");
+    packager.generate("wp7");
+    packager.generate("android");
+    packager.generate("errgen");
+    packager.generate("test");
 
 });
 

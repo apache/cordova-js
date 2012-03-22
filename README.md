@@ -5,45 +5,57 @@ A unified JavaScript layer for [Apache Cordova](http://incubator.apache.org/proj
     cordova-js
       |
       |-build/
-      | Will contain any build modules (currently nothing here as it is all hacked
-      | into the JakeFile)
+      | Will contain any build modules (currently nothing here as it is all
+      | hacked into the JakeFile)
       |
       |-lib
-      |  |-bootstrap.js
-      |  | Code to bootstrap the Cordova platform, inject APIs and fire events
-      |  |
-      |  |-builder.js
-      |  | Injects in our classes onto window and navigator (or wherever else is needed)
-      |  |
-      |  |-channel.js
-      |  | A pub/sub implementation to handle custom framework events 
-      |  |
       |  |-cordova.js
       |  | Common Cordova stuff such as callback handling and
       |  | window/document add/removeEventListener hijacking 
       |  | 
-      |  |-require.js
-      |  | Our own module definition and require implementation. 
+      |  |-common/
+      |  | Contains the common-across-platforms base modules
       |  |
-      |  |-utils.js
+      |  |-common/builder.js
+      |  | Injects in our classes onto window and navigator (or wherever else 
+      |  | is needed)
+      |  |
+      |  |-common/channel.js
+      |  | A pub/sub implementation to handle custom framework events 
+      |  |
+      |  |-common/common.js
+      |  | Common locations to add Cordova objects to browser globals.
+      |  |
+      |  |-common/exec.js
+      |  | Stub for platform's specific version of exec.js
+      |  |
+      |  |-common/platform.js
+      |  | Stub for platform's specific version of platform.js
+      |  |
+      |  |-common/utils.js
       |  | General purpose JS utility stuff: closures, uuids, object
       |  | cloning, extending prototypes
       |  |
-      |  |-exec/
-      |  | Contains the platform specific definitions of the exec method
+      |  |-common/plugin
+      |  | Contains the common-across-platforms plugin modules
       |  |
-      |  |-platform/
-      |  | Definitions of each platform that help us describe where
-      |  | and what to put on the window object, and what to run to
-      |  | initialize the platform. A common set of globals are also
-      |  | defined (common.js)
+      |  |-scripts/
+      |  | Contains non-module JavaScript source that gets added to the
+      |  | resulting cordova.<platform>.js files closures, uuids, object
       |  |
-      |  |-plugin/
-      |  |  | All API definitions as plugins, ones common to all
-      |  |  | platforms reside at the top level...
-      |  |  `-<platform>
-      |  |    ... and platform-specific ones reside in their respective
-      |  |    folders
+      |  |-scripts/bootstrap.js
+      |  | Code to bootstrap the Cordova platform, inject APIs and fire events
+      |  |
+      |  |-scripts/require.js
+      |  | Our own module definition and require implementation. 
+      |  |
+      |  |-<platform>/
+      |  | Contains the platform-specific base modules.
+      |  |
+      |  |-<platform>/plugin
+      |  | Contains the platform-specific plugin modules.
+
+The way the resulting `cordova.<platform>.js` files will be built is by combining the scripts in the `lib/scripts` directory with modules from the `lib/common` and `lib/<platform>` directories.  For cases where there is the same named module in `lib/common` and `lib/<platform>`, the `lib/<platform>` version wins.  For instance, every `lib/<platform>` includes an `exec.js`, and there is also a version in `lib/common`, so the `lib/<platform>` version will always be used.  In fact, the `lib/common` one will throw errors, so if you build a new platform and forget `exec.js`, the resulting `cordova.<platform>.js` file will also throw errors.
 
 # Building
 
@@ -77,13 +89,13 @@ This will run the `build` and `test` tasks by default. All of the available task
 
 The `build/packager.js` tool is a node.js script that concatenates all of the core Cordova plugins in this repository into a `cordova.<platform>.js` file under the `pkg/` folder. It also wraps the plugins with a RequireJS-compatible module syntax that works in both browser and node environments. We end up with a cordova.js file that wraps each Cordova plugin into its own module.
 
-Cordova defines a `channel` module under `lib/channel.js`, which is a publish/subscribe implementation that the project uses for event management.
+Cordova defines a `channel` module under `lib/common/channel.js`, which is a publish/subscribe implementation that the project uses for event management.
 
-The Cordova native-to-webview bridge is initialized in `lib/bootstrap.js`. This file attaches the `boot` function to the `channel.onNativeReady` event - fired by native with a call to:
+The Cordova native-to-webview bridge is initialized in `lib/scripts/bootstrap.js`. This file attaches the `boot` function to the `channel.onNativeReady` event - fired by native with a call to:
 
     cordova.require('cordova/channel).onNativeReady.fire()
 
-The `boot` method does all the work.  First, it grabs the common platform definition (under `lib/platform/common.js`) and injects all of the objects defined there onto `window` and other global namespaces. Next, it grabs all of the platform-specific object definitions (as defined under `lib/platform/<platform>.js`) and overrides those onto `window`. Finally, it calls the platform-specific `initialize` function (located in the platform definition). At this point, Cordova is fully initialized and ready to roll. Last thing we do is wait for the `DOMContentLoaded` event to fire to make sure the page has loaded properly. Once that is done, Cordova fires the `deviceready` event where you can safely attach functions that consume the Cordova APIs.
+The `boot` method does all the work.  First, it grabs the common platform definition (under `lib/common/common.js`) and injects all of the objects defined there onto `window` and other global namespaces. Next, it grabs all of the platform-specific object definitions (as defined under `lib/<platform>/platform.js`) and overrides those onto `window`. Finally, it calls the platform-specific `initialize` function (located in the platform definition). At this point, Cordova is fully initialized and ready to roll. Last thing we do is wait for the `DOMContentLoaded` event to fire to make sure the page has loaded properly. Once that is done, Cordova fires the `deviceready` event where you can safely attach functions that consume the Cordova APIs.
 
 # Testing
 

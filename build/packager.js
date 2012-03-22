@@ -1,135 +1,184 @@
-var util = require('util'),
-    debug = false,
-    fs = require('fs');
+var fs    = require('fs')
+var util  = require('util')
+var path  = require('path')
 
-// (Recursively) list contents of a directory
-function walk(dir, doRecursive) {
-    var results = [];
-    try {
-        var list = fs.readdirSync(dir);
-        for (var i = 0, l = list.length; i < l; i++) {
-            var file = list[i];
-            file = dir + '/' + file;
-            var stat = fs.statSync(file);
-            if (stat && doRecursive && stat.isDirectory()) {
-                results = results.concat(walk(file,doRecursive));
-            } else {
-                if (list[i] != ".DS_Store") {
-                    results.push(file);
-                }
-            }
-        }
-    } catch (e) {
-        //do nothing
+var packager = module.exports
+
+//------------------------------------------------------------------------------
+packager.generate = function(platform) {
+    var time = new Date().valueOf()
+    
+    var libraryRelease = packager.bundle(platform, false)
+    var libraryDebug   = packager.bundle(platform, true)
+    
+    time = new Date().valueOf() - time
+    
+    var outFile
+    
+    outFile = path.join('pkg', 'cordova.' + platform + '.js')
+    fs.writeFileSync(outFile, libraryRelease, 'utf8')
+    
+    outFile = path.join('pkg', 'cordova.' + platform + '-debug.js')
+    fs.writeFileSync(outFile, libraryDebug, 'utf8')
+    
+    console.log('generated platform: ' + platform + ' in ' + time + 'ms')
+}
+
+//------------------------------------------------------------------------------
+packager.bundle = function(platform, debug) {
+    var modules = collectFiles('lib/common')
+    var scripts = collectFiles('lib/scripts')
+    
+    modules[''] = 'lib/cordova.js'
+    
+    if (['playbook', 'blackberry'].indexOf(platform) > -1) {
+        copyProps(modules, collectFiles(path.join('lib', 'webworks')))
     }
-    return results;
-}
+    
+    copyProps(modules, collectFiles(path.join('lib', platform)))
 
-// Simply inline includes the specified file(s) with an optional transform function.
-function include(files, transform) {
-    files = files.map ? files : [files];
-    return files.map(function (file) {
-        try {
-            var str = fs.readFileSync(file, "utf-8") + "\n";
-            str = transform ? transform(str, file) : str;
-            str = debug ? "try {" + str + "} catch (e) { alert('" + file + ":' + e);}" : str;
-            return str;
-        } catch (e) {
-            //do nothing
-        }
-    }).join('\n');
-}
+    var output = []
 
-// Includes the specified file(s) with optional overriding id
-// Wraps the specified file(s) in a define statement which implicitly
-// creates a closure as well.
-function drop(files, id) {
-    return include(files, function(file, path) {
-        var define_id = (typeof id != 'undefined' && id.length > 0 ? id : path.replace(/lib\//, "cordova/").replace(/\.js$/, ''));
-        return "define('" + define_id + "', function(require, exports, module) {\n" + file + "});\n";
-    });
-}
+    // write header     
+    output.push('/*\n' + getContents('LICENSE-for-js-file.txt') + '\n*/')
+    output.push('\n;(function() {\n')
+    
+    // write initial scripts
+    if (!scripts['require']) {
+        throw new Error("didn't find a script for 'require'")
+    }
+    
+    writeScript(output, scripts['require'], debug)
 
-module.exports = {
-    modules: function (platform) {
-        var baseFiles = [
-                "lib/utils.js",
-                "lib/builder.js"
-            ],
-            platformFiles = walk('lib/plugin/' + platform, true),
-            output = "";
-
-        //HACK: ummm .... we really need to figure out this webworks common file stuff
-        if (platform === "blackberry" || platform === "playbook") {
-            platformFiles = platformFiles.concat(walk('lib/plugin/webworks', true));
-        }
-
-        //include all common platform files that are under lib/plugin
-        baseFiles = baseFiles.concat(walk('lib/plugin'));
-
-        //include require
-        output += include("lib/require.js");
-
-        //include channel
-        output += drop('lib/channel.js', 'cordova/channel');
-
-        //include cordova
-        output += drop('lib/cordova.js', 'cordova');
-
-        //include exec
-        output += drop('lib/exec/' + platform + '.js', 'cordova/exec');
-
-        //include common platform defn 
-        output += drop('lib/platform/common.js', 'cordova/common');
-
-        //include platform defn
-        output += drop('lib/platform/' + platform + '.js', 'cordova/platform');
-
-        //include common modules
-        output += drop(baseFiles);
-
-        //include platform specific modules
-        output += drop(platformFiles);
-
-        return output;
-    },
-
-    bundle: function (platform) {
-        console.log("building platform: " + platform);
+    // write modules
+    var moduleIds = Object.keys(modules)
+    moduleIds.sort()
+    
+    for (var i=0; i<moduleIds.length; i++) {
+        var moduleId = moduleIds[i]
         
-        var output = "";
-
-        //include LICENSE
-        output += include("LICENSE-for-js-file.txt", function (file) {
-            return "/*\n" + file + "*/\n";
-        });
-
-        // wrap the entire thing in one more closure
-        // closure closure closure
-        output += "(function() {\n";
-
-        //include modules
-        output += this.modules(platform);
-
-        // HACK: this gets done in bootstrap.js anyways, once native side is ready + domcontentloaded is fired.
-        // TODO: Do we need it?
-        output += "window.cordova = require('cordova');\n"; 
-
-        //include bootstrap
-        output += include('lib/bootstrap.js');
-
-        // TODO/HACK: we don't need platform-specific bootstrap.
-        // those can go into the init function inside the platform/*.js
-        // files
-        output += include('lib/bootstrap/' + platform + '.js');
-
-        // closing the closure har har
-        output += "})();";
-
-        return output;
-    },
-    write: function (platform) {
-        var output = this.bundle(platform);
-        fs.writeFileSync(__dirname + "/../pkg/cordova." + platform + ".js", output);
+        writeModule(output, modules[moduleId], moduleId, debug)
     }
-};
+
+    output.push("\nwindow.cordova = require('cordova');\n")
+
+    // write final scripts
+    if (!scripts['bootstrap']) {
+        throw new Error("didn't find a script for 'bootstrap'")
+    }
+    
+    writeScript(output, scripts['bootstrap'], debug)
+    
+    var bootstrapPlatform = 'bootstrap-' + platform
+    if (scripts[bootstrapPlatform]) {
+        writeScript(output, scripts[bootstrapPlatform], debug)
+    }
+
+    // write trailer
+    output.push('\n})();')
+
+    return output.join('\n')
+}
+
+//------------------------------------------------------------------------------
+var CollectedFiles = {}
+
+function collectFiles(dir, id) {
+    if (!id) id = ''
+    
+    if (CollectedFiles[dir]) {
+        return copyProps({}, CollectedFiles[dir])
+    }
+
+    var result = {}    
+    
+    var entries = fs.readdirSync(dir)
+    
+    entries = entries.filter(function(entry) {
+        if (entry.match(/\.js$/)) return true
+        
+        var stat = fs.statSync(path.join(dir, entry))
+        if (stat.isDirectory())  return true
+    })
+
+    entries.forEach(function(entry) {
+        var moduleId = path.join(id,  entry)
+        var fileName = path.join(dir, entry)
+        
+        var stat = fs.statSync(fileName)
+        if (stat.isDirectory()) {
+            copyProps(result, collectFiles(fileName, moduleId))
+        }
+        else {
+            moduleId         = getModuleId(moduleId)
+            result[moduleId] = fileName
+        }
+    })
+    
+    CollectedFiles[dir] = result
+    
+    return copyProps({}, result)
+}
+
+//------------------------------------------------------------------------------
+function writeScript(oFile, fileName, debug) {
+    var contents = getContents(fileName, 'utf8')
+    
+    writeContents(oFile, fileName, contents, debug)    
+}
+
+//------------------------------------------------------------------------------
+function writeModule(oFile, fileName, moduleId, debug) {
+    var contents = '\n' + getContents(fileName, 'utf8') + '\n'
+    
+    moduleId = path.join('cordova', moduleId)
+    
+    var signature = 'function(require, exports, module)'
+    
+    contents = 'define("' + moduleId + '", ' + signature + ' {' + contents + '})\n'
+
+    writeContents(oFile, fileName, contents, debug)    
+}
+
+//------------------------------------------------------------------------------
+var FileContents = {}
+
+function getContents(file) {
+    if (!FileContents.hasOwnProperty(file)) {
+        FileContents[file] = fs.readFileSync(file, 'utf8')
+    }
+    
+    return FileContents[file]
+}
+
+//------------------------------------------------------------------------------
+function writeContents(oFile, fileName, contents, debug) {
+    
+    if (debug) {
+        contents += '\n//@ sourceURL=' + fileName
+        
+        contents = 'eval(' + JSON.stringify(contents) + ')'
+    }
+    
+    else {
+        contents = '// file: ' + fileName + '\n' + contents    
+    }
+
+    oFile.push(contents)
+}
+
+//------------------------------------------------------------------------------
+function getModuleId(fileName) {
+    return fileName.match(/(.*)\.js$/)[1]
+}
+
+//------------------------------------------------------------------------------
+function copyProps(target, source) {
+    for (var key in source) {
+        if (!source.hasOwnProperty(key)) continue
+        
+        target[key] = source[key]
+    }
+    
+    return target
+}
