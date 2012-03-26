@@ -2,7 +2,7 @@ describe("geolocation", function () {
     var geo = require('cordova/plugin/geolocation'),
         Position = require('cordova/plugin/Position'),
         PositionError = require('cordova/plugin/PositionError'),
-        s, e;
+        s, e,
         exec = require('cordova/exec');
 
     beforeEach(function () {
@@ -16,22 +16,17 @@ describe("geolocation", function () {
         describe("arguments", function () {
             it("uses default PositionOptions if none are specified", function () {
                 geo.getCurrentPosition(s, e);
-                expect(exec).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function), "Geolocation", "getLocation", [false, Infinity, 0]);
-            });
-
-            it("uses the maximumAge option if specified", function () {
-                geo.getCurrentPosition(s, e, {maximumAge: 10});
-                expect(exec).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function), "Geolocation", "getLocation", [false, Infinity, 10]);
+                expect(exec).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function), "Geolocation", "getLocation", [false, 0]);
             });
 
             it("uses the enableHighAccuracy option if specified", function () {
-                geo.getCurrentPosition(s, e, {enableHighAccuracy: true, maximumAge: 100});
-                expect(exec).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function), "Geolocation", "getLocation", [true, Infinity, 100]);
+                geo.getCurrentPosition(s, e, {enableHighAccuracy: true});
+                expect(exec).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function), "Geolocation", "getLocation", [true, 0]);
             });
 
-            it("uses the timeout option if specified and positive", function () {
-                geo.getCurrentPosition(s, e, {timeout: 1000});
-                expect(exec).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function), "Geolocation", "getLocation", [false, 1000, 0]);
+            it("uses the maximumAge option if specified", function () {
+                geo.getCurrentPosition(s, e, {maximumAge: 100});
+                expect(exec).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function), "Geolocation", "getLocation", [false, 100]);
             });
 
             it("uses a timeout value of 0 if specified and negative, which should call the error callback immediately (since we have no cached position)", function () {
@@ -75,13 +70,13 @@ describe("geolocation", function () {
 
                 geo.getCurrentPosition(s, e, {maximumAge:100});
 
-                expect(exec).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function), "Geolocation", "getLocation", [false, Infinity, 100]);
+                expect(exec).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function), "Geolocation", "getLocation", [false, 100]);
             });
 
             it("should fire error callback with TIMEOUT code after timeout period has elapsed and no position is available", function() {
                 runs(function() {
                     geo.getCurrentPosition(s, e, {timeout: 50});
-                    expect(exec).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function), "Geolocation", "getLocation", [false, 50, 0]);
+                    expect(exec).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function), "Geolocation", "getLocation", [false, 0]);
                 });
                 
                 waits(75);
@@ -150,30 +145,23 @@ describe("geolocation", function () {
     });
 
     describe("watchPosition", function () {
-        var utils = require('cordova/utils');
-
         describe("arguments", function () {
             it("uses default PositionOptions if none are specified", function () {
-                geo.watchPosition(s, e);
-                expect(exec).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function), "Geolocation", "getLocation", [false, Infinity, 0]);
-            });
-
-            it("uses the maximumAge option if specified", function () {
-                geo.watchPosition(s, e, {maximumAge: 10});
-                expect(exec).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function), "Geolocation", "getLocation", [false, Infinity, 10]);
+                var id = geo.watchPosition(s, e);
+                expect(exec).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function), "Geolocation", "addWatch", [id, false]);
             });
 
             it("uses the enableHighAccuracy option if specified", function () {
-                geo.watchPosition(s, e, {enableHighAccuracy: true, maximumAge: 100});
-                expect(exec).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function), "Geolocation", "getLocation", [true, Infinity, 100]);
+                var id = geo.watchPosition(s, e, {enableHighAccuracy: true});
+                expect(exec).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function), "Geolocation", "addWatch", [id, true]);
             });
 
-            it("uses the timeout option if specified and positive", function () {
-                geo.watchPosition(s, e, {timeout: 1000});
-                expect(exec).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function), "Geolocation", "getLocation", [false, 1000, 0]);
+            it("uses the maximumAge option if specified", function () {
+                var id = geo.watchPosition(s, e, {maximumAge: 100});
+                expect(exec).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function), "Geolocation", "addWatch", [id, false]);
             });
 
-            it("uses a timeout value of 0 if specified and negative, which should call the error callback immediately (since we have no cached position)", function () {
+            it("uses a timeout value of 0 if specified and negative, which should call the error callback immediately", function () {
                 geo.watchPosition(s, e, {timeout: -1000});
                 expect(e).toHaveBeenCalledWith({
                     code:PositionError.TIMEOUT,
@@ -192,12 +180,77 @@ describe("geolocation", function () {
             });
         });
         describe("position acquisition", function() {
-            it("should invoke the success callback every time the position changes");
-            it("should invoke the error callback if position could not be retrieved");
-            
+            it("should invoke the success callback every time the position changes", function() {
+                runs(function() {
+                    geo.watchPosition(s, e);
+                });
+                waits(50);
+                runs(function() {
+                    exec.mostRecentCall.args[0]({}); // fake success callback from native
+                    expect(s).toHaveBeenCalled();
+                    s.reset();
+                    exec.mostRecentCall.args[0]({}); // fake success callback from native
+                    expect(s).toHaveBeenCalled();
+                });
+            });
+            it("should invoke the error callback if position could not be retrieved", function() {
+                geo.watchPosition(s, e);
+                exec.mostRecentCall.args[1]({
+                    code:PositionError.POSITION_UNAVAILABLE
+                });
+                expect(e).toHaveBeenCalledWith({
+                    code:PositionError.POSITION_UNAVAILABLE,
+                    message:""
+                });
+            });
+            it("should invoke the error callback if no position could be acquired within the specified timeout", function() {
+                runs(function() {
+                    geo.watchPosition(s, e, {timeout:50});
+                });
+                waits(75);
+                runs(function() {
+                    expect(e).toHaveBeenCalledWith({
+                        code:PositionError.TIMEOUT,
+                        message:"Position retrieval timed out."
+                    });
+                });
+            });
+            it("should invoke the error callback if no position could be acquired within the specified timeout, even after successfully retrieving the position once", function() {
+                runs(function() {
+                    geo.watchPosition(s, e, {timeout:50});
+                });
+                waits(25);
+                runs(function() {
+                    exec.mostRecentCall.args[0]({}); // fire new position return
+                    expect(s).toHaveBeenCalled();
+                });
+                waits(30);
+                runs(function() {
+                    // The error callback should NOT be fired, since the timeout should have reset when we fired a new position return above
+                    expect(e).not.toHaveBeenCalled();
+                });
+                waits(25);
+                runs(function() {
+                    // NOW the error callback should be fired with a TIMEOUT error
+                    expect(e).toHaveBeenCalledWith({
+                        code:PositionError.TIMEOUT,
+                        message:"Position retrieval timed out."
+                    });
+                });
+            });
         });
     });
 
     describe("clearWatch", function () {
+        it("should tell native to remove an id from the watch list if it exists", function() {
+            var id = geo.watchPosition(s, e);
+            geo.clearWatch(id);
+            expect(exec).toHaveBeenCalledWith(null, null, "Geolocation", "clearWatch", [id]);
+        });
+        it("should not call into native if id does not exist", function() {
+            var id = "this is bat country";
+            geo.clearWatch(id);
+            expect(exec).not.toHaveBeenCalled();
+        });
     });
 });
