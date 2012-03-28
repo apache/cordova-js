@@ -7,7 +7,7 @@ describe("network", function () {
 
         network = require('cordova/plugin/network');
 
-        expect(exec).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function), "Network Status", "getConnectionInfo", []);
+        expect(exec).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function), "NetworkStatus", "getConnectionInfo", []);
     });
 
     //TODO: There is a lot of code executed on the first require call to this plugin
@@ -22,6 +22,6 @@ describe("network", function () {
             error = jasmine.createSpy();
 
         network.getInfo(success, error);
-        expect(exec).toHaveBeenCalledWith(success, error, "Network Status", "getConnectionInfo", []);
+        expect(exec).toHaveBeenCalledWith(success, error, "NetworkStatus", "getConnectionInfo", []);
     });
 });
