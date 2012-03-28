@@ -22,11 +22,11 @@ task('build', ['clean'], function () {
         fs = require('fs'),
         packager = require("./build/packager");
 
-    packager.bundle("blackberry");
-    packager.bundle("playbook");
-    packager.bundle("ios");
-    packager.bundle("wp7");
-    packager.bundle("android");
+    packager.write("blackberry");
+    packager.write("playbook");
+    packager.write("ios");
+    packager.write("wp7");
+    packager.write("android");
 
     util.puts(fs.readFileSync("build/dalek", "utf-8"));
 });

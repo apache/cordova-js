@@ -24,6 +24,8 @@ function walk(dir, doRecursive) {
     }
     return results;
 }
+
+// Simply inline includes the specified file(s) with an optional transform function.
 function include(files, transform) {
     files = files.map ? files : [files];
     return files.map(function (file) {
@@ -37,6 +39,10 @@ function include(files, transform) {
         }
     }).join('\n');
 }
+
+// Includes the specified file(s) with optional overriding id
+// Wraps the specified file(s) in a define statement which implicitly
+// creates a closure as well.
 function drop(files, id) {
     return include(files, function(file, path) {
         var define_id = (typeof id != 'undefined' && id.length > 0 ? id : path.replace(/lib\//, "cordova/").replace(/\.js$/, ''));
@@ -96,19 +102,32 @@ module.exports = {
             return "/*\n" + file + "\n*/\n";
         });
 
+        // wrap the entire thing in one more closure
+        // closure closure closure
+        output += "(function() {\n";
+
         //include modules
         output += this.modules(platform);
 
-        // HACK: this gets done in bootstrap.js anyways, once native side is ready + domcontentloaded is fired. Do we need it?
+        // HACK: this gets done in bootstrap.js anyways, once native side is ready + domcontentloaded is fired.
+        // TODO: Do we need it?
         output += "window.cordova = require('cordova');\n"; 
 
         //include bootstrap
         output += include('lib/bootstrap.js');
-        // TODO: we don't need platform-specific bootstrap.
+
+        // TODO/HACK: we don't need platform-specific bootstrap.
         // those can go into the init function inside the platform/*.js
         // files
         output += include('lib/bootstrap/' + platform + '.js');
 
+        // closing the closure har har
+        output += "})();";
+
+        return output;
+    },
+    write: function (platform) {
+        var output = this.bundle(platform);
         fs.writeFileSync(__dirname + "/../pkg/cordova." + platform + ".js", output);
     }
 };

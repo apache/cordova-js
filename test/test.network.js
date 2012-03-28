@@ -1,6 +1,14 @@
 describe("network", function () {
-    var network = require('cordova/plugin/network'),
+    var network,
         exec = require('cordova/exec');
+       
+    it("should fire exec on first-run", function() {
+        exec.reset();
+
+        network = require('cordova/plugin/network');
+
+        expect(exec).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function), "Network Status", "getConnectionInfo", []);
+    });
 
     //TODO: There is a lot of code executed on the first require call to this plugin
     //      we should refactor or find a good way to call and test this code.

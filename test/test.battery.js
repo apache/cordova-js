@@ -10,7 +10,7 @@ describe("battery", function () {
             window.removeEventListener("batterystatus", cb);
         });
         
-        it("only calls exec once", function () {
+        it("only calls exec with start once", function () {
             var cb1 = jasmine.createSpy("cb1"),
                 cb2 = jasmine.createSpy("cb2");
 
@@ -28,12 +28,15 @@ describe("battery", function () {
                 cb2 = jasmine.createSpy("cb2");
 
             window.addEventListener("batterystatus", cb1);
+            
+            exec.reset();
+            
             window.removeEventListener("batterystatus", cb1);
 
             expect(exec).toHaveBeenCalledWith(null, null, "Battery", "stop", []);
         });
 
-        it("only calls stop once", function () {
+        it("only calls exec with stop once", function () {
             var cb1 = jasmine.createSpy("cb1"),
                 cb2 = jasmine.createSpy("cb2");
 

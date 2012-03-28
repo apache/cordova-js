@@ -22,6 +22,9 @@ A unified JavaScript layer for [Apache Cordova](http://incubator.apache.org/proj
       |  | Common Cordova stuff such as callback handling and
       |  | window/document add/removeEventListener hijacking 
       |  | 
+      |  |-require.js
+      |  | Our own module definition and require implementation. 
+      |  |
       |  |-utils.js
       |  | General purpose JS utility stuff: closures, uuids, object
       |  | cloning, extending prototypes
@@ -44,62 +47,53 @@ A unified JavaScript layer for [Apache Cordova](http://incubator.apache.org/proj
 
 # Building
 
-Just make sure you have [node.js](http://nodejs.org) installed. It
-should come pre-installed with [npm](http://npmjs.org) - but if you
-install node and can't run `npm` then head over to the website and
-install it yourself. Make sure you have all of the node dependencies
-installed by running the following command from the repository root:
+Make sure you have [node.js](http://nodejs.org) installed. It should come pre-installed with [npm](http://npmjs.org) - but if you install node and can't run `npm` then head over to the website and install it yourself. Make sure you have all of the node dependencies installed by running the following command from the repository root:
 
     npm install
 
-Then all of the build tasks can be run via:
+All of the build tasks can be run via the `jake` node module. Install it globally first by running:
+
+    npm install -g jake
+
+Then from the repository root run:
 
     jake
 
-This will run the "build" and "test" tasks by default. All of the available tasks
-are:
+This will run the `build` and `test` tasks by default. All of the available tasks are:
 
-- build: creates platform versions of cordova-js and builds them into
-  the `pkg` directory.
-- test: runs all of the unit tests inside node.
-- btest: creates a server so you can run the tests inside a browser.
-- clean: cleans out the `pkg` directory
+- `build`: creates platform versions of cordova-js and builds them into
+  the `pkg/` directory.
+- `test`: runs all of the unit tests inside node.
+- `btest`: creates a server so you can run the tests inside a browser.
+- `clean`: cleans out the `pkg/` directory
+
+## Known Issues
+
+- On Mac OS 10.7.3, there were issues with the contextify module not
+    being able to build properly when using node v0.6.10 and running `npm
+	install`. Using node v0.6.6 works, though.
 
 # How It Works
 
-The `build/packager.js` tool is a node.js script that concatenates and
-wraps various .js files with a RequireJS-compatible module syntax in this
-project together to generate cordova.js files that are compatible
-to the various supported platforms. Check that script out to figure out
-how and in what order the various files are concatenated together.
+The `build/packager.js` tool is a node.js script that concatenates all of the core Cordova plugins in this repository into a `cordova.<platform>.js` file under the `pkg/` folder. It also wraps the plugins with a RequireJS-compatible module syntax that works in both browser and node environments. We end up with a cordova.js file that wraps each Cordova plugin into its own module.
 
-We end up with a script file that has a ton of `define` calls, wrapping
-each Cordova API or object into its own module. Next, the Cordova bridge is initialized with the
-help of `lib/bootstrap.js`. This file attaches the `_self.boot` function
-once the `channel.onNativeReady` event is fired - which should be fired
-from the native side (native should call `require('cordova/channel).onNativeReady.fire()`).
-Finally, the `boot` method is where the magic happens.  First, it grabs
-the common platform definition (as defined under
-`lib/platform/common.js`) and injects all the objects defined in there
-onto `window` and other global namespaces. Next, it grabs all of the platform-specific object
-definitions (as defined under `lib/platform/<platform>.js`) and
-overrides those onto `window`. Finally, it calls the platform-specific
-`initialize` function (located in the platform definition). At this
-point, Cordova is fully initialized and ready to roll, however, before
-the `deviceready` event is fired, we still wait for the
-`DOMContentLoaded` event to fire to make sure the page has loaded
-properly.
+Cordova defines a `channel` module under `lib/channel.js`, which is a publish/subscribe implementation that the project uses for event management.
+
+The Cordova native-to-webview bridge is initialized in `lib/bootstrap.js`. This file attaches the `boot` function to the `channel.onNativeReady` event - fired by native with a call to:
+
+    cordova.require('cordova/channel).onNativeReady.fire()
+
+The `boot` method does all the work.  First, it grabs the common platform definition (under `lib/platform/common.js`) and injects all of the objects defined there onto `window` and other global namespaces. Next, it grabs all of the platform-specific object definitions (as defined under `lib/platform/<platform>.js`) and overrides those onto `window`. Finally, it calls the platform-specific `initialize` function (located in the platform definition). At this point, Cordova is fully initialized and ready to roll. Last thing we do is wait for the `DOMContentLoaded` event to fire to make sure the page has loaded properly. Once that is done, Cordova fires the `deviceready` event where you can safely attach functions that consume the Cordova APIs.
 
 # Testing
 
-Tests run in node or the browser, and you can launch them with :
+Tests run in node or the browser. To run the tests in node:
     
     jake test
 
-or to run in the browser:
+To run them in the browser:
 
     jake btest
-
 
 Final testing should always be done with the [Mobile Spec test application](https://github.com/apache/incubator-cordova-mobile-spec).
 
@@ -107,22 +101,22 @@ Final testing should always be done with the [Mobile Spec test application](http
 
 ## Cordova
 
-Build the .js file and drop it in as a replacement for cordova.js or
-cordova.js!
+Build the .js file and drop it in as a replacement for cordova.js.
+
+### Supported Platforms
+
+- Android
 
 ## Ripple
 
-Load this in Ripple to play with it. You will have to use the cordova
-prototype branch to better simulate the phone environment and use this
-javascript rather than Ripples emulated code.
+Load this in Ripple to play with it. You will have to use the cordova prototype branch to better simulate the phone environment and use this javascript rather than Ripples emulated code.
 
     git clone git@github.com:blackberry-webworks/Ripple-UI.git
     git checkout winnie.the.pooh
     ./configure
     jake
 
-and then load the upacked extension in chrome in the pkg/chromium folder.
-Use the cordova.proto platform in ripple.
+and then load the upacked extension in chrome in the pkg/chromium folder. Use the cordova.proto platform in ripple.
 
 # Adding a New Platform
 
@@ -145,9 +139,7 @@ Use the cordova.proto platform in ripple.
     by the `exec` call
    It is required that new platform additions be as consistent as
    possible with the existing `service` and `action` labels.
-2. Define your platform definition object and name it <platform>.js.
-   Drop this into the `lib/platform` folder. This file should contain a
-   JSON object with the following properties:
+2. Define your platform definition object and name it <platform>.js. Drop this into the `lib/platform` folder. This file should contain a JSON object with the following properties:
     - `id`: a string representing the platform. This should be the same
       name the .js file has
     - `objects`: the property names defined as children of this property
@@ -160,8 +152,7 @@ Use the cordova.proto platform in ripple.
       - `children`: in a recursive fashion, can have `path` and
         `children` properties of its own that are defined as children of
         the parent property object
-    - `initialize`: a function that fires immediately after the the
-      `objects` (see above) are defined in the global scope
+    - `initialize`: a function that fires immediately after the `objects` (see above) are defined in the global scope
    
    The following is a simple example of a platform definition:
 
@@ -184,15 +175,12 @@ Use the cordova.proto platform in ripple.
     }
     </pre>
 
-3. You should probably add a `packager.bundle('<platform>')`
-   call to the `Jakefile`.
-4. Make sure your native implementation executes the following
-   JavaScript once all of the native side is initialized and ready:
-   `require('cordova/channel').onNativeReady.fire()`.
-
+3. You should probably add a `packager.bundle('<platform>')` call to the `Jakefile`.
+4. Make sure your native implementation executes the following JavaScript once all of the native side is initialized and ready: `require('cordova/channel').onNativeReady.fire()`.
 
 # Cordova-specific TODOs Before Final Integration
 
+- Add a section about authoring plugins for cordova.
 - Related to above, come up with a consistent sensor plugin API.
   Functions like `getCurrent<data>` and `watch<data>` can be abstracted
   into a nice plugin. Compass, Accel, Geo should all be basically the
@@ -201,26 +189,19 @@ Use the cordova.proto platform in ripple.
   However, Compass requires that JS initiates a `start`. This is dumb.
 - Media (and other plugin) implementations across platforms need to use the established
   cordova/exec callback method (instead of triggering globally-accessible functions to 
-  dispatch listeners). On iOS and Android, grep for "cast" in the native
+  dispatch listeners). On iOS, grep for "cast" in the native
   code - you'll see a bunch of invoked JavaScript from native, which
   shouldn't be there.
 - Media needs updates across all platforms. Methods need fixing with
   respect to timing: some methods use milliseconds, some use seconds.
   Some methods not documented (setVolume on Android). Consolidate /
   implement properly across platforms.
-- Storage shim on Android needs to change its win/fail callbacks to
-  `require('cordova/plugin/android/storage').failQuery / completeQuery`
-  (away from droiddb.fail / completeQuery)
 - Normalize `Entry.toURL` return values. iOS returns `"file://localhost" +
   fullPath`, Android returns `"file://" + fullPath`, BlackBerry returns just `fullPath`
 - APIs that are not cross-platform - what
   to do with these?
   - Crypto on Android
   - SMS, telephony, splashscreen on iOS
-- Need to normalize native return values as much as possible across
-  platforms. For example, error objects. Should we return JSON objects
-  from native or minimal primitives (i.e. error codes as numbers)? Both
-  are in use today, we need to decide on a standard.
 - Once-over all of the cordova-docs with the APIs defined in here to
   make sure all is consistent. There were function signature tweaks,
   undocumented procedures, etc.
@@ -239,3 +220,4 @@ Use the cordova.proto platform in ripple.
   kb?). what about specifically denoting modules to include/exclude on a
   per-platform basis?
 - 3rd party plugins could be interesting. Need a little bit more thought about how these will fit into the system. I am thinking a package.json type file to handle per plugin.
+
