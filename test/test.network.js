@@ -1,11 +1,13 @@
 describe("network", function () {
     var network,
-        exec = require('cordova/exec');
+        exec = require('cordova/exec'),
+        channel = require('cordova/channel');
        
-    it("should fire exec on first-run", function() {
+    it("should fire exec on first-run after CordovaReady fires", function() {
         exec.reset();
 
         network = require('cordova/plugin/network');
+        channel.onCordovaReady.fire();
 
         expect(exec).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function), "NetworkStatus", "getConnectionInfo", []);
     });
