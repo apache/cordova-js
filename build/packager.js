@@ -130,12 +130,17 @@ function writeScript(oFile, fileName, debug) {
 //------------------------------------------------------------------------------
 function writeModule(oFile, fileName, moduleId, debug) {
     var contents = '\n' + getContents(fileName, 'utf8') + '\n'
+
+	// Windows fix, '\' is an escape, but defining requires '/' -jm
+    moduleId = path.join('cordova', moduleId).split("\\").join("/");
+	
+	
     
-    moduleId = path.join('cordova', moduleId)
+    var signature = 'function(require, exports, module)';
+	
+	
     
-    var signature = 'function(require, exports, module)'
-    
-    contents = 'define("' + moduleId + '", ' + signature + ' {' + contents + '})\n'
+    contents = 'define("' + moduleId + '", ' + signature + ' {' + contents + '});\n'
 
     writeContents(oFile, fileName, contents, debug)    
 }
