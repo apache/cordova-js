@@ -37,7 +37,9 @@ packager.bundle = function(platform, debug) {
     
     copyProps(modules, collectFiles(path.join('lib', platform)))
 
-    var output = []
+    var output = [];
+	
+	output.push("// File generated at :: "  + new Date() + "\n");
 
     // write header     
     output.push('/*\n' + getContents('LICENSE-for-js-file.txt') + '\n*/')
