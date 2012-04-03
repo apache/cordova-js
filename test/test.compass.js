@@ -3,7 +3,9 @@ describe("compass", function () {
         utils = require('cordova/utils'),
         exec = require('cordova/exec');
 
-    exec.reset();
+    beforeEach(function() {
+        exec.reset();
+    });
 
     describe("when getting the current heading", function () {
         it("logs an error and doesn't call exec when no success callback given", function () {
@@ -33,7 +35,7 @@ describe("compass", function () {
                 f = function () {};
 
             compass.getCurrentHeading(s, f);
-            expect(exec).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function), "Compass", "getHeading", []);
+            expect(exec).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function), "Compass", "getHeading", [undefined]);
         });
     });
 
@@ -96,7 +98,7 @@ describe("compass", function () {
 
             //exec the interval callback!
             window.setInterval.mostRecentCall.args[0]();
-            expect(exec).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function), "Compass", "getHeading", []);
+            expect(exec).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function), "Compass", "getHeading", [undefined]);
         });
     });
 
