@@ -37,7 +37,9 @@ packager.bundle = function(platform, debug) {
     
     copyProps(modules, collectFiles(path.join('lib', platform)))
 
-    var output = []
+    var output = [];
+	
+	output.push("// File generated at :: "  + new Date() + "\n");
 
     // write header     
     output.push('/*\n' + getContents('LICENSE-for-js-file.txt') + '\n*/')
@@ -130,12 +132,17 @@ function writeScript(oFile, fileName, debug) {
 //------------------------------------------------------------------------------
 function writeModule(oFile, fileName, moduleId, debug) {
     var contents = '\n' + getContents(fileName, 'utf8') + '\n'
+
+	// Windows fix, '\' is an escape, but defining requires '/' -jm
+    moduleId = path.join('cordova', moduleId).split("\\").join("/");
+	
+	
     
-    moduleId = path.join('cordova', moduleId)
+    var signature = 'function(require, exports, module)';
+	
+	
     
-    var signature = 'function(require, exports, module)'
-    
-    contents = 'define("' + moduleId + '", ' + signature + ' {' + contents + '})\n'
+    contents = 'define("' + moduleId + '", ' + signature + ' {' + contents + '});\n'
 
     writeContents(oFile, fileName, contents, debug)    
 }
