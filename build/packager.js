@@ -5,11 +5,11 @@ var path  = require('path')
 var packager = module.exports
 
 //------------------------------------------------------------------------------
-packager.generate = function(platform) {
+packager.generate = function(platform, commitId) {
     var time = new Date().valueOf()
     
-    var libraryRelease = packager.bundle(platform, false)
-    var libraryDebug   = packager.bundle(platform, true)
+    var libraryRelease = packager.bundle(platform, false, commitId)
+    var libraryDebug   = packager.bundle(platform, true, commitId)
     
     time = new Date().valueOf() - time
     
@@ -25,7 +25,7 @@ packager.generate = function(platform) {
 }
 
 //------------------------------------------------------------------------------
-packager.bundle = function(platform, debug) {
+packager.bundle = function(platform, debug, commitId ) {
     var modules = collectFiles('lib/common')
     var scripts = collectFiles('lib/scripts')
     
@@ -39,6 +39,7 @@ packager.bundle = function(platform, debug) {
 
     var output = [];
 	
+    output.push("// "  + commitId + "\n");
 	output.push("// File generated at :: "  + new Date() + "\n");
 
     // write header     

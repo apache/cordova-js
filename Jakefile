@@ -21,14 +21,26 @@ desc("compiles the source files for all extensions");
 task('build', ['clean'], function () {
 
     var packager = require("./build/packager");
+    var commitId = "";
+    childProcess.exec("git log -1",function(err,stdout,stderr)
+    {
+        var stdoutLines = stdout.split("\n");
+        if(stdoutLines.length > 0)
+        {
+            commitId = stdoutLines[0];
+        }
+        
+        console.log("commitId = " + commitId);
+        packager.generate("blackberry",commitId);
+        packager.generate("playbook",commitId);
+        packager.generate("ios",commitId);
+        packager.generate("wp7",commitId);
+        packager.generate("android",commitId);
+        packager.generate("errgen",commitId);
+        packager.generate("test",commitId);
+    });
 
-    packager.generate("blackberry");
-    packager.generate("playbook");
-    packager.generate("ios");
-    packager.generate("wp7");
-    packager.generate("android");
-    packager.generate("errgen");
-    packager.generate("test");
+    
 
 });
 
