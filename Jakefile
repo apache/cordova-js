@@ -33,6 +33,7 @@ task('build', ['clean'], function () {
         packager.generate("ios",commitId);
         packager.generate("wp7",commitId);
         packager.generate("android",commitId);
+        packager.generate("bada",commitId);
         packager.generate("errgen",commitId);
         packager.generate("test",commitId);
         complete();
