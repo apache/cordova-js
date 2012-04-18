@@ -7,7 +7,8 @@ var util         = require('util'),
     rexp_minified = new RegExp("\\.min\\.js$"),
     rexp_src = new RegExp('\\.js$');
 
-
+// HELPERS
+// Iterates over a directory
 function forEachFile(root, cbFile, cbDone) {
     var count = 0;
 
@@ -41,6 +42,7 @@ function forEachFile(root, cbFile, cbDone) {
 
     scan(root);
 }
+
 
 desc("runs build");
 task('default', ['build','test'], function () {});
@@ -96,8 +98,8 @@ task('set-cwd', [], function() {
 });
 
 // Taken shamelessly from Jakefile from https://github.com/marcenuc/sammy
-desc('Check sources with JSHint.');
-task('hint', function () {
+desc('check sources with JSHint');
+task('hint', ['fixtabs'], function () {
     var JSHINT = require('jshint').JSHINT;
 
     function checkFile(file, cbDone) {
@@ -136,4 +138,21 @@ task('hint', function () {
     }, function() {
         checkFile('Jakefile', complete);
     });
+}, true);
+
+desc('converts tabs to four spaces - enforcing style guide ftw!');
+task('fixtabs', function() {
+    forEachFile('lib', function(err, file, stats, cbDone) {
+        if (err) throw err;
+        if (rexp_minified.test(file) || !rexp_src.test(file)) {
+            cbDone();
+        } else {
+            var src = fs.readFileSync(file, 'utf8');
+            if (src.indexOf('\t') >= 0) {
+                src = src.split('\t').join('    ');
+                fs.writeFileSync(file, src, 'utf8');
+            }
+            cbDone();
+        }
+    }, complete);
 }, true);
