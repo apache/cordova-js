@@ -43,7 +43,8 @@
   ],
   "dependencies": {
     "jsdom":"0.2.10",
-    "connect":"1.8.5"
+    "connect":"1.8.5",
+    "jshint":"0.6.1"
   },
   "devDependencies": {}
 }

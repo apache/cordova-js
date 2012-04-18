@@ -1,8 +1,46 @@
 
-var util         = require('util')
-var fs           = require('fs')
-var childProcess = require('child_process')
-var path         = require("path")
+var util         = require('util'),
+    fs           = require('fs'),
+    childProcess = require('child_process'),
+    path         = require("path"),
+    hint         = require('jshint'),
+    rexp_minified = new RegExp("\\.min\\.js$"),
+    rexp_src = new RegExp('\\.js$');
+
+
+function forEachFile(root, cbFile, cbDone) {
+    var count = 0;
+
+    function scan(name) {
+        ++count;
+
+        fs.stat(name, function (err, stats) {
+            if (err) cbFile(err);
+
+            if (stats.isDirectory()) {
+                fs.readdir(name, function (err, files) {
+                    if (err) cbFile(err);
+
+                    files.forEach(function (file) {
+                        scan(path.join(name, file));
+                    });
+                    done();
+                });
+            } else if (stats.isFile()) {
+                cbFile(null, name, stats, done);
+            } else {
+                done();
+            }
+        });
+    }
+
+    function done() {
+        --count;
+        if (count === 0 && cbDone) cbDone();
+    }
+
+    scan(root);
+}
 
 desc("runs build");
 task('default', ['build','test'], function () {});
@@ -43,7 +81,7 @@ task('build', ['clean'], function () {
 desc("prints a dalek");
 task('dalek', ['set-cwd'], function () {
     util.puts(fs.readFileSync("build/dalek", "utf-8"));
-})
+});
 
 desc("runs the unit tests in node");
 task('test', ['set-cwd'], require('./test/runner').node);
@@ -54,7 +92,49 @@ task('btest', ['set-cwd'], require('./test/runner').browser);
 desc("make sure we're in the right directory");
 task('set-cwd', [], function() {
     if (__dirname != process.cwd()) {
-        process.chdir(__dirname)
+        process.chdir(__dirname);
     }
 });
 
+// Taken shamelessly from Jakefile from https://github.com/marcenuc/sammy
+desc('Check sources with JSHint.');
+task('hint', function () {
+    var JSHINT = require('jshint').JSHINT;
+
+    function checkFile(file, cbDone) {
+        fs.readFile(file, 'utf8', function (err, src) {
+            if (err) throw err;
+
+            var res = [],
+                line;
+
+            if (!JSHINT(src)) {
+                res.push("\n" + file);
+                JSHINT.errors.forEach(function (e) {
+                    if (e) {
+                        if (line !== e.line) {
+                            line = e.line;
+                            res.push(line + ": " + e.evidence);
+                        }
+                        res.push("\t" + e.reason);
+                    }
+                });
+                console.log(res.join('\n'));
+            }
+
+            cbDone();
+        });
+    }
+
+    forEachFile('lib', function (err, file, stats, cbDone) {
+        if (err) throw err;
+
+        if (rexp_minified.test(file) || !rexp_src.test(file)) {
+            cbDone();
+        } else {
+            checkFile(file, cbDone);
+        }
+    }, function() {
+        checkFile('Jakefile', complete);
+    });
+}, true);
