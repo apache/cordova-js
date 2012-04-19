@@ -3,7 +3,6 @@ var util         = require('util'),
     fs           = require('fs'),
     childProcess = require('child_process'),
     path         = require("path"),
-    hint         = require('jshint'),
     rexp_minified = new RegExp("\\.min\\.js$"),
     rexp_src = new RegExp('\\.js$');
 
@@ -98,61 +97,46 @@ task('set-cwd', [], function() {
     }
 });
 
-// Taken shamelessly from Jakefile from https://github.com/marcenuc/sammy
 desc('check sources with JSHint');
-task('hint', ['fixtabs'], function () {
-    var JSHINT = require('jshint').JSHINT;
-
-    function checkFile(file, cbDone) {
-        fs.readFile(file, 'utf8', function (err, src) {
-            if (err) throw err;
-
-            var res = [],
-                line;
-
-            if (!JSHINT(src)) {
-                res.push("\n" + file);
-                JSHINT.errors.forEach(function (e) {
-                    if (e) {
-                        if (line !== e.line) {
-                            line = e.line;
-                            res.push(line + ": " + e.evidence);
-                        }
-                        res.push("\t" + e.reason);
-                    }
-                });
-                console.log(res.join('\n'));
-            }
-
-            cbDone();
+task('hint', ['fixwhitespace'], function () {
+    var knownWarnings = ["Redefinition of 'FileReader'", "Redefinition of 'require'", "Read only"];
+    var filterKnownWarnings = function(el, index, array) {
+        var wut = false;
+        knownWarnings.forEach(function(e) {
+            wut = wut && (el.indexOf(e) > -1);
         });
-    }
+        return wut;
+    };
 
-    forEachFile('lib', function (err, file, stats, cbDone) {
-        if (err) throw err;
-
-        if (rexp_minified.test(file) || !rexp_src.test(file)) {
-            cbDone();
-        } else {
-            checkFile(file, cbDone);
-        }
-    }, function() {
-        checkFile('Jakefile', complete);
+    childProcess.exec("jshint lib",function(err,stdout,stderr) {
+        var exs = stdout.split('\n');
+        console.log(exs.filter(filterKnownWarnings).join('\n')); 
+        complete();
     });
 }, true);
 
-desc('converts tabs to four spaces - enforcing style guide ftw!');
-task('fixtabs', function() {
+desc('converts tabs to four spaces, eliminates trailing white space, converts newlines to proper form - enforcing style guide ftw!');
+task('fixwhitespace', function() {
     forEachFile('lib', function(err, file, stats, cbDone) {
-        if (err) throw err;
+        //if (err) throw err;
         if (rexp_minified.test(file) || !rexp_src.test(file)) {
             cbDone();
         } else {
             var src = fs.readFileSync(file, 'utf8');
+
+            // tabs -> four spaces
             if (src.indexOf('\t') >= 0) {
                 src = src.split('\t').join('    ');
-                fs.writeFileSync(file, src, 'utf8');
             }
+
+            // convert carriage return + line feed to just a line feed
+            src = src.replace(/\r\n/g, '\n');
+
+            // eliminate trailing white space
+            src = src.replace(/ +\n/g, '\n');
+
+            // write it out yo
+            fs.writeFileSync(file, src, 'utf8');
             cbDone();
         }
     }, complete);
