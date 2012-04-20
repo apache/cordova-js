@@ -67,8 +67,9 @@ All of the build tasks can be run via the `jake` node module. Install it globall
 
     sudo npm install -g jake
 
-Every build also runs the scripts through [JSHint](). It is best
-installed globally:
+Every build also runs the scripts through [JSHint](http://jshint.com). It is best
+installed globally, but it is _not_ necessary for building cordova-js
+(you just won't get syntax and style hints when you build):
 
     sudo npm install -g jshint
 
