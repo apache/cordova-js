@@ -85,13 +85,18 @@ This will run the `build`, `hint` and `test` tasks by default. All of the availa
 - `btest`: creates a server so you can run the tests inside a browser
 - `clean`: cleans out the `pkg/` directory
 - `hint`: runs all of the script files through JSHint
-- `fixtabs`: converts all tabs to four spaces within the script files
+- `fixwhitespace`: converts all tabs to four spaces, removes carriage returns and cuts out trailing whitespace within the script files
 
 ## Known Issues
 
 - On Mac OS 10.7.3, there were issues with the contextify module not
     being able to build properly when using node v0.6.10 and running `npm
 	install`. Using node v0.6.6 works, though.
+- On Windows, when you run `npm install`, you may get errors regarding
+  contextify. This is necessary for running the tests. Make sure you
+  are running node v0.6.15 at the least (and npm v1.1.16 which should
+  come bundled with node 0.6.15). Also, install [Python 2.7.x](http://python.org/download/releases/2.7.3) and [Visual C++ 2010 Express](http://www.microsoft.com/visualstudio/en-us/products/2010-editions/visual-cpp-express). When that is done, run `npm install` again and it should build
+  contextify natively on Windows.
 
 # How It Works
 
