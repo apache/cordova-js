@@ -131,9 +131,6 @@ task('fixwhitespace', function() {
                 src = src.split('\t').join('    ');
             }
 
-            // convert carriage return + line feed to just a line feed
-            src = src.replace(/\r\n/g, '\n');
-
             // eliminate trailing white space
             src = src.replace(/ +\n/g, '\n');
 
