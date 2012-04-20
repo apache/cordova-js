@@ -57,7 +57,7 @@ task('clean', ['set-cwd'], function () {
 }, true);
 
 desc("compiles the source files for all extensions");
-task('build', ['clean'], function () {
+task('build', ['clean', 'hint'], function () {
     var packager = require("./build/packager");
     var commitId = "";
     childProcess.exec("git log -1",function(err,stdout,stderr) {
@@ -66,7 +66,7 @@ task('build', ['clean'], function () {
             commitId = stdoutLines[0];
         }
         
-        console.log("commit = " + commitId);
+        console.log("building " + commitId);
         packager.generate("blackberry",commitId);
         packager.generate("playbook",commitId);
         packager.generate("ios",commitId);
@@ -101,10 +101,12 @@ desc('check sources with JSHint');
 task('hint', ['fixwhitespace'], function () {
     var knownWarnings = ["Redefinition of 'FileReader'", "Redefinition of 'require'", "Read only"];
     var filterKnownWarnings = function(el, index, array) {
-        var wut = false;
+        var wut = true;
+        // filter out the known warnings listed out above
         knownWarnings.forEach(function(e) {
-            wut = wut && (el.indexOf(e) > -1);
+            wut = wut && (el.indexOf(e) == -1);
         });
+        wut = wut && (!el.match(/\d+ errors/));
         return wut;
     };
 
