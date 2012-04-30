@@ -124,7 +124,7 @@ task('fixwhitespace', function() {
         if (rexp_minified.test(file) || !rexp_src.test(file)) {
             cbDone();
         } else {
-            var src = fs.readFileSync(file, 'utf8');
+            var origsrc = src = fs.readFileSync(file, 'utf8');
 
             // tabs -> four spaces
             if (src.indexOf('\t') >= 0) {
@@ -134,8 +134,10 @@ task('fixwhitespace', function() {
             // eliminate trailing white space
             src = src.replace(/ +\n/g, '\n');
 
-            // write it out yo
-            fs.writeFileSync(file, src, 'utf8');
+            if (origsrc !== src) {
+                // write it out yo
+                fs.writeFileSync(file, src, 'utf8');
+            }
             cbDone();
         }
     }, complete);

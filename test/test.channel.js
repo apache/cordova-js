@@ -2,15 +2,37 @@ describe("channel", function () {
     var channel = require('cordova/channel');
 
     describe("when subscribing", function() {
+        it("should throw an exception if no function is provided", function() {
+            var c = channel.create('test');
+            expect(function() {
+                c.subscribe();
+            }).toThrow();
+
+            expect(function() {
+                c.subscribe(null);
+            }).toThrow();
+
+            expect(function() {
+                c.subscribe(undefined);
+            }).toThrow();
+
+            expect(function() {
+                c.subscribe({apply:function(){},call:function(){}});
+            }).toThrow();
+        });
         it("should not change number of handlers if no function is provided", function() {
             var c = channel.create('heydawg');
             var initialLength = c.numHandlers;
 
-            c.subscribe();
+            try {
+                c.subscribe();
+            } catch(e) {}
 
             expect(c.numHandlers).toEqual(initialLength);
 
-            c.subscribe(null);
+            try {
+                c.subscribe(null);
+            } catch(e) {}
 
             expect(c.numHandlers).toEqual(initialLength);
         });
