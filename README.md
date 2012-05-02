@@ -52,10 +52,10 @@ A unified JavaScript layer for [Apache Cordova](http://incubator.apache.org/proj
       |  |-<platform>/
       |  | Contains the platform-specific base modules.
       |  |
-      |  |-<platform>/plugin
+      |  |-<platform>/plugin/<platform>
       |  | Contains the platform-specific plugin modules.
 
-The way the resulting `cordova.<platform>.js` files will be built is by combining the scripts in the `lib/scripts` directory with modules from the `lib/common` and `lib/<platform>` directories.  For cases where there is the same named module in `lib/common` and `lib/<platform>`, the `lib/<platform>` version wins.  For instance, every `lib/<platform>` includes an `exec.js`, and there is also a version in `lib/common`, so the `lib/<platform>` version will always be used.  In fact, the `lib/common` one will throw errors, so if you build a new platform and forget `exec.js`, the resulting `cordova.<platform>.js` file will also throw errors.
+The way the resulting `cordova.<platform>.js` files will be built is by combining the scripts in the `lib/scripts` directory with modules from the `lib/common` and `lib/<platform>` directories.  For cases where there is the same named module in `lib/common` and `lib/<platform>/plugin/<platform>`, the `lib/<platform>` version wins.  For instance, every `lib/<platform>` includes an `exec.js`, and there is also a version in `lib/common`, so the `lib/<platform>` version will always be used.  In fact, the `lib/common` one will throw errors, so if you build a new platform and forget `exec.js`, the resulting `cordova.<platform>.js` file will also throw errors.
 
 # Building
 
@@ -65,25 +65,38 @@ Make sure you have [node.js](http://nodejs.org) installed. It should come pre-in
 
 All of the build tasks can be run via the `jake` node module. Install it globally first by running:
 
-    npm install -g jake
+    sudo npm install -g jake
+
+Every build also runs the scripts through [JSHint](http://jshint.com). It is best
+installed globally, but it is _not_ necessary for building cordova-js
+(you just won't get syntax and style hints when you build):
+
+    sudo npm install -g jshint
 
 Then from the repository root run:
 
     jake
 
-This will run the `build` and `test` tasks by default. All of the available tasks are:
+This will run the `build`, `hint` and `test` tasks by default. All of the available tasks are:
 
 - `build`: creates platform versions of cordova-js and builds them into
-  the `pkg/` directory.
-- `test`: runs all of the unit tests inside node.
-- `btest`: creates a server so you can run the tests inside a browser.
+  the `pkg/` directory
+- `test`: runs all of the unit tests inside node
+- `btest`: creates a server so you can run the tests inside a browser
 - `clean`: cleans out the `pkg/` directory
+- `hint`: runs all of the script files through JSHint
+- `fixwhitespace`: converts all tabs to four spaces, removes carriage returns and cuts out trailing whitespace within the script files
 
 ## Known Issues
 
 - On Mac OS 10.7.3, there were issues with the contextify module not
     being able to build properly when using node v0.6.10 and running `npm
 	install`. Using node v0.6.6 works, though.
+- On Windows, when you run `npm install`, you may get errors regarding
+  contextify. This is necessary for running the tests. Make sure you
+  are running node v0.6.15 at the least (and npm v1.1.16 which should
+  come bundled with node 0.6.15). Also, install [Python 2.7.x](http://python.org/download/releases/2.7.3) and [Visual C++ 2010 Express](http://www.microsoft.com/visualstudio/en-us/products/2010-editions/visual-cpp-express). When that is done, run `npm install` again and it should build
+  contextify natively on Windows.
 
 # How It Works
 
@@ -118,6 +131,9 @@ Build the .js file and drop it in as a replacement for cordova.js.
 ### Supported Platforms
 
 - Android
+- iOS
+- BlackBerry
+- Windows Phone 7 Mango
 
 ## Ripple
 
@@ -132,13 +148,14 @@ and then load the upacked extension in chrome in the pkg/chromium folder. Use th
 
 # Adding a New Platform
 
-1. Write a module that encapsulates your platform's `exec` method and
-   call it <platform>.js. The `exec` method is a JavaScript function
+1. Add your platform as a directory under the `lib` folder.
+2. Write a module that encapsulates your platform's `exec` method and
+   call it exec.js. The `exec` method is a JavaScript function
    that enables communication from the platform's JavaScript environment
    into the platform's native environment. Each platform uses a different
    mechanism to enable this bridge. We recommend you check out the other
    platform `exec` definitions for inspiration. Drop this into the
-   `lib/exec` folder. The `exec` method has the following method
+   `lib/<platform>` folder you created in step 1. The `exec` method has the following method
    signature: `function(success, fail, service, action, args)`, with the
    following parameters:
   - `success`: a success function callback
@@ -151,11 +168,12 @@ and then load the upacked extension in chrome in the pkg/chromium folder. Use th
     by the `exec` call
    It is required that new platform additions be as consistent as
    possible with the existing `service` and `action` labels.
-2. Define your platform definition object and name it <platform>.js. Drop this into the `lib/platform` folder. This file should contain a JSON object with the following properties:
+2. Define your platform definition object and name it platform.js. Drop this into the `lib/<platform>` folder. This file should contain a JSON object with the following properties:
     - `id`: a string representing the platform. This should be the same
       name the .js file has
     - `objects`: the property names defined as children of this property
-      are injected into `window`. Each property can have the following
+      are injected into `window`, and also *overrides any existing
+      properties*. Each property can have the following
       child properties:
       - `path`: a string representing the module ID that will define
         this object. For example, the file `lib/plugin/accelerometer.js`
@@ -164,6 +182,9 @@ and then load the upacked extension in chrome in the pkg/chromium folder. Use th
       - `children`: in a recursive fashion, can have `path` and
         `children` properties of its own that are defined as children of
         the parent property object
+    - `merges`: similar to the above `objects` property, this one will
+      not clobber existing objects, instead it will recursively merge
+      this object into the specific target
     - `initialize`: a function that fires immediately after the `objects` (see above) are defined in the global scope
    
    The following is a simple example of a platform definition:
@@ -187,49 +208,17 @@ and then load the upacked extension in chrome in the pkg/chromium folder. Use th
     }
     </pre>
 
-3. You should probably add a `packager.bundle('<platform>')` call to the `Jakefile`.
+3. You should probably add a `packager.bundle('<platform>')` call to the `Jakefile` under the `build` task.
 4. Make sure your native implementation executes the following JavaScript once all of the native side is initialized and ready: `require('cordova/channel').onNativeReady.fire()`.
-
-# Cordova-specific TODOs Before Final Integration
-
-- Add a section about authoring plugins for cordova.
-- Related to above, come up with a consistent sensor plugin API.
-  Functions like `getCurrent<data>` and `watch<data>` can be abstracted
-  into a nice plugin. Compass, Accel, Geo should all be basically the
-  same implementation. For example, on Android geo + accel handle
-  calling `start` (starting the listener) in the native code on its own.
-  However, Compass requires that JS initiates a `start`. This is dumb.
-- Media (and other plugin) implementations across platforms need to use the established
-  cordova/exec callback method (instead of triggering globally-accessible functions to 
-  dispatch listeners). On iOS, grep for "cast" in the native
-  code - you'll see a bunch of invoked JavaScript from native, which
-  shouldn't be there.
-- Media needs updates across all platforms. Methods need fixing with
-  respect to timing: some methods use milliseconds, some use seconds.
-  Some methods not documented (setVolume on Android). Consolidate /
-  implement properly across platforms.
-- Normalize `Entry.toURL` return values. iOS returns `"file://localhost" +
-  fullPath`, Android returns `"file://" + fullPath`, BlackBerry returns just `fullPath`
-- APIs that are not cross-platform - what
-  to do with these?
-  - Crypto on Android
-  - SMS, telephony, splashscreen on iOS
-- Once-over all of the cordova-docs with the APIs defined in here to
-  make sure all is consistent. There were function signature tweaks,
-  undocumented procedures, etc.
-
-# TODO / Hacking / Contributing
-
-- implementations:
-  - BlackBerry: button + app + contact + file + others (need to once-over)
-  - all of Playbook
-  - everything for WP7
-  - everything for Bada
-- tests for channel, pretty much everything under lib/plugin
-- think about whether to select and load the platform specific modules at
-  runtime or at buildtime. what about platform-specific overrides? can
-  we at buildtime decide to include only the overrides (to save a few
-  kb?). what about specifically denoting modules to include/exclude on a
-  per-platform basis?
-- 3rd party plugins could be interesting. Need a little bit more thought about how these will fit into the system. I am thinking a package.json type file to handle per plugin.
-
+5. The deviceready event is important. To make sure that the stock
+   common JavaScript fires this event off, the device and network
+   connection plugins must successfully be instantiated and return
+   information about the connectivity and device information. The
+   success callbacks for these plugins should include calls to
+   `require('cordova/channel').onCordovaInfoReady.fire()` (for device
+   information) and
+   `require('cordova/channel').OnCordovaConnectionReady.fire()` (for
+   network information).
+6. Last but certainly not least: add yourself to the contributors list!
+   It's in the `package.json` file in the root of this repository. You
+   deserve it!
