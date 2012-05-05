@@ -13,7 +13,7 @@ describe("geolocation", function () {
     });
 
     describe("getCurrentPosition", function() {
-        describe("arguments", function () {
+        describe("and passed-in arguments", function () {
             it("uses default PositionOptions if none are specified", function () {
                 geo.getCurrentPosition(s, e);
                 expect(exec).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function), "Geolocation", "getLocation", [false, 0]);
@@ -244,6 +244,7 @@ describe("geolocation", function () {
     describe("clearWatch", function () {
         it("should tell native to remove an id from the watch list if it exists", function() {
             var id = geo.watchPosition(s, e);
+            exec.reset();
             geo.clearWatch(id);
             expect(exec).toHaveBeenCalledWith(null, null, "Geolocation", "clearWatch", [id]);
         });
