@@ -92,4 +92,79 @@ describe("utils", function () {
         expect(uuid).toMatch(/^(\{{0,1}([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){12}\}{0,1})$/);
         expect(uuid).not.toEqual(utils.createUUID());
     });
+    
+    describe("format() method", function () {
+        it("handles passing nothing", function() {
+            expect(utils.format()).toBe("")
+        })
+
+        it("handles the empty string", function() {
+            expect(utils.format("")).toBe("")
+        })
+
+        it("handles null", function() {
+            expect(utils.format(null)).toBe("")
+        })
+        
+        it("handles undefined", function() {
+            expect(utils.format(undefined)).toBe("")
+        })
+        
+        it("handles NaN", function() {
+            expect(utils.format(1/'x')).toBe('NaN')
+        })
+        
+        it("handles Infinity", function() {
+            expect(utils.format(1/0)).toBe('Infinity')
+        })
+        
+        it("handles ('x')", function() {
+            expect(utils.format('x')).toBe('x')
+        })
+        
+        it("handles ('x',1)", function() {
+            expect(utils.format('x',1)).toBe('x')
+        })
+        
+        it("handles ('%d',1)", function() {
+            expect(utils.format('%d',1)).toBe('1')
+        })
+
+        it("handles ('%d','x')", function() {
+            expect(utils.format('%d','x')).toBe('x')
+        })
+
+        it("handles ('%s %s %s',1,2,3)", function() {
+            expect(utils.format('%s %s %s',1,2,3)).toBe('1 2 3')
+        })
+
+        it("handles ('1%c2%c3',1,2,3)", function() {
+            expect(utils.format('1%c2%c3',1,2,3)).toBe('123')
+        })
+
+        it("handles ('%j',{a:1})", function() {
+            expect(utils.format('%j',{a:1})).toBe('{"a":1}')
+        })
+        
+        it("handles ('%d: %o',1, {b:2})", function() {
+            expect(utils.format('%d: %j',1, {b:2})).toBe('1: {"b":2}')
+        })
+        
+        it("handles ('%j',function(){})", function() {
+            expect(utils.format('%j',function(){})).toBe('')
+        })
+        
+        it("handles ('%s',function(){})", function() {
+            expect(utils.format('%s',function(){})).toBe('function (){}')
+        })
+        
+        it("handles ('1%%2%%3',4)", function() {
+            expect(utils.format('1%%2%%3',1)).toBe('1%2%3')
+        })
+        
+        it("handles ('1%x2%y3',4,5)", function() {
+            expect(utils.format('1%x2%y3',4,5)).toBe('14253')
+        })
+    })
+    
 });

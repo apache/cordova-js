@@ -25,6 +25,7 @@
 
 --stdoutcolor blue
 --stderrcolor red
+--verbose
 
 jake
 
