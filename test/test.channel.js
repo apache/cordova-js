@@ -1,9 +1,14 @@
 describe("channel", function () {
-    var channel = require('cordova/channel');
+    var channel = require('cordova/channel'),
+        c;
 
-    describe("when subscribing", function() {
+    beforeEach(function() {
+        c = null;
+        c = channel.create('masterexploder');
+    });
+
+    describe("subscribe method", function() {
         it("should throw an exception if no function is provided", function() {
-            var c = channel.create('test');
             expect(function() {
                 c.subscribe();
             }).toThrow();
@@ -21,7 +26,6 @@ describe("channel", function () {
             }).toThrow();
         });
         it("should not change number of handlers if no function is provided", function() {
-            var c = channel.create('heydawg');
             var initialLength = c.numHandlers;
 
             try {
@@ -38,9 +42,25 @@ describe("channel", function () {
         });
     });
 
-    describe("when unsubscribing", function() {
+    describe("unsubscribe method", function() {
+        it("should throw an exception if passed in null or undefined", function() {
+            expect(function() {
+                c.unsubscribe();
+            }).toThrow();
+            expect(function() {
+                c.unsubscribe(null);
+            }).toThrow();
+        });
+        it("should not decrement numHandlers if unsubscribing something that does not exist", function() {
+            var initialLength = c.numHandlers;
+            c.unsubscribe('blah');
+            expect(c.numHandlers).toEqual(initialLength);
+            c.unsubscribe(2);
+            expect(c.numHandlers).toEqual(initialLength);
+            c.unsubscribe({balls:false});
+            expect(c.numHandlers).toEqual(initialLength);
+        });
         it("should change the handlers length appropriately", function() {
-            var c = channel.create('test');
             var firstHandler = function() {};
             var secondHandler = function() {};
             var thirdHandler = function() {};
