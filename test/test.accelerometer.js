@@ -2,28 +2,26 @@ describe("accelerometer", function () {
     var accelerometer = require("cordova/plugin/accelerometer"),
         exec = require('cordova/exec');
 
-    describe("when getting the current acceleration", function () {
-        describe("when passing in bad data", function () {
-            it("logs the error message when missing the successCallback", function () {
-                spyOn(console, "log");
-                accelerometer.getCurrentAcceleration();
-                expect(console.log).toHaveBeenCalledWith("Accelerometer Error: successCallback is not a function");
-            });
+    beforeEach(function() {
+        exec.reset();
+    });
 
-            it("logs the error message when the success callback isn't a function", function () {
-                spyOn(console, "log");
-                accelerometer.getCurrentAcceleration("ponies");
-                expect(console.log).toHaveBeenCalledWith("Accelerometer Error: successCallback is not a function");
-            });
-
-            it("logs the error message the error callback isn't a function", function () {
-                spyOn(console, "log");
-                accelerometer.getCurrentAcceleration(jasmine.createSpy(), "rainbows");
-                expect(console.log).toHaveBeenCalledWith("Accelerometer Error: errorCallback is not a function");
+    describe("getCurrentAcceleration", function () {
+        describe("failure", function () {
+            it("should throw exception if bad success callback passed in", function () {
+                expect(function() {
+                    accelerometer.getCurrentAcceleration();
+                }).toThrow();
+                expect(function() {
+                    accelerometer.getCurrentAcceleration(null);
+                }).toThrow();
+                expect(function() {
+                    accelerometer.getCurrentAcceleration({call:function(){}, apply:function(){}});
+                }).toThrow();
             });
         });
 
-        it("calls the exec method", function () {
+        it("should call the exec method", function () {
             var success = function () {},
                 error = function () {};
 
@@ -32,112 +30,58 @@ describe("accelerometer", function () {
         });
     });
 
-    describe("when watching the acceleration", function () {
-        describe("when passing in bad data", function () {
-            it("logs the error message when missing the successCallback", function () {
-                spyOn(console, "log");
-                accelerometer.watchAcceleration();
-                expect(console.log).toHaveBeenCalledWith("Accelerometer Error: successCallback is not a function");
-            });
-
-            it("logs the error message when the success callback isn't a function", function () {
-                spyOn(console, "log");
-                accelerometer.watchAcceleration("ponies");
-                expect(console.log).toHaveBeenCalledWith("Accelerometer Error: successCallback is not a function");
-            });
-
-            it("logs the error message the error callback isn't a function", function () {
-                spyOn(console, "log");
-                accelerometer.watchAcceleration(jasmine.createSpy(), "rainbows");
-                expect(console.log).toHaveBeenCalledWith("Accelerometer Error: errorCallback is not a function");
+    describe("watchAcceleration", function () {
+        describe("failure", function () {
+            it("throws an exception if bad successCallback", function () {
+                expect(function() {
+                    accelerometer.watchAcceleration();
+                }).toThrow();
+                expect(function() {
+                    accelerometer.watchAcceleration(null);
+                }).toThrow();
+                expect(function() {
+                    accelerometer.watchAcceleration({call:function(){}, apply:function(){}});
+                }).toThrow();
             });
         });
 
-        describe("when working with the timeout", function () {
-            it("calls exec to get the timeout", function () {
+        describe('success', function() {
+            it("should call exec with a provided frequency", function () {
                 var success = jasmine.createSpy(),
                     fail = jasmine.createSpy();
 
-                spyOn(window, "setInterval");
+                accelerometer.watchAcceleration(success, fail, {frequency: 11});
+
+                expect(exec).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function), "Accelerometer", "addWatch", [jasmine.any(String), 11]);
+            });
+
+            it("should call exec with default frequency if no options provided", function () {
+                var success = jasmine.createSpy(),
+                    fail = jasmine.createSpy();
+
                 accelerometer.watchAcceleration(success, fail);
 
-                expect(exec).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function), "Accelerometer", "getTimeout", []);
+                expect(exec).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function), "Accelerometer", "addWatch", [jasmine.any(String), 10000]);
             });
-
-            it("it sets it to 10 seconds greater than the frequency", function () {
-                var success = jasmine.createSpy(),
-                    fail = jasmine.createSpy();
-
-                spyOn(window, "setInterval");
-                accelerometer.watchAcceleration(success, fail, {frequency: 5000});
-
-                //execute the success callback ;)
-                exec.mostRecentCall.args[0](5000);
-
-                expect(exec).toHaveBeenCalledWith(null, null, "Accelerometer", "setTimeout", [15000]);
-            });
-
-            it("doesn't set it if timeout is less than freq + 10sec", function () {
-                var success = jasmine.createSpy(),
-                    fail = jasmine.createSpy();
-
-                spyOn(window, "setInterval");
-                accelerometer.watchAcceleration(success, fail, {frequency: 1000});
-
-                //execute the success callback ;)
-                exec.mostRecentCall.args[0](20000);
-
-                expect(exec).not.toHaveBeenCalledWith(null, null, "Accelerometer", "setTimeout", [11000]);
-            });
-        });
-
-        it("starts the interval with the provided frequency", function () {
-            var success = jasmine.createSpy(),
-                fail = jasmine.createSpy();
-
-            spyOn(window, "setInterval");
-            accelerometer.watchAcceleration(success, fail, {frequency: 11});
-
-            expect(window.setInterval).toHaveBeenCalledWith(jasmine.any(Function), 11);
-        });
-
-        it("starts the interval with the default frequency", function () {
-            var success = jasmine.createSpy(),
-                fail = jasmine.createSpy();
-
-            spyOn(window, "setInterval");
-            accelerometer.watchAcceleration(success, fail);
-
-            expect(window.setInterval).toHaveBeenCalledWith(jasmine.any(Function), 10000);
-        });
-
-        it("gets the acceleration for the provided interval", function () {
-            var success = jasmine.createSpy(),
-                fail = jasmine.createSpy();
-
-            spyOn(window, "setInterval");
-            accelerometer.watchAcceleration(success, fail, {frequency: 11});
-
-            //exec the interval callback!
-            window.setInterval.mostRecentCall.args[0]();
-
-            expect(exec).toHaveBeenCalledWith(success, fail, "Accelerometer", "getAcceleration", []);
         });
     });
 
     describe("when clearing the watch", function () {
-        beforeEach(function () {
-            spyOn(window, "clearInterval");
-        });
-
         it("doesn't clear anything if the timer doesn't exist", function () {
             accelerometer.clearWatch("Never Gonna Give you Up");
-            expect(window.clearInterval).not.toHaveBeenCalled();
+            expect(exec).not.toHaveBeenCalled();
         });
 
-        it("can be called with no args", function () {
+        it("doesnt invoke exec if no id provided", function () {
             accelerometer.clearWatch();
-            expect(window.clearInterval).not.toHaveBeenCalled();
+            expect(exec).not.toHaveBeenCalled();
+        });
+
+        it("invokes exec if watch exists", function() {
+            var id = accelerometer.watchAcceleration(function(){}, function(){});
+            exec.reset();
+            accelerometer.clearWatch(id);
+            expect(exec).toHaveBeenCalledWith(null, null, "Accelerometer", "clearWatch", [id]);
         });
     });
 });
