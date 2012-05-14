@@ -26,7 +26,7 @@ describe("accelerometer", function () {
                 error = function () {};
 
             accelerometer.getCurrentAcceleration(success, error, "options");
-            expect(exec).toHaveBeenCalledWith(success, error, "Accelerometer", "getAcceleration", []);
+            expect(exec).toHaveBeenCalledWith(jasmine.any(Function), error, "Accelerometer", "getAcceleration", []);
         });
     });
 
@@ -62,6 +62,39 @@ describe("accelerometer", function () {
                 accelerometer.watchAcceleration(success, fail);
 
                 expect(exec).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function), "Accelerometer", "addWatch", [jasmine.any(String), 10000]);
+            });
+
+            it("should set a timer with the provided frequency", function() {
+                spyOn(window, "setInterval");
+                
+                accelerometer.watchAcceleration(function(){}, function(){}, {frequency:50});
+
+                expect(window.setInterval).toHaveBeenCalledWith(jasmine.any(Function), 50);
+            });
+
+            it("should not fire the timer until the framework sends back an acceleration reading", function() {
+                var success = jasmine.createSpy();
+
+                runs(function() {
+                    accelerometer.watchAcceleration(success, function(){}, {frequency:50});
+                });
+
+                waits(51);
+
+                runs(function() {
+                    expect(success).not.toHaveBeenCalled();
+                });
+
+                runs(function() {
+                    // "fake" native returning an accel reading
+                    exec.mostRecentCall.args[0]({x:1, y:2, z:3, timestamp:100});
+                });
+
+                waits(51);
+
+                runs(function() {
+                    expect(success).toHaveBeenCalled();
+                });
             });
         });
     });
