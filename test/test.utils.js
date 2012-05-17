@@ -93,6 +93,28 @@ describe("utils", function () {
         expect(uuid).not.toEqual(utils.createUUID());
     });
     
+    describe("vformat() method", function () {
+        it("handles passing nothing", function() {
+            expect(utils.format()).toBe("")
+        })
+
+        it("handles empty args", function() {
+            expect(utils.vformat("abc",[])).toBe("abc")
+        })
+
+        it("handles empty args and format char", function() {
+            expect(utils.vformat("ab%oc",[])).toBe("ab%oc")
+        })
+
+        it("handles one arg", function() {
+            expect(utils.vformat("a%sb", ["-"])).toBe("a-b")
+        })
+
+        it("handles two args", function() {
+            expect(utils.vformat("a%sb%sc", ["-","_"])).toBe("a-b_c")
+        })
+    })
+        
     describe("format() method", function () {
         it("handles passing nothing", function() {
             expect(utils.format()).toBe("")
