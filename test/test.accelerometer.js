@@ -117,6 +117,26 @@ describe("accelerometer", function () {
                     expect(success).toHaveBeenCalled();
                 });
             });
+            it("should fire the success callback on the appropriate interval, not based on how quickly the framework returns accel objects", function() {
+                var success = jasmine.createSpy();
+                runs(function() {
+                    id = accelerometer.watchAcceleration(success, function(){}, {frequency:250});
+                });
+                waits(25);
+                runs(function() {
+                    callSuccess();
+                    expect(success).not.toHaveBeenCalled();
+                });
+                waits(25);
+                runs(function() {
+                    callSuccess();
+                    expect(success).not.toHaveBeenCalled();
+                });
+                waits(210);
+                runs(function() {
+                    expect(success).toHaveBeenCalled();
+                });
+            });
         });
     });
 
