@@ -98,7 +98,7 @@ task('set-cwd', [], function() {
 });
 
 desc('check sources with JSHint');
-task('hint', ['fixwhitespace'], function () {
+task('hint', ['complainwhitespace'], function () {
     var knownWarnings = ["Redefinition of 'FileReader'", "Redefinition of 'require'", "Read only"];
     var filterKnownWarnings = function(el, index, array) {
         var wut = true;
@@ -117,8 +117,34 @@ task('hint', ['fixwhitespace'], function () {
     });
 }, true);
 
+var complainedAboutWhitespace = false
+
+desc('complain about what fixwhitespace would fix');
+task('complainwhitespace', function() {
+    processWhiteSpace(function(file, newSource) {
+        if (!complainedAboutWhitespace) {
+            console.log("files with whitespace issues: (to fix: `jake fixwhitespace`)")
+            complainedAboutWhitespace = true
+        }
+        
+        console.log("   " + file)
+    })
+}, true);
+
 desc('converts tabs to four spaces, eliminates trailing white space, converts newlines to proper form - enforcing style guide ftw!');
 task('fixwhitespace', function() {
+    processWhiteSpace(function(file, newSource) {
+        if (!complainedAboutWhitespace) {
+            console.log("fixed whitespace issues in:")
+            complainedAboutWhitespace = true
+        }
+        
+        fs.writeFileSync(file, newSource, 'utf8');
+        console.log("   " + file)
+    })
+}, true);
+
+function processWhiteSpace(processor) {
     forEachFile('lib', function(err, file, stats, cbDone) {
         //if (err) throw err;
         if (rexp_minified.test(file) || !rexp_src.test(file)) {
@@ -136,9 +162,9 @@ task('fixwhitespace', function() {
 
             if (origsrc !== src) {
                 // write it out yo
-                fs.writeFileSync(file, src, 'utf8');
+                processor(file, src);
             }
             cbDone();
         }
     }, complete);
-}, true);
+}
