@@ -99,7 +99,12 @@ task('set-cwd', [], function() {
 
 desc('check sources with JSHint');
 task('hint', ['complainwhitespace'], function () {
-    var knownWarnings = ["Redefinition of 'FileReader'", "Redefinition of 'require'", "Read only"];
+    var knownWarnings = [
+        "Redefinition of 'FileReader'", 
+        "Redefinition of 'require'", 
+        "Read only",
+        "Redefinition of 'console'"
+    ];
     var filterKnownWarnings = function(el, index, array) {
         var wut = true;
         // filter out the known warnings listed out above

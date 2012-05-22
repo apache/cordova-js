@@ -7,7 +7,7 @@ var fs = require('fs'),
 
 function collect(path, files, matches) {
     matches = matches || function (path) {
-        return path.match(/test\.\w+\.js$/);
+        return path.match(/test\.(\w|-)+\.js$/);
     };
 
     if (fs.statSync(path).isDirectory()) {
