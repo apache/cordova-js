@@ -74,6 +74,20 @@ describe("channel", function () {
             c.unsubscribe(thirdHandler);
 
             expect(c.numHandlers).toEqual(initialLength - 1);
+
+            c.unsubscribe(firstHandler);
+            c.unsubscribe(secondHandler);
+
+            expect(c.numHandlers).toEqual(0);
+
+            c.subscribe(firstHandler);
+            c.subscribe(firstHandler);
+
+            c.unsubscribe(firstHandler);
+            c.unsubscribe(firstHandler);
+
+            expect(c.numHandlers).toEqual(0);
+
         });
     });
 });
