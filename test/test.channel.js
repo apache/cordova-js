@@ -82,7 +82,12 @@ describe("channel", function () {
 
             c.subscribe(firstHandler);
             c.subscribe(firstHandler);
+            c.subscribe(firstHandler);
 
+            expect(c.numHandlers).toEqual(1);
+
+            c.unsubscribe(firstHandler);
+            c.unsubscribe(firstHandler);
             c.unsubscribe(firstHandler);
             c.unsubscribe(firstHandler);
 
