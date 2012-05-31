@@ -40,6 +40,16 @@ describe("channel", function () {
 
             expect(c.numHandlers).toEqual(initialLength);
         });
+        it("should not change number of handlers when subscribing same function multiple times", function() {
+            var initialLength = c.numHandlers;
+            var handler = function(){};
+
+            c.subscribe(handler);
+            c.subscribe(handler);
+            c.subscribe(handler);
+
+            expect(c.numHandlers).toEqual(initialLength+1);
+        });
     });
 
     describe("unsubscribe method", function() {
@@ -79,9 +89,9 @@ describe("channel", function () {
             c.unsubscribe(secondHandler);
 
             expect(c.numHandlers).toEqual(0);
-
-            c.subscribe(firstHandler);
-            c.subscribe(firstHandler);
+        });
+        it("should not decrement handlers length more than once if unsubing a single handler", function() {
+            var firstHandler = function(){};
             c.subscribe(firstHandler);
 
             expect(c.numHandlers).toEqual(1);
@@ -92,7 +102,47 @@ describe("channel", function () {
             c.unsubscribe(firstHandler);
 
             expect(c.numHandlers).toEqual(0);
+        });
+    });
 
+    describe("fire method", function() {
+        it("should fire all subscribed handlers", function() {
+            var handler = jasmine.createSpy();
+            var anotherOne = jasmine.createSpy();
+
+            c.subscribe(handler);
+            c.subscribe(anotherOne);
+
+            c.fire();
+
+            expect(handler).toHaveBeenCalled();
+            expect(anotherOne).toHaveBeenCalled();
+        });
+        it("should not fire a handler that was unsubscribed", function() {
+            var handler = jasmine.createSpy();
+            var anotherOne = jasmine.createSpy();
+
+            c.subscribe(handler);
+            c.subscribe(anotherOne);
+            c.unsubscribe(handler);
+
+            c.fire();
+
+            expect(handler).not.toHaveBeenCalled();
+            expect(anotherOne).toHaveBeenCalled();
+        });
+        it("should not fire a handler more than once if it was subscribed more than once", function() {
+            var count = 0;
+            var handler = jasmine.createSpy().andCallFake(function() { count++; });
+
+            c.subscribe(handler);
+            c.subscribe(handler);
+            c.subscribe(handler);
+
+            c.fire();
+
+            expect(handler).toHaveBeenCalled();
+            expect(count).toEqual(1);
         });
     });
 });
