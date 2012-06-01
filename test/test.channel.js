@@ -144,5 +144,19 @@ describe("channel", function () {
             expect(handler).toHaveBeenCalled();
             expect(count).toEqual(1);
         });
+        it("handler should be called when subscribed, removed, and subscribed again", function() {
+            var count = 0;
+            var handler = jasmine.createSpy().andCallFake(function() { count++; });
+
+            c.subscribe(handler);
+            c.unsubscribe(handler);
+            c.subscribe(handler);
+
+            c.fire();
+
+            expect(handler).toHaveBeenCalled();
+            expect(count).toEqual(1);
+
+        });
     });
 });
