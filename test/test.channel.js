@@ -158,5 +158,17 @@ describe("channel", function () {
             expect(count).toEqual(1);
 
         });
+        it("should instantly trigger the callback if the event has already been fired", function () {
+            var chan = channel.create("foo"),
+                before = jasmine.createSpy('before'),
+                after = jasmine.createSpy('after');
+
+            chan.subscribe(before);
+            chan.fire();
+            chan.subscribe(after);
+
+            expect(before).toHaveBeenCalled();
+            expect(after).toHaveBeenCalled();
+        });
     });
 });
