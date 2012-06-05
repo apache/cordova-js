@@ -187,6 +187,26 @@ describe("utils", function () {
         it("handles ('1%x2%y3',4,5)", function() {
             expect(utils.format('1%x2%y3',4,5)).toBe('14253')
         })
+        
+        var cycler
+        
+        beforeEach(function(){
+            cycler = {a: 1}
+            cycler.cycler = cycler
+        })
+        
+        it("handles cyclic objects as format string", function() {
+            expect(utils.format(cycler)).toBe("[object Object]")
+        })
+        
+        it("handles cyclic objects as object arg", function() {
+            expect(utils.format("%o",cycler)).toMatch(/^error JSON\.stringify\(\)ing argument:/)
+        })
+        
+        it("handles cyclic objects as string arg", function() {
+            expect(utils.format("%s",cycler)).toBe("[object Object]")
+        })
+
     })
     
 });
