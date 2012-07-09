@@ -97,7 +97,7 @@ module.exports = {
                                 '" type="text/javascript" charset="utf-8"></script>';
                         }).join('');
                         modules = packager.bundle('test'); 
-                        doc = html.replace(/<!-- TESTS -->/g, specs).replace(/"##MODULES##"/g, modules);
+                        doc = html.replace(/<!-- ##TESTS## -->/g, specs).replace(/"##MODULES##"/g, modules);
                         res.end(doc);
                     });
                 })
