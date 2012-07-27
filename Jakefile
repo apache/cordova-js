@@ -75,6 +75,7 @@ task('build', ['clean', 'hint'], function () {
         packager.generate("wp7",commitId);
         packager.generate("android",commitId);
         packager.generate("bada",commitId);
+        packager.generate("tizen",commitId);
         packager.generate("errgen",commitId);
         packager.generate("test",commitId);
         complete();
