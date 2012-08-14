@@ -139,7 +139,7 @@ Build the .js file and drop it in as a replacement for cordova.js.
 
 ## Ripple
 
-Load this in Ripple to play with it. You will have to use the cordova prototype branch to better simulate the phone environment and use this javascript rather than Ripples emulated code.
+Load this in Ripple to play with it. You will have to use the cordova prototype branch to better simulate the phone environment and use this javascript rather than Ripple's emulated code.
 
     git clone git@github.com:blackberry-webworks/Ripple-UI.git
     git checkout winnie.the.pooh
