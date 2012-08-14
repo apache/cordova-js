@@ -166,7 +166,7 @@ jasmine.TrivialReporter.prototype.log = function() {
     if (console.log.apply) {
       console.log.apply(console, arguments);
     } else {
-      console.log(arguments); // ie fix: console.log.apply doesn't exist on ie
+      console.log(arguments); // IE fix: console.log.apply doesn't exist in IE
     }
   }
 };
