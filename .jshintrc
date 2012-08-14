@@ -105,7 +105,7 @@
   "multistr": false,
   // If line breaks should not be checked around commas.
   "laxcomma": false,
-  // If semicolons may be ommitted for the trailing statements inside of a
+  // If semicolons may be omitted for the trailing statements inside of a
   // one-line blocks.
   "lastsemic": false,
   // If the `__iterator__` property should be allowed.
