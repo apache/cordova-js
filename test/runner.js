@@ -32,7 +32,7 @@ module.exports = {
             window = document.createWindow();
         } catch (e) {
             //no jsDom (some people don't have compilers)
-            console.log("can't run tests in node: run jake btest instead");
+            console.log("can't run tests in node: run jake btest instead, or install jsdom via: sudo npm install jsdom");
             return;
         }
 
