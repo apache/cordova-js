@@ -146,7 +146,7 @@ Load this in Ripple to play with it. You will have to use the cordova prototype 
     ./configure
     jake
 
-and then load the upacked extension in chrome in the pkg/chromium folder. Use the cordova.proto platform in ripple.
+and then load the unpacked extension in chrome in the pkg/chromium folder. Use the cordova.proto platform in ripple.
 
 # Adding a New Platform
 
