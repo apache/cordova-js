@@ -32,10 +32,28 @@ packager.bundle = function(platform, debug, commitId ) {
     modules[''] = 'lib/cordova.js'
     
     if (['playbook', 'blackberry'].indexOf(platform) > -1) {
-        copyProps(modules, collectFiles(path.join('lib', 'webworks')))
+        //BlackBerry is special ;)
+
+        var lang;
+
+        switch (platform) {
+        case 'blackberry':
+            lang = 'java';
+            break;
+        case 'playbook':
+            lang = 'air';
+            break;
+        default: 
+            break;
+        }
+
+        copyProps(modules, collectFile(path.join('lib', 'webworks'), '', 'exec.js'))
+        copyProps(modules, collectFiles(path.join('lib', 'webworks/' + lang)))
+    }
+    else {
+        copyProps(modules, collectFiles(path.join('lib', platform)))
     }
     
-    copyProps(modules, collectFiles(path.join('lib', platform)))
 
     var output = [];
 	
@@ -85,6 +103,21 @@ packager.bundle = function(platform, debug, commitId ) {
 
 //------------------------------------------------------------------------------
 var CollectedFiles = {}
+
+function collectFile(dir, id, entry) {
+    if (!id) id = ''
+    var moduleId = path.join(id,  entry)
+    var fileName = path.join(dir, entry)
+    
+    var stat = fs.statSync(fileName)
+
+    var result = CollectedFiles[dir] || {};
+
+    moduleId         = getModuleId(moduleId)
+    result[moduleId] = fileName
+
+    return copyProps({}, result)
+}
 
 function collectFiles(dir, id) {
     if (!id) id = ''
