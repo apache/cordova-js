@@ -133,8 +133,9 @@ Build the .js file and drop it in as a replacement for cordova.js.
 - Android
 - iOS
 - BlackBerry
-- Windows Phone 7 Mango
+- Windows Phone 7 ( 7.5 )
 - Bada (WAC implementation)
+- Windows 8 ( experimental work in progress )
 
 ## Ripple
 
