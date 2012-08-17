@@ -68,7 +68,7 @@ task('build', ['clean', 'hint'], function () {
         
         console.log("building " + commitId);
 
-        packager.generate("win8metro",commitId);
+        packager.generate("windows8",commitId);
         packager.generate("blackberry",commitId);
         packager.generate("playbook",commitId);
         packager.generate("ios",commitId);
