@@ -35,6 +35,38 @@ describe("require + define", function () {
             }).toThrow("module your mom not found");
         });
 
+        it("throws an exception when modules depend on each other", function () {
+            define("ModuleA", function(require, exports, module) {
+                require("ModuleB");
+            });
+            define("ModuleB", function(require, exports, module) {
+                require("ModuleA");
+            });
+            expect(function () {
+                require("ModuleA");
+            }).toThrow("Cycle in require graph: ModuleA->ModuleB->ModuleA");
+            define.remove("ModuleA");
+            define.remove("ModuleB");
+        });
+
+        it("throws an exception when a cycle of requires occurs", function () {
+            define("ModuleA", function(require, exports, module) {
+                require("ModuleB");
+            });
+            define("ModuleB", function(require, exports, module) {
+                require("ModuleC");
+            });
+            define("ModuleC", function(require, exports, module) {
+                require("ModuleA");
+            });
+            expect(function () {
+                require("ModuleA");
+            }).toThrow("Cycle in require graph: ModuleA->ModuleB->ModuleC->ModuleA");
+            define.remove("ModuleA");
+            define.remove("ModuleB");
+            define.remove("ModuleC");
+        });
+
         it("calls the factory method when requiring", function () {
             var factory = jasmine.createSpy();
             define("dino", factory);
