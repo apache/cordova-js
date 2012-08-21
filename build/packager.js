@@ -31,10 +31,10 @@ packager.bundle = function(platform, debug, commitId ) {
     
     modules[''] = 'lib/cordova.js'
     
-    if (['playbook', 'blackberry'].indexOf(platform) > -1) {
+    if (['playbook', 'blackberry', 'qnx'].indexOf(platform) > -1) {
         //BlackBerry is special ;)
 
-        var lang;
+        var lang = platform;
 
         switch (platform) {
         case 'blackberry':

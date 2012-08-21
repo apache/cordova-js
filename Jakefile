@@ -71,6 +71,7 @@ task('build', ['clean', 'hint'], function () {
         packager.generate("windows8",commitId);
         packager.generate("blackberry",commitId);
         packager.generate("playbook",commitId);
+        packager.generate("qnx",commitId);
         packager.generate("ios",commitId);
         packager.generate("wp7",commitId);
         packager.generate("android",commitId);
