@@ -48,12 +48,12 @@ packager.bundle = function(platform, debug, commitId ) {
         }
 
         copyProps(modules, collectFile(path.join('lib', 'webworks'), '', 'exec.js'))
+        copyProps(modules, collectFiles(path.join('lib', 'webworks/common')))
         copyProps(modules, collectFiles(path.join('lib', 'webworks/' + lang)))
     }
     else {
         copyProps(modules, collectFiles(path.join('lib', platform)))
     }
-    
 
     var output = [];
 	
