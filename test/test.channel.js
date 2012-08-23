@@ -103,6 +103,22 @@ describe("channel", function () {
 
             expect(c.numHandlers).toEqual(0);
         });
+        it("should not unregister a function registered with a different handler", function() {
+            var cHandler = function(){};
+            var c2Handler = function(){};
+            var c2 = channel.create('jables');
+            c.subscribe(cHandler);
+            c2.subscribe(c2Handler);
+
+            expect(c.numHandlers).toEqual(1);
+            expect(c2.numHandlers).toEqual(1);
+
+            c.unsubscribe(c2Handler);
+            c2.unsubscribe(cHandler);
+
+            expect(c.numHandlers).toEqual(1);
+            expect(c2.numHandlers).toEqual(1);
+        });
     });
 
     describe("fire method", function() {
