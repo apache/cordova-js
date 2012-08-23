@@ -50,6 +50,16 @@ describe("channel", function () {
 
             expect(c.numHandlers).toEqual(initialLength+1);
         });
+        it("should be able to use the same function with multiple channels.", function() {
+            var c2 = channel.create('jables');
+            var handler = function(){};
+
+            c.subscribe(handler);
+            c2.subscribe(handler);
+
+            expect(c.numHandlers).toEqual(1);
+            expect(c2.numHandlers).toEqual(1);
+        });
     });
 
     describe("unsubscribe method", function() {
