@@ -206,6 +206,15 @@ describe("channel", function () {
             expect(before).toHaveBeenCalled();
             expect(after).toHaveBeenCalled();
         });
+        it("should instantly trigger the callback if the event is currently being fired.", function () {
+            var handler1 = jasmine.createSpy().andCallFake(function() { c.subscribe(handler2); }),
+                handler2 = jasmine.createSpy().andCallFake(function(arg1) { expect(arg1).toEqual('foo');});
+
+            c.subscribe(handler1);
+            c.fire('foo');
+
+            expect(handler2).toHaveBeenCalled();
+        });
     });
     describe("subscribeOnce method", function() {
         it("should be unregistered after being fired.", function() {
