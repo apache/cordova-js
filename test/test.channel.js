@@ -129,6 +129,16 @@ describe("channel", function () {
             expect(c.numHandlers).toEqual(1);
             expect(c2.numHandlers).toEqual(1);
         });
+        it("should be able to unsubscribe a subscribeOnce.", function() {
+            var handler = function(){};
+            c.subscribeOnce(handler);
+
+            expect(c.numHandlers).toEqual(1);
+
+            c.unsubscribe(handler);
+
+            expect(c.numHandlers).toEqual(0);
+        });
     });
 
     describe("fire method", function() {
@@ -195,6 +205,24 @@ describe("channel", function () {
 
             expect(before).toHaveBeenCalled();
             expect(after).toHaveBeenCalled();
+        });
+    });
+    describe("subscribeOnce method", function() {
+        it("should be unregistered after being fired.", function() {
+            var count = 0;
+            var handler = jasmine.createSpy().andCallFake(function() { count++; });
+            c.subscribeOnce(handler);
+            c.fire();
+            c.fire();
+            expect(count).toEqual(1);
+        });
+        it("should be safe to add listeners from within callback.", function() {
+            var count = 0;
+            var handler = jasmine.createSpy().andCallFake(function() { count++; c.subscribeOnce(handler2); });
+            var handler2 = jasmine.createSpy().andCallFake(function() { count++; });
+            c.subscribeOnce(handler);
+            c.fire();
+            expect(count).toEqual(2);
         });
     });
 });
