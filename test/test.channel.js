@@ -233,5 +233,14 @@ describe("channel", function () {
             c.fire();
             expect(count).toEqual(2);
         });
+        it("should not prevent a callback from firing when it is removed during firing.", function() {
+            var count = 0;
+            var handler = jasmine.createSpy().andCallFake(function() { count++; c.unsubscribe(handler2); });
+            var handler2 = jasmine.createSpy().andCallFake(function() { count++; });
+            c.subscribeOnce(handler);
+            c.subscribeOnce(handler2);
+            c.fire();
+            expect(count).toEqual(2);
+        });
     });
 });
