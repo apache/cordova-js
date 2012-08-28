@@ -24,7 +24,6 @@ describe("channel", function () {
         c;
 
     beforeEach(function() {
-        c = null;
         c = channel.create('masterexploder');
     });
 
@@ -262,6 +261,26 @@ describe("channel", function () {
             c.subscribeOnce(handler2);
             c.fire();
             expect(count).toEqual(2);
+        });
+    });
+    describe("onHasSubscribersChange", function() {
+        it("should be called only when the first subscriber is added and last subscriber is removed.", function() {
+            var handler = jasmine.createSpy().andCallFake(function() {
+                var callCount = handler.argsForCall.length;
+                if (callCount == 1) {
+                    expect(this.numHandlers).toEqual(1);
+                } else {
+                    expect(this.numHandlers).toEqual(0);
+                }
+            });
+            c.onHasSubscribersChange = handler;
+            function foo1() {}
+            function foo2() {}
+            c.subscribe(foo1);
+            c.subscribe(foo2);
+            c.unsubscribe(foo1);
+            c.unsubscribe(foo2);
+            expect(handler.argsForCall.length).toEqual(2);
         });
     });
 });
