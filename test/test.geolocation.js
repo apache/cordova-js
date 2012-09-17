@@ -253,5 +253,18 @@ describe("geolocation", function () {
             geo.clearWatch(id);
             expect(exec).not.toHaveBeenCalled();
         });
+        it("watchPosition followed by clearWatch should not invoke any success callbacks", function() {
+            // watchPosition calls native getLocation then addWatch method in order.
+            var id = geo.watchPosition(s, e);
+            // Get ref to getLocation success callback, to fake the native interaction.
+            var getLocationWin = exec.argsForCall[0][0];
+
+            // Next clear the watch id, but call the get location success callback as if the native framework has fired it after a clear watch.
+            geo.clearWatch(id);
+            getLocationWin({});
+
+            // End result: expect the success callback not to have been called.
+            expect(s).not.toHaveBeenCalled();
+        });
     });
 });
