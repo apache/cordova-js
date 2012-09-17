@@ -178,22 +178,22 @@ function collectFiles(dir, id) {
 //------------------------------------------------------------------------------
 function writeScript(oFile, fileName, debug) {
     var contents = getContents(fileName, 'utf8')
+
+    contents = stripHeader(contents)
     
     writeContents(oFile, fileName, contents, debug)    
 }
 
 //------------------------------------------------------------------------------
 function writeModule(oFile, fileName, moduleId, debug) {
-    var contents = '\n' + getContents(fileName, 'utf8') + '\n'
+    var contents = getContents(fileName, 'utf8')
+
+    contents = '\n' + stripHeader(contents) + '\n'
 
 	// Windows fix, '\' is an escape, but defining requires '/' -jm
     moduleId = path.join('cordova', moduleId).split("\\").join("/");
-	
-	
     
     var signature = 'function(require, exports, module)';
-	
-	
     
     contents = 'define("' + moduleId + '", ' + signature + ' {' + contents + '});\n'
 
@@ -248,4 +248,17 @@ function copyProps(target, source) {
     }
     
     return target
+}
+//-----------------------------------------------------------------------------
+// Strips the license header. Basically only the first multi-line comment up to to the closing */
+function stripHeader(contents) {
+    var ls = contents.split('\n');
+    while (ls[0]) {
+        if (ls[0].match(/^\s*\/\*/) || ls[0].match(/^\s*\*/)) ls.shift();
+        else if (ls[0].match(/^\s*\*\//)) {
+            ls.shift();
+            break;
+        }
+    }
+    return ls.join('\n');
 }
