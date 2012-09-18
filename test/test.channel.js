@@ -21,315 +21,266 @@
 
 describe("channel", function () {
     var channel = require('cordova/channel'),
-        multiChannel,
-        stickyChannel;
+        c;
 
-    function callCount(spy) {
-        return spy.argsForCall.length;
-    }
-    function expectCallCount(spy, count) {
-        expect(callCount(spy)).toEqual(count);
-    }
     beforeEach(function() {
-        multiChannel = channel.create('multiChannel');
-        stickyChannel = channel.createSticky('stickyChannel');
+        c = channel.create('masterexploder');
     });
 
     describe("subscribe method", function() {
         it("should throw an exception if no function is provided", function() {
             expect(function() {
-                multiChannel.subscribe();
+                c.subscribe();
             }).toThrow();
 
             expect(function() {
-                multiChannel.subscribe(null);
+                c.subscribe(null);
             }).toThrow();
 
             expect(function() {
-                multiChannel.subscribe(undefined);
+                c.subscribe(undefined);
             }).toThrow();
 
             expect(function() {
-                multiChannel.subscribe({apply:function(){},call:function(){}});
+                c.subscribe({apply:function(){},call:function(){}});
             }).toThrow();
         });
         it("should not change number of handlers if no function is provided", function() {
-            var initialLength = multiChannel.numHandlers;
+            var initialLength = c.numHandlers;
 
             try {
-                multiChannel.subscribe();
+                c.subscribe();
             } catch(e) {}
 
-            expect(multiChannel.numHandlers).toEqual(initialLength);
+            expect(c.numHandlers).toEqual(initialLength);
 
             try {
-                multiChannel.subscribe(null);
+                c.subscribe(null);
             } catch(e) {}
 
-            expect(multiChannel.numHandlers).toEqual(initialLength);
+            expect(c.numHandlers).toEqual(initialLength);
         });
         it("should not change number of handlers when subscribing same function multiple times", function() {
+            var initialLength = c.numHandlers;
             var handler = function(){};
 
-            multiChannel.subscribe(handler);
-            multiChannel.subscribe(handler);
-            stickyChannel.subscribe(handler);
-            stickyChannel.subscribe(handler);
+            c.subscribe(handler);
+            c.subscribe(handler);
+            c.subscribe(handler);
 
-            expect(multiChannel.numHandlers).toEqual(1);
-            expect(stickyChannel.numHandlers).toEqual(1);
+            expect(c.numHandlers).toEqual(initialLength+1);
+        });
+        it("should be able to use the same function with multiple channels.", function() {
+            var c2 = channel.create('jables');
+            var handler = function(){};
+
+            c.subscribe(handler);
+            c2.subscribe(handler);
+
+            expect(c.numHandlers).toEqual(1);
+            expect(c2.numHandlers).toEqual(1);
         });
     });
 
     describe("unsubscribe method", function() {
         it("should throw an exception if passed in null or undefined", function() {
             expect(function() {
-                multiChannel.unsubscribe();
+                c.unsubscribe();
             }).toThrow();
             expect(function() {
-                multiChannel.unsubscribe(null);
+                c.unsubscribe(null);
             }).toThrow();
         });
         it("should not decrement numHandlers if unsubscribing something that does not exist", function() {
-            multiChannel.subscribe(function() {});
-            multiChannel.unsubscribe(function() {});
-            expect(multiChannel.numHandlers).toEqual(1);
+            var initialLength = c.numHandlers;
+            c.unsubscribe('blah');
+            expect(c.numHandlers).toEqual(initialLength);
+            c.unsubscribe(2);
+            expect(c.numHandlers).toEqual(initialLength);
+            c.unsubscribe({balls:false});
+            expect(c.numHandlers).toEqual(initialLength);
         });
         it("should change the handlers length appropriately", function() {
             var firstHandler = function() {};
             var secondHandler = function() {};
             var thirdHandler = function() {};
 
-            multiChannel.subscribe(firstHandler);
-            multiChannel.subscribe(secondHandler);
-            multiChannel.subscribe(thirdHandler);
-            expect(multiChannel.numHandlers).toEqual(3);
+            c.subscribe(firstHandler);
+            c.subscribe(secondHandler);
+            c.subscribe(thirdHandler);
 
-            multiChannel.unsubscribe(thirdHandler);
-            expect(multiChannel.numHandlers).toEqual(2);
+            var initialLength = c.numHandlers;
 
-            multiChannel.unsubscribe(firstHandler);
-            multiChannel.unsubscribe(secondHandler);
+            c.unsubscribe(thirdHandler);
 
-            expect(multiChannel.numHandlers).toEqual(0);
+            expect(c.numHandlers).toEqual(initialLength - 1);
+
+            c.unsubscribe(firstHandler);
+            c.unsubscribe(secondHandler);
+
+            expect(c.numHandlers).toEqual(0);
         });
         it("should not decrement handlers length more than once if unsubing a single handler", function() {
             var firstHandler = function(){};
-            multiChannel.subscribe(firstHandler);
+            c.subscribe(firstHandler);
 
-            expect(multiChannel.numHandlers).toEqual(1);
+            expect(c.numHandlers).toEqual(1);
 
-            multiChannel.unsubscribe(firstHandler);
-            multiChannel.unsubscribe(firstHandler);
-            multiChannel.unsubscribe(firstHandler);
-            multiChannel.unsubscribe(firstHandler);
+            c.unsubscribe(firstHandler);
+            c.unsubscribe(firstHandler);
+            c.unsubscribe(firstHandler);
+            c.unsubscribe(firstHandler);
 
-            expect(multiChannel.numHandlers).toEqual(0);
+            expect(c.numHandlers).toEqual(0);
         });
         it("should not unregister a function registered with a different handler", function() {
             var cHandler = function(){};
             var c2Handler = function(){};
             var c2 = channel.create('jables');
-            multiChannel.subscribe(cHandler);
+            c.subscribe(cHandler);
             c2.subscribe(c2Handler);
 
-            expect(multiChannel.numHandlers).toEqual(1);
+            expect(c.numHandlers).toEqual(1);
             expect(c2.numHandlers).toEqual(1);
 
-            multiChannel.unsubscribe(c2Handler);
+            c.unsubscribe(c2Handler);
             c2.unsubscribe(cHandler);
 
-            expect(multiChannel.numHandlers).toEqual(1);
+            expect(c.numHandlers).toEqual(1);
             expect(c2.numHandlers).toEqual(1);
         });
+        it("should be able to unsubscribe a subscribeOnce.", function() {
+            var handler = function(){};
+            c.subscribeOnce(handler);
+
+            expect(c.numHandlers).toEqual(1);
+
+            c.unsubscribe(handler);
+
+            expect(c.numHandlers).toEqual(0);
+        });
     });
 
-    function commonFireTests(multi) {
+    describe("fire method", function() {
         it("should fire all subscribed handlers", function() {
-            var testChannel = multi ? multiChannel : stickyChannel;
             var handler = jasmine.createSpy();
             var anotherOne = jasmine.createSpy();
 
-            testChannel.subscribe(handler);
-            testChannel.subscribe(anotherOne);
+            c.subscribe(handler);
+            c.subscribe(anotherOne);
 
-            testChannel.fire();
+            c.fire();
 
-            expectCallCount(handler, 1);
-            expectCallCount(anotherOne, 1);
-        });
-        it("should pass params to handlers", function() {
-            var testChannel = multi ? multiChannel : stickyChannel;
-            var handler = jasmine.createSpy();
-
-            testChannel.subscribe(handler);
-
-            testChannel.fire(1, 2, 3);
-            expect(handler.argsForCall[0]).toEqual({0:1, 1:2, 2:3});
+            expect(handler).toHaveBeenCalled();
+            expect(anotherOne).toHaveBeenCalled();
         });
         it("should not fire a handler that was unsubscribed", function() {
-            var testChannel = multi ? multiChannel : stickyChannel;
             var handler = jasmine.createSpy();
             var anotherOne = jasmine.createSpy();
 
-            testChannel.subscribe(handler);
-            testChannel.subscribe(anotherOne);
-            testChannel.unsubscribe(handler);
+            c.subscribe(handler);
+            c.subscribe(anotherOne);
+            c.unsubscribe(handler);
 
-            testChannel.fire();
+            c.fire();
 
-            expectCallCount(handler, 0);
-            expectCallCount(anotherOne, 1);
+            expect(handler).not.toHaveBeenCalled();
+            expect(anotherOne).toHaveBeenCalled();
         });
         it("should not fire a handler more than once if it was subscribed more than once", function() {
-            var testChannel = multi ? multiChannel : stickyChannel;
-            var handler = jasmine.createSpy();
+            var count = 0;
+            var handler = jasmine.createSpy().andCallFake(function() { count++; });
 
-            testChannel.subscribe(handler);
-            testChannel.subscribe(handler);
-            testChannel.subscribe(handler);
+            c.subscribe(handler);
+            c.subscribe(handler);
+            c.subscribe(handler);
 
-            testChannel.fire();
+            c.fire();
 
-            expectCallCount(handler, 1);
+            expect(handler).toHaveBeenCalled();
+            expect(count).toEqual(1);
         });
         it("handler should be called when subscribed, removed, and subscribed again", function() {
-            var testChannel = multi ? multiChannel : stickyChannel;
-            var handler = jasmine.createSpy();
+            var count = 0;
+            var handler = jasmine.createSpy().andCallFake(function() { count++; });
 
-            testChannel.subscribe(handler);
-            testChannel.unsubscribe(handler);
-            testChannel.subscribe(handler);
+            c.subscribe(handler);
+            c.unsubscribe(handler);
+            c.subscribe(handler);
 
-            testChannel.fire();
+            c.fire();
 
-            expectCallCount(handler, 1);
+            expect(handler).toHaveBeenCalled();
+            expect(count).toEqual(1);
+
         });
-        it("should not prevent a callback from firing when it is removed during firing.", function() {
-            var testChannel = multi ? multiChannel : stickyChannel;
-            var handler = jasmine.createSpy().andCallFake(function() { testChannel.unsubscribe(handler2); });
-            var handler2 = jasmine.createSpy();
-            testChannel.subscribe(handler);
-            testChannel.subscribe(handler2);
-            testChannel.fire();
-            expectCallCount(handler, 1);
-            expectCallCount(handler2, 1);
-        });
-    }
-    describe("fire method for sticky channels", function() {
-        commonFireTests(false);
         it("should instantly trigger the callback if the event has already been fired", function () {
-            var before = jasmine.createSpy('before'),
+            var chan = channel.create("foo"),
+                before = jasmine.createSpy('before'),
                 after = jasmine.createSpy('after');
 
-            stickyChannel.subscribe(before);
-            stickyChannel.fire(1, 2, 3);
-            stickyChannel.subscribe(after);
+            chan.subscribe(before);
+            chan.fire();
+            chan.subscribe(after);
 
-            expectCallCount(before, 1);
-            expectCallCount(after, 1);
-            expect(after.argsForCall[0]).toEqual({0:1, 1:2, 2:3});
+            expect(before).toHaveBeenCalled();
+            expect(after).toHaveBeenCalled();
         });
         it("should instantly trigger the callback if the event is currently being fired.", function () {
-            var handler1 = jasmine.createSpy().andCallFake(function() { stickyChannel.subscribe(handler2); }),
+            var handler1 = jasmine.createSpy().andCallFake(function() { c.subscribe(handler2); }),
                 handler2 = jasmine.createSpy().andCallFake(function(arg1) { expect(arg1).toEqual('foo');});
 
-            stickyChannel.subscribe(handler1);
-            stickyChannel.fire('foo');
+            c.subscribe(handler1);
+            c.fire('foo');
 
-            expectCallCount(handler2, 1);
-        });
-        it("should unregister all handlers after being fired.", function() {
-            var handler = jasmine.createSpy();
-            stickyChannel.subscribe(handler);
-            stickyChannel.fire();
-            stickyChannel.fire();
-            expectCallCount(handler, 1);
+            expect(handler2).toHaveBeenCalled();
         });
     });
-    describe("fire method for multi channels", function() {
-        commonFireTests(true);
-        it("should not trigger the callback if the event has already been fired", function () {
-            var before = jasmine.createSpy('before'),
-                after = jasmine.createSpy('after');
-
-            multiChannel.subscribe(before);
-            multiChannel.fire();
-            multiChannel.subscribe(after);
-
-            expectCallCount(before, 1);
-            expectCallCount(after, 0);
+    describe("subscribeOnce method", function() {
+        it("should be unregistered after being fired.", function() {
+            var count = 0;
+            var handler = jasmine.createSpy().andCallFake(function() { count++; });
+            c.subscribeOnce(handler);
+            c.fire();
+            c.fire();
+            expect(count).toEqual(1);
         });
-        it("should not trigger the callback if the event is currently being fired.", function () {
-            var handler1 = jasmine.createSpy().andCallFake(function() { multiChannel.subscribe(handler2); }),
-                handler2 = jasmine.createSpy();
-
-            multiChannel.subscribe(handler1);
-            multiChannel.fire();
-            multiChannel.fire();
-
-            expectCallCount(handler1, 2);
-            expectCallCount(handler2, 1);
+        it("should be safe to add listeners from within callback.", function() {
+            var count = 0;
+            var handler = jasmine.createSpy().andCallFake(function() { count++; c.subscribeOnce(handler2); });
+            var handler2 = jasmine.createSpy().andCallFake(function() { count++; });
+            c.subscribeOnce(handler);
+            c.fire();
+            expect(count).toEqual(2);
         });
-        it("should not unregister handlers after being fired.", function() {
-            var handler = jasmine.createSpy();
-            multiChannel.subscribe(handler);
-            multiChannel.fire();
-            multiChannel.fire();
-            expectCallCount(handler, 2);
-        });
-    });
-    describe("channel.join()", function() {
-        it("should be called when all functions start unfired", function() {
-            var handler = jasmine.createSpy(),
-                stickyChannel2 = channel.createSticky('stickyChannel');
-            channel.join(handler, [stickyChannel, stickyChannel2]);
-            expectCallCount(handler, 0);
-            stickyChannel.fire();
-            expectCallCount(handler, 0);
-            stickyChannel2.fire();
-            expectCallCount(handler, 1);
-        });
-        it("should be called when one functions start fired", function() {
-            var handler = jasmine.createSpy(),
-                stickyChannel2 = channel.createSticky('stickyChannel');
-            stickyChannel.fire();
-            channel.join(handler, [stickyChannel, stickyChannel2]);
-            expectCallCount(handler, 0);
-            stickyChannel2.fire();
-            expectCallCount(handler, 1);
-        });
-        it("should be called when all functions start fired", function() {
-            var handler = jasmine.createSpy(),
-                stickyChannel2 = channel.createSticky('stickyChannel');
-            stickyChannel.fire();
-            stickyChannel2.fire();
-            channel.join(handler, [stickyChannel, stickyChannel2]);
-            expectCallCount(handler, 1);
-        });
-        it("should throw if a channel is not sticky", function() {
-            expect(function() {
-                channel.join(function(){}, [stickyChannel, multiChannel]);
-            }).toThrow();
+        it("should not prevent a callback from firing when it is removed during firing.", function() {
+            var count = 0;
+            var handler = jasmine.createSpy().andCallFake(function() { count++; c.unsubscribe(handler2); });
+            var handler2 = jasmine.createSpy().andCallFake(function() { count++; });
+            c.subscribeOnce(handler);
+            c.subscribeOnce(handler2);
+            c.fire();
+            expect(count).toEqual(2);
         });
     });
     describe("onHasSubscribersChange", function() {
         it("should be called only when the first subscriber is added and last subscriber is removed.", function() {
             var handler = jasmine.createSpy().andCallFake(function() {
-                if (callCount(handler) == 1) {
+                var callCount = handler.argsForCall.length;
+                if (callCount == 1) {
                     expect(this.numHandlers).toEqual(1);
                 } else {
                     expect(this.numHandlers).toEqual(0);
                 }
             });
-            multiChannel.onHasSubscribersChange = handler;
+            c.onHasSubscribersChange = handler;
             function foo1() {}
             function foo2() {}
-            multiChannel.subscribe(foo1);
-            multiChannel.subscribe(foo2);
-            multiChannel.unsubscribe(foo1);
-            multiChannel.unsubscribe(foo2);
-            expectCallCount(handler, 2);
+            c.subscribe(foo1);
+            c.subscribe(foo2);
+            c.unsubscribe(foo1);
+            c.unsubscribe(foo2);
+            expect(handler.argsForCall.length).toEqual(2);
         });
     });
 });
