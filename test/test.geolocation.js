@@ -100,7 +100,7 @@ describe("geolocation", function () {
                     expect(exec).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function), "Geolocation", "getLocation", [false, 0]);
                 });
                 
-                waits(75);
+                waitsFor(function() { return e.wasCalled; }, 200);
 
                 runs(function() {
                     expect(e).toHaveBeenCalledWith({
@@ -119,7 +119,7 @@ describe("geolocation", function () {
                     exec.mostRecentCall.args[0]({});
                 });
 
-                waits(75);
+                waitsFor(function() { return e.wasCalled || s.wasCalled; }, 200);
 
                 runs(function() {
                     expect(e).not.toHaveBeenCalled();
@@ -153,7 +153,7 @@ describe("geolocation", function () {
                     exec.mostRecentCall.args[1](eObj);
                 });
 
-                waits(75);
+                waitsFor(function() { return e.wasCalled; }, 200);
 
                 runs(function() {
                     expect(e).not.toHaveBeenCalledWith({
@@ -205,7 +205,7 @@ describe("geolocation", function () {
                 runs(function() {
                     geo.watchPosition(s, e);
                 });
-                waits(50);
+                waits(1);
                 runs(function() {
                     exec.mostRecentCall.args[0]({}); // fake success callback from native
                     expect(s).toHaveBeenCalled();
@@ -228,7 +228,7 @@ describe("geolocation", function () {
                 runs(function() {
                     geo.watchPosition(s, e, {timeout:50});
                 });
-                waits(75);
+                waitsFor(function() { return e.wasCalled; }, 200);
                 runs(function() {
                     expect(e).toHaveBeenCalledWith({
                         code:PositionError.TIMEOUT,
@@ -240,17 +240,17 @@ describe("geolocation", function () {
                 runs(function() {
                     geo.watchPosition(s, e, {timeout:50});
                 });
-                waits(25);
+                waits(1);
                 runs(function() {
                     exec.mostRecentCall.args[0]({}); // fire new position return
                     expect(s).toHaveBeenCalled();
                 });
-                waits(30);
+                waits(1);
                 runs(function() {
                     // The error callback should NOT be fired, since the timeout should have reset when we fired a new position return above
                     expect(e).not.toHaveBeenCalled();
                 });
-                waits(25);
+                waitsFor(function() { return e.wasCalled; }, 200);
                 runs(function() {
                     // NOW the error callback should be fired with a TIMEOUT error
                     expect(e).toHaveBeenCalledWith({
