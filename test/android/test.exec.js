@@ -23,6 +23,7 @@ describe('exec.processMessages', function () {
     var cordova = require('cordova'),
         exec = require('cordova/androidexec'),
         callbackSpy = jasmine.createSpy('callbackFromNative'),
+        origPrompt = typeof prompt == 'undefined' ? null : prompt,
         origCallbackFromNative = cordova.callbackFromNative;
 
     beforeEach(function() {
@@ -32,13 +33,14 @@ describe('exec.processMessages', function () {
 
     afterEach(function() {
         cordova.callbackFromNative = origCallbackFromNative;
+        prompt = origPrompt;
     });
 
     function createCallbackMessage(success, keepCallback, status, callbackId, encodedPayload) {
         var ret = '';
         ret += success ? 'S' : 'F';
         ret += keepCallback ? '1' : '0';
-        ret += ' ' + status;
+        ret += status;
         ret += ' ' + callbackId;
         ret += ' ' + encodedPayload;
         ret = ret.length + ' ' + ret;
@@ -67,7 +69,7 @@ describe('exec.processMessages', function () {
             expect(callbackSpy).toHaveBeenCalledWith('id', true, 1, 'Hello world', true);
         });
         it('should handle payloads of JSON objects', function() {
-            var messages = createCallbackMessage(true, true, 1, 'id', '{a:1}');
+            var messages = createCallbackMessage(true, true, 1, 'id', '{"a":1}');
             exec.processMessages(messages);
             expect(callbackSpy).toHaveBeenCalledWith('id', true, 1, {a:1}, true);
         });
@@ -81,6 +83,28 @@ describe('exec.processMessages', function () {
             exec.processMessages(messages);
             expect(callbackSpy).toHaveBeenCalledWith('id', false, 3, 'foo', false);
         });
-
+        it('should handle multiple messages', function() {
+            var message1 = createCallbackMessage(false, false, 3, 'id', 'sfoo');
+            var message2 = createCallbackMessage(true, true, 1, 'id', 'f');
+            var messages = message1 + message2;
+            exec.processMessages(messages);
+            expect(callbackSpy).toHaveBeenCalledWith('id', false, 3, 'foo', false);
+            expect(callbackSpy).toHaveBeenCalledWith('id', true, 1, false, true);
+        });
+        it('should poll for more messages when hitting an *', function() {
+            var message1 = createCallbackMessage(false, false, 3, 'id', 'sfoo');
+            var message2 = createCallbackMessage(true, true, 1, 'id', 'f');
+            prompt = jasmine.createSpy('prompt').andCallFake(function() {
+                callbackSpy.reset();
+                return message2;
+            });
+            var messages = message1 + '*';
+            exec.processMessages(messages);
+            expect(callbackSpy).toHaveBeenCalledWith('id', false, 3, 'foo', false);
+            waitsFor(function() { return prompt.wasCalled }, 500);
+            runs(function() {
+                expect(callbackSpy).toHaveBeenCalledWith('id', true, 1, false, true);
+            });
+        });
     });
 });
