@@ -106,5 +106,21 @@ describe('exec.processMessages', function () {
                 expect(callbackSpy).toHaveBeenCalledWith('id', true, 1, false, true);
             });
         });
+        it('should call callbacks in order when one callback enqueues another.', function() {
+            var message1 = createCallbackMessage(false, false, 3, 'id', 'scall1');
+            var message2 = createCallbackMessage(false, false, 3, 'id', 'scall2');
+            var message3 = createCallbackMessage(false, false, 3, 'id', 'scall3');
+
+            callbackSpy.andCallFake(function() {
+                if (callbackSpy.calls.length == 1) {
+                    exec.processMessages(message3);
+                }
+            });
+            exec.processMessages(message1 + message2);
+            expect(callbackSpy.argsForCall.length).toEqual(3);
+            expect(callbackSpy.argsForCall[0]).toEqual(['id', false, 3, 'call1', false]);
+            expect(callbackSpy.argsForCall[1]).toEqual(['id', false, 3, 'call2', false]);
+            expect(callbackSpy.argsForCall[2]).toEqual(['id', false, 3, 'call3', false]);
+        });
     });
 });
