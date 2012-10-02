@@ -66,7 +66,7 @@ describe("contacts", function () {
             expect(exec).not.toHaveBeenCalled();
         });
 
-        it("calls the error callback when no fields provied", function () {
+        it("calls the error callback when no fields provided", function () {
             var success = jasmine.createSpy(),
                 error = jasmine.createSpy();
 
