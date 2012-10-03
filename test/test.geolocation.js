@@ -1,3 +1,24 @@
+/*
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ *
+*/
+
 describe("geolocation", function () {
     var geo = require('cordova/plugin/geolocation'),
         Position = require('cordova/plugin/Position'),
@@ -79,7 +100,7 @@ describe("geolocation", function () {
                     expect(exec).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function), "Geolocation", "getLocation", [false, 0]);
                 });
                 
-                waits(75);
+                waitsFor(function() { return e.wasCalled; }, 200);
 
                 runs(function() {
                     expect(e).toHaveBeenCalledWith({
@@ -98,7 +119,7 @@ describe("geolocation", function () {
                     exec.mostRecentCall.args[0]({});
                 });
 
-                waits(75);
+                waitsFor(function() { return e.wasCalled || s.wasCalled; }, 200);
 
                 runs(function() {
                     expect(e).not.toHaveBeenCalled();
@@ -132,7 +153,7 @@ describe("geolocation", function () {
                     exec.mostRecentCall.args[1](eObj);
                 });
 
-                waits(75);
+                waitsFor(function() { return e.wasCalled; }, 200);
 
                 runs(function() {
                     expect(e).not.toHaveBeenCalledWith({
@@ -184,7 +205,7 @@ describe("geolocation", function () {
                 runs(function() {
                     geo.watchPosition(s, e);
                 });
-                waits(50);
+                waits(1);
                 runs(function() {
                     exec.mostRecentCall.args[0]({}); // fake success callback from native
                     expect(s).toHaveBeenCalled();
@@ -207,7 +228,7 @@ describe("geolocation", function () {
                 runs(function() {
                     geo.watchPosition(s, e, {timeout:50});
                 });
-                waits(75);
+                waitsFor(function() { return e.wasCalled; }, 200);
                 runs(function() {
                     expect(e).toHaveBeenCalledWith({
                         code:PositionError.TIMEOUT,
@@ -219,17 +240,17 @@ describe("geolocation", function () {
                 runs(function() {
                     geo.watchPosition(s, e, {timeout:50});
                 });
-                waits(25);
+                waits(1);
                 runs(function() {
                     exec.mostRecentCall.args[0]({}); // fire new position return
                     expect(s).toHaveBeenCalled();
                 });
-                waits(30);
+                waits(1);
                 runs(function() {
                     // The error callback should NOT be fired, since the timeout should have reset when we fired a new position return above
                     expect(e).not.toHaveBeenCalled();
                 });
-                waits(25);
+                waitsFor(function() { return e.wasCalled; }, 200);
                 runs(function() {
                     // NOW the error callback should be fired with a TIMEOUT error
                     expect(e).toHaveBeenCalledWith({
@@ -252,6 +273,19 @@ describe("geolocation", function () {
             var id = "this is bat country";
             geo.clearWatch(id);
             expect(exec).not.toHaveBeenCalled();
+        });
+        it("watchPosition followed by clearWatch should not invoke any success callbacks", function() {
+            // watchPosition calls native getLocation then addWatch method in order.
+            var id = geo.watchPosition(s, e);
+            // Get ref to getLocation success callback, to fake the native interaction.
+            var getLocationWin = exec.argsForCall[0][0];
+
+            // Next clear the watch id, but call the get location success callback as if the native framework has fired it after a clear watch.
+            geo.clearWatch(id);
+            getLocationWin({});
+
+            // End result: expect the success callback not to have been called.
+            expect(s).not.toHaveBeenCalled();
         });
     });
 });
