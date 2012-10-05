@@ -134,8 +134,8 @@
   "sub": false,
   // If trailing whitespace rules apply.
   "trailing": true,
-  // If strict whitespace rules apply.
-  "white": false,
   // Specify indentation.
-  "indent": 4
+  "indent": 4,
+  // If strict whitespace rules apply.
+  "white": false
 }

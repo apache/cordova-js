@@ -252,9 +252,11 @@ function copyProps(target, source) {
 //-----------------------------------------------------------------------------
 // Strips the license header. Basically only the first multi-line comment up to to the closing */
 function stripHeader(contents, fileName) {
-    var ls = contents.split('\n');
+    var ls = contents.split(/\r?\n/);
     while (ls[0]) {
-        if (ls[0].match(/^\s*\/\*/) || ls[0].match(/^\s*\*/)) ls.shift();
+        if (ls[0].match(/^\s*\/\*/) || ls[0].match(/^\s*\*/)) {
+            ls.shift();
+        }
         else if (ls[0].match(/^\s*\*\//)) {
             ls.shift();
             break;
