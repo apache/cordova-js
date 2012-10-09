@@ -105,20 +105,29 @@ module.exports = {
                 connect.static(_path.join(__dirname, '..', 'thirdparty')),
                 connect.static(__dirname),
                 connect.router(function (app) {
+                    app.get('/cordova.test.js', function (req, res) {
+                        res.writeHead(200, {
+                            "Cache-Control": "no-cache",
+                            "Content-Type": "text/javascript"
+                        });
+                        res.end(packager.bundle('test'));
+                    }),
                     app.get('/', function (req, res) {
                         res.writeHead(200, {
                             "Cache-Control": "no-cache",
                             "Content-Type": "text/html"
                         });
+
+                        //create the script tags to include
                         tests = [];
                         collect(__dirname, tests);
-
                         specs = tests.map(function (file, path) {
-                            return '<script src="' + file.replace(/^.*test/, "test") +
+                            return '<script src="' + file.replace(/^.*\/test\//, "/") +
                                 '" type="text/javascript" charset="utf-8"></script>';
                         }).join('');
-                        modules = packager.bundle('test'); 
-                        doc = html.replace(/<!-- ##TESTS## -->/g, specs).replace(/"##MODULES##"/g, modules);
+
+                        //inject in the test script includes and write the document
+                        doc = html.replace(/<!-- ##TESTS## -->/g, specs);
                         res.end(doc);
                     });
                 })

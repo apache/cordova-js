@@ -70,6 +70,20 @@ packager.bundle = function(platform, debug, commitId ) {
         copyProps(modules, collectFiles(path.join('lib', 'webworks/common')))
         copyProps(modules, collectFiles(path.join('lib', 'webworks/' + lang)))
     }
+    else if (platform === 'test') {
+        copyProps(modules, collectFiles(path.join('lib', platform)));
+
+        //Test platform needs to bring in platform specific plugin's for testing
+        copyProps(modules, collectFiles(path.join('lib', 'webworks', 'air', 'plugin', 'air'), 'plugin/air'));
+        copyProps(modules, collectFiles(path.join('lib', 'webworks', 'java', 'plugin', 'java'), 'plugin/java'));
+        copyProps(modules, collectFiles(path.join('lib', 'webworks', 'qnx', 'plugin', 'qnx'), 'plugin/qnx'));
+        copyProps(modules, collectFiles(path.join('lib', 'tizen', 'plugin', 'tizen'), 'plubin/tizen'));
+        copyProps(modules, collectFiles(path.join('lib', 'wp7', 'plugin', 'wp7'), 'plugin/wp7'));
+        copyProps(modules, collectFiles(path.join('lib', 'windows8', 'plugin', 'windows8'), 'plugin/windows8'));
+        copyProps(modules, collectFiles(path.join('lib', 'ios', 'plugin', 'ios'), 'plugin/ios/'));
+        copyProps(modules, collectFiles(path.join('lib', 'bada', 'plugin', 'bada'), 'plugin/bada/'));
+        copyProps(modules, collectFiles(path.join('lib', 'android', 'plugin', 'android'), 'plugin/android/'));
+    }
     else {
         copyProps(modules, collectFiles(path.join('lib', platform)))
     }
@@ -121,7 +135,6 @@ packager.bundle = function(platform, debug, commitId ) {
 }
 
 //------------------------------------------------------------------------------
-var CollectedFiles = {}
 
 function collectFile(dir, id, entry) {
     if (!id) id = ''
@@ -130,7 +143,7 @@ function collectFile(dir, id, entry) {
     
     var stat = fs.statSync(fileName)
 
-    var result = CollectedFiles[dir] || {};
+    var result = {};
 
     moduleId         = getModuleId(moduleId)
     result[moduleId] = fileName
@@ -140,10 +153,6 @@ function collectFile(dir, id, entry) {
 
 function collectFiles(dir, id) {
     if (!id) id = ''
-    
-    if (CollectedFiles[dir]) {
-        return copyProps({}, CollectedFiles[dir])
-    }
 
     var result = {}    
     
@@ -157,7 +166,7 @@ function collectFiles(dir, id) {
     })
 
     entries.forEach(function(entry) {
-        var moduleId = path.join(id,  entry)
+        var moduleId = path.join(id, entry)
         var fileName = path.join(dir, entry)
         
         var stat = fs.statSync(fileName)
@@ -169,8 +178,6 @@ function collectFiles(dir, id) {
             result[moduleId] = fileName
         }
     })
-    
-    CollectedFiles[dir] = result
     
     return copyProps({}, result)
 }
@@ -201,14 +208,8 @@ function writeModule(oFile, fileName, moduleId, debug) {
 }
 
 //------------------------------------------------------------------------------
-var FileContents = {}
-
 function getContents(file) {
-    if (!FileContents.hasOwnProperty(file)) {
-        FileContents[file] = fs.readFileSync(file, 'utf8')
-    }
-    
-    return FileContents[file]
+    return fs.readFileSync(file, 'utf8');
 }
 
 //------------------------------------------------------------------------------
