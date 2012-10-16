@@ -28,7 +28,7 @@
   "dojo": false,
 
   // Custom predefined globals.
-  "predef": ["jasmine", "blackberry", "define", "alert", "prompt", "org", "deviceapis", "Osp"],
+  "predef": ["jasmine", "blackberry", "define", "alert", "prompt", "org", "deviceapis", "Osp", "_cordovaExec", "WinJS", "Windows", "MSApp"],
 
 
   // Development
