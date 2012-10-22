@@ -88,8 +88,6 @@ task('build', ['clean', 'hint', 'update-version'], function () {
 
         packager.generate("windows8",commitId);
         packager.generate("blackberry",commitId);
-        packager.generate("playbook",commitId);
-        packager.generate("qnx",commitId);
         packager.generate("ios",commitId);
         packager.generate("wp7",commitId);
         packager.generate("android",commitId);
@@ -110,8 +108,8 @@ task('update-version', ['set-cwd'], function() {
     var files = {
         "lib/bada/plugin/bada/device.js":/(me\.cordova\s=\s").+(")/,
         "lib/tizen/plugin/tizen/Device.js":/(this\.cordova\s=\s").+(")/,
-        "lib/webworks/qnx/plugin/qnx/device.js":/(cordova:\s").+(")/,
-        "lib/webworks/air/plugin/air/device.js":/(cordova:\s").+(")/
+        "lib/blackberry/plugin/qnx/device.js":/(cordova:\s").+(")/,
+        "lib/blackberry/plugin/air/device.js":/(cordova:\s").+(")/
     };
 
     for (var f in files) if (files.hasOwnProperty(f)) {

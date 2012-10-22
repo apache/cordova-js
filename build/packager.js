@@ -50,33 +50,11 @@ packager.bundle = function(platform, debug, commitId ) {
     
     modules[''] = 'lib/cordova.js'
     
-    if (['playbook', 'blackberry', 'qnx'].indexOf(platform) > -1) {
-        //BlackBerry is special ;)
-
-        var lang = platform;
-
-        switch (platform) {
-        case 'blackberry':
-            lang = 'java';
-            break;
-        case 'playbook':
-            lang = 'air';
-            break;
-        default: 
-            break;
-        }
-
-        copyProps(modules, collectFile(path.join('lib', 'webworks'), '', 'exec.js'))
-        copyProps(modules, collectFiles(path.join('lib', 'webworks/common')))
-        copyProps(modules, collectFiles(path.join('lib', 'webworks/' + lang)))
-    }
-    else if (platform === 'test') {
+    if (platform === 'test') {
         copyProps(modules, collectFiles(path.join('lib', platform)));
 
         //Test platform needs to bring in platform specific plugin's for testing
-        copyProps(modules, collectFiles(path.join('lib', 'webworks', 'air', 'plugin', 'air'), 'plugin/air'));
-        copyProps(modules, collectFiles(path.join('lib', 'webworks', 'java', 'plugin', 'java'), 'plugin/java'));
-        copyProps(modules, collectFiles(path.join('lib', 'webworks', 'qnx', 'plugin', 'qnx'), 'plugin/qnx'));
+        copyProps(modules, collectFiles(path.join('lib', 'blackberry', 'plugin'), 'plugin'));
         copyProps(modules, collectFiles(path.join('lib', 'tizen', 'plugin', 'tizen'), 'plubin/tizen'));
         copyProps(modules, collectFiles(path.join('lib', 'wp7', 'plugin', 'wp7'), 'plugin/wp7'));
         copyProps(modules, collectFiles(path.join('lib', 'windows8', 'plugin', 'windows8'), 'plugin/windows8'));
