@@ -66,6 +66,14 @@ describe('exec.processMessages', function () {
             expect(winSpy).toHaveBeenCalledWith(true);
             expect(result).toBe(true);
         });
+        it('should return payload value when plugin is synchronous and no callbacks are used', function() {
+            nativeApi.exec.andCallFake(function(service, action, callbackId, argsJson) {
+                return createCallbackMessage(true, true, 1, callbackId, 't');
+            });
+
+            var result = exec(null, null, 'Service', 'action', []);
+            expect(result).toBe(true);
+        });
     });
 
     describe('processMessages', function() {
