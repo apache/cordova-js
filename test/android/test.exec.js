@@ -22,18 +22,26 @@
 describe('exec.processMessages', function () {
     var cordova = require('cordova'),
         exec = require('cordova/androidexec'),
-        callbackSpy = jasmine.createSpy('callbackFromNative'),
-        origPrompt = typeof prompt == 'undefined' ? null : prompt,
-        origCallbackFromNative = cordova.callbackFromNative;
+        nativeApiProvider = require('cordova/plugin/android/nativeapiprovider'),
+        origNativeApi = nativeApiProvider.get();
+
+    var nativeApi = {
+        exec: jasmine.createSpy('nativeApi.exec'),
+        retrieveJsMessages: jasmine.createSpy('nativeApi.retrieveJsMessages'),
+    };
+
 
     beforeEach(function() {
-        callbackSpy.reset();
-        cordova.callbackFromNative = callbackSpy;
+        nativeApi.exec.reset();
+        nativeApi.retrieveJsMessages.reset();
+        // Avoid a log message warning about the lack of _nativeApi.
+        exec.setJsToNativeBridgeMode(exec.jsToNativeModes.PROMPT);
+        nativeApiProvider.set(nativeApi);
     });
 
     afterEach(function() {
-        cordova.callbackFromNative = origCallbackFromNative;
-        prompt = origPrompt;
+        nativeApiProvider.set(origNativeApi);
+        cordova.callbacks = {};
     });
 
     function createCallbackMessage(success, keepCallback, status, callbackId, encodedPayload) {
@@ -47,7 +55,31 @@ describe('exec.processMessages', function () {
         return ret;
     }
 
+    describe('exec', function() {
+        it('should return payload value when plugin is synchronous', function() {
+            var winSpy = jasmine.createSpy('win');
+            nativeApi.exec.andCallFake(function(service, action, callbackId, argsJson) {
+                return createCallbackMessage(true, true, 1, callbackId, 't');
+            });
+
+            var result = exec(winSpy, null, 'Service', 'action', []);
+            expect(winSpy).toHaveBeenCalledWith(true);
+            expect(result).toBe(true);
+        });
+    });
+
     describe('processMessages', function() {
+        var origCallbackFromNative = cordova.callbackFromNative,
+            callbackSpy = jasmine.createSpy('callbackFromNative');
+
+        beforeEach(function() {
+            callbackSpy.reset();
+            cordova.callbackFromNative = callbackSpy;
+        });
+
+        afterEach(function() {
+            cordova.callbackFromNative = origCallbackFromNative;
+        });
         it('should handle payloads of false', function() {
             var messages = createCallbackMessage(true, true, 1, 'id', 'f');
             exec.processMessages(messages);
@@ -99,14 +131,14 @@ describe('exec.processMessages', function () {
         it('should poll for more messages when hitting an *', function() {
             var message1 = createCallbackMessage(false, false, 3, 'id', 'sfoo');
             var message2 = createCallbackMessage(true, true, 1, 'id', 'f');
-            prompt = jasmine.createSpy('prompt').andCallFake(function() {
+            nativeApi.retrieveJsMessages.andCallFake(function() {
                 callbackSpy.reset();
                 return message2;
             });
             var messages = message1 + '*';
             exec.processMessages(messages);
             expect(callbackSpy).toHaveBeenCalledWith('id', false, 3, 'foo', false);
-            waitsFor(function() { return prompt.wasCalled }, 500);
+            waitsFor(function() { return nativeApi.retrieveJsMessages.wasCalled }, 500);
             runs(function() {
                 expect(callbackSpy).toHaveBeenCalledWith('id', true, 1, false, true);
             });
