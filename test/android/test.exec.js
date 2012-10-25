@@ -58,6 +58,11 @@ describe('exec.processMessages', function () {
             exec.processMessages(messages);
             expect(callbackSpy).toHaveBeenCalledWith('id', true, 1, true, true);
         });
+        it('should handle payloads of null', function() {
+            var messages = createCallbackMessage(true, true, 1, 'id', 'N');
+            exec.processMessages(messages);
+            expect(callbackSpy).toHaveBeenCalledWith('id', true, 1, null, true);
+        });
         it('should handle payloads of numbers', function() {
             var messages = createCallbackMessage(true, true, 1, 'id', 'n-3.3');
             exec.processMessages(messages);
