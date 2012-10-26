@@ -74,6 +74,22 @@ describe('exec.processMessages', function () {
             var result = exec(null, null, 'Service', 'action', []);
             expect(result).toBe(true);
         });
+        it('should return payload value when plugin is synchronous even when called recursively', function() {
+            var winSpy = jasmine.createSpy('win');
+            nativeApi.exec.andCallFake(function(service, action, callbackId, argsJson) {
+                return createCallbackMessage(true, true, 1, callbackId, 't');
+            });
+
+            function firstWin(value) {
+                expect(value).toBe(true);
+                var result = exec(winSpy, null, 'Service', 'action', []);
+                expect(result).toBe(true);
+            }
+
+            var result2 = exec(firstWin, null, 'Service', 'action', []);
+            expect(winSpy).toHaveBeenCalledWith(true);
+            expect(result2).toBe(true);
+        });
     });
 
     describe('processMessages', function() {
