@@ -22,6 +22,39 @@
 describe("utils", function () {
     var utils = require('cordova/utils');
 
+    describe("utils.arrayIndexOf", function() {
+        it("should return -1 when not found", function() {
+            expect(utils.arrayIndexOf([1,2,3], 4)).toBe(-1);
+        });
+        it("should return 0 for first item", function() {
+            expect(utils.arrayIndexOf([1,2,3], 1)).toBe(0);
+        });
+        it("should return 2 for last item", function() {
+            expect(utils.arrayIndexOf([1,2,3], 3)).toBe(2);
+        });
+        it("should return index of first occurance", function() {
+            expect(utils.arrayIndexOf([1,2,1], 1)).toBe(0);
+        });
+    });
+
+    describe("utils.arrayRemove", function() {
+        it("should return true when removed.", function() {
+            var a = [1, 2, 3];
+            expect(utils.arrayRemove(a, 2)).toBe(true);
+            expect(a).toEqual([1, 3]);
+        });
+        it("should return false when item was not there.", function() {
+            var a = [1, 2, 3];
+            expect(utils.arrayRemove(a, 4)).toBe(false);
+            expect(a).toEqual([1, 2, 3]);
+        });
+        it("should remove only first occurance", function() {
+            var a = [1, 2, 1];
+            expect(utils.arrayRemove(a, 1)).toBe(true);
+            expect(a).toEqual([2, 1]);
+        });
+    });
+
     describe("when cloning", function () {
         it("can clone an array", function () {
             var orig = [1, 2, 3, {four: 4}, "5"];
