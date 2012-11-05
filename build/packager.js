@@ -57,6 +57,7 @@ packager.bundle = function(platform, debug, commitId ) {
         copyProps(modules, collectFiles(path.join('lib', 'blackberry', 'plugin'), 'plugin'));
         copyProps(modules, collectFiles(path.join('lib', 'tizen', 'plugin', 'tizen'), 'plubin/tizen'));
         copyProps(modules, collectFiles(path.join('lib', 'wp7', 'plugin', 'wp7'), 'plugin/wp7'));
+        copyProps(modules, collectFiles(path.join('lib', 'wp', 'plugin', 'wp'), 'plugin/wp'));
         copyProps(modules, collectFiles(path.join('lib', 'windows8', 'plugin', 'windows8'), 'plugin/windows8'));
         copyProps(modules, collectFiles(path.join('lib', 'ios', 'plugin', 'ios'), 'plugin/ios/'));
         copyProps(modules, collectFiles(path.join('lib', 'bada', 'plugin', 'bada'), 'plugin/bada/'));
