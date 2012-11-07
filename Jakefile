@@ -102,7 +102,7 @@ task('build', ['clean', 'hint', 'update-version'], function () {
 
 desc("drops VERSION into JavaScript-based platforms");
 task('update-version', ['set-cwd'], function() {
-    var version = fs.readFileSync("VERSION", "utf-8").toString().split('\n').join('');
+    var version = fs.readFileSync("VERSION", "utf-8").toString().split(/\r?\n/).join('');
 
     // List of files that need to be interpolated with matching regexes
     var files = {
