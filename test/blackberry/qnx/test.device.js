@@ -19,22 +19,30 @@
  *
 */
 
-var cordova = require('cordova'),
-    interval;
+describe("blackberry qnx device", function () {
+    var device = require('cordova/plugin/qnx/device');
+    
+    it("calls the win callback with the device info", function () {
+        global.blackberry = {
+            system: {
+                softwareVersion: "NaN"
+            },
+            identity: {
+                uuid: 1
+            }
+        };
 
-module.exports = {
-    start: function (args, win, fail) {
-        interval = window.setInterval(function () {
-            win({
-                level: navigator.webkitBattery.level * 100,
-                isPlugged: navigator.webkitBattery.charging
-            });
-        }, 500);
-        return { "status" : cordova.callbackStatus.NO_RESULT, "message" : "WebWorks Is On It" };
-    },
+        var info;
 
-    stop: function (args, win, fail) {
-        window.clearInterval(interval);
-        return { "status" : cordova.callbackStatus.OK, "message" : "stopped" };
-    }
-};
+        //HACK: I know this is a sync call ;)
+        device.getDeviceInfo({}, function (i) { info = i; });
+
+        expect(info.platform).toBe("BB10");
+        expect(info.version).toBe("NaN");
+        expect(info.name).toBe("Dev Alpha");
+        expect(info.uuid).toBe(1);
+        expect(info.cordova).toBeDefined();
+        
+        delete global.blackberry;
+    });
+});
