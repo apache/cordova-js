@@ -19,22 +19,21 @@
  *
 */
 
-var cordova = require('cordova'),
-    interval;
+describe("blackberry qnx network", function () {
+    var cordova = require('cordova'),
+        network = require('cordova/plugin/qnx/network');
 
-module.exports = {
-    start: function (args, win, fail) {
-        interval = window.setInterval(function () {
-            win({
-                level: navigator.webkitBattery.level * 100,
-                isPlugged: navigator.webkitBattery.charging
-            });
-        }, 500);
-        return { "status" : cordova.callbackStatus.NO_RESULT, "message" : "WebWorks Is On It" };
-    },
+    it("returns the connection info", function () {
+        global.blackberry = {
+            connection: {
+                type: "pigeon"
+            }
+        };
+        expect(network.getConnectionInfo()).toEqual({
+            status: cordova.callbackStatus.OK,
+            message: "pigeon"
+        });
 
-    stop: function (args, win, fail) {
-        window.clearInterval(interval);
-        return { "status" : cordova.callbackStatus.OK, "message" : "stopped" };
-    }
-};
+        delete global.blackberry;
+    });
+});

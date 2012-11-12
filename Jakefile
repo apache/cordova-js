@@ -89,7 +89,7 @@ task('build', ['clean', 'hint', 'update-version'], function () {
         packager.generate("windows8",commitId);
         packager.generate("blackberry",commitId);
         packager.generate("ios",commitId);
-        packager.generate("wp7",commitId);
+        packager.generate("windowsphone",commitId);
         packager.generate("android",commitId);
         packager.generate("bada",commitId);
         packager.generate("tizen",commitId);
@@ -102,7 +102,7 @@ task('build', ['clean', 'hint', 'update-version'], function () {
 
 desc("drops VERSION into JavaScript-based platforms");
 task('update-version', ['set-cwd'], function() {
-    var version = fs.readFileSync("VERSION", "utf-8").toString().split('\n').join('');
+    var version = fs.readFileSync("VERSION", "utf-8").toString().split(/\r?\n/).join('');
 
     // List of files that need to be interpolated with matching regexes
     var files = {

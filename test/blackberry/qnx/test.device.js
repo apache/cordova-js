@@ -19,12 +19,30 @@
  *
 */
 
-describe("media", function () {
-    describe("MediaError object + error codes", function () {
-        var MediaError = require('cordova/plugin/MediaError');
-        it("should have no problem instantiating a MediaError object with the zero code", function () {
-            var err = new MediaError(0);
-            expect(err.code).toBe(0);
-        });
+describe("blackberry qnx device", function () {
+    var device = require('cordova/plugin/qnx/device');
+    
+    it("calls the win callback with the device info", function () {
+        global.blackberry = {
+            system: {
+                softwareVersion: "NaN"
+            },
+            identity: {
+                uuid: 1
+            }
+        };
+
+        var info;
+
+        //HACK: I know this is a sync call ;)
+        device.getDeviceInfo({}, function (i) { info = i; });
+
+        expect(info.platform).toBe("BB10");
+        expect(info.version).toBe("NaN");
+        expect(info.name).toBe("Dev Alpha");
+        expect(info.uuid).toBe(1);
+        expect(info.cordova).toBeDefined();
+        
+        delete global.blackberry;
     });
 });
