@@ -22,15 +22,19 @@
 describe("logger", function () {
     var logger = require('cordova/plugin/webworks/logger');
 
-    describe("log", function() {
-        it("should post a console log", function() {            
-            spyOn(console, "log");
-            var l = logger.log("Yodalay-Yodalay-Yodalay-Hee-Hoo!");
-            
-            expect(console.log).toHaveBeenCalledWith("Yodalay-Yodalay-Yodalay-Hee-Hoo!");
-        	expect(l.status).toBe(1);
-        	expect(l.message).toBe('Message logged to console: Yodalay-Yodalay-Yodalay-Hee-Hoo!');
-        });
+    beforeEach(function () {
+        spyOn(console, "log");
     });
 
+    it("should post a console log", function() {            
+        logger.log("Yodalay-Yodalay-Yodalay-Hee-Hoo!");
+        expect(console.log).toHaveBeenCalledWith("Yodalay-Yodalay-Yodalay-Hee-Hoo!");
+    });
+
+    it("returns ok", function () {
+        expect(logger.log('moo')).toEqual({
+            status: cordova.callbackStatus.OK,
+            message: 'Message logged to console: moo'
+        });
+    });
 });

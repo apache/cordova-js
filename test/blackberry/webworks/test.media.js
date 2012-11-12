@@ -21,254 +21,242 @@
 
 describe("media", function () {
     var media = require('cordova/plugin/webworks/media'),
-    	m;
+        audio = {
+            play: jasmine.createSpy("play"), 
+            pause: jasmine.createSpy("pause"),
+            currentTime: 800,
+            duration: 2100
+        };
 
-    	beforeEach(function(){
-    		global.Audio = function(src){ 
-    			var funcs = {	
-                    play: function(){}, 
-    				pause: function(){},
-    				currentTime: 800,
-    				duration: 2100
-    			}
-    			return funcs;
-    		}
-    	});
+    beforeEach(function(){
+        audio.play.reset();
+        audio.pause.reset();
+        global.blackberry = {
+            media:{
+                microphone:{
+                    record: jasmine.createSpy("blackberry.media.microphone.record")
+                }
+            }
+        };
 
-    	afterEach(function(){
-    		delete global.Audio;
-    	});
+        global.Audio = jasmine.createSpy("Audio").andCallFake(function () {
+            return audio;
+        });
+    });
+
+    afterEach(function(){
+        delete global.Audio;
+        delete global.blackberry;
+    });
+
+    function handlesNoArgs(func) {
+        it("should return an error message when no args provided", function() {            
+            expect(func({})).toEqual({
+                status: 9,
+                message: 'Media Object id was not sent in arguments'
+            });
+        });
+    }
+
+    function handlesNotFound(func) {
+        it("returns error if it can't find audio object", function () {
+            expect(func(["FreeBird"])).toEqual({
+                status: 2,
+                message: 'Audio Object has not been initialized'
+            });
+        });
+    }
     
     describe("create", function() {
-        it("should fail to create a media object", function() {            
-            m = media.create({});
-        	expect(m.status).toBe(9);
-        	expect(m.message).toBe('Media Object id was not sent in arguments');
+
+        handlesNoArgs(media.create);
+
+        it("should create an audio object for the src", function () {
+            media.create(["jammin", "tunes/wejammin.mp3"]);
+            expect(Audio).toHaveBeenCalledWith("tunes/wejammin.mp3");
         });
 
-        it("should fail to create a media object", function() {            
-            m = media.create(9);
-        	expect(m.status).toBe(9);
-        	expect(m.message).toBe('Media Object id was not sent in arguments');
-        });
-
-        it("should create a media object", function() {            
-         	m = media.create(["jammin", "tunes/wejammin.mp3"]);
-        	expect(m.status).toBe(1);
-        	expect(m.message).toBe('Audio object created');
+        it("returns success", function() {            
+            expect(media.create(["jammin", "tunes/wejammin.mp3"])).toEqual({
+                status: 1,
+                message: 'Audio object created'
+            });
         });
     });
 
     describe("startPlayingAudio", function(){
-    	it("should fail to find the media Object", function() {            
-            m = media.startPlayingAudio({});
-        	expect(m.status).toBe(9);
-        	expect(m.message).toBe('Media Object id was not sent in arguments');
+
+        handlesNoArgs(media.startPlayingAudio);
+
+        it("errors out when no src", function () {
+            expect(media.startPlayingAudio([1])).toEqual({
+                status: 9,
+                message: "Media source argument not found"
+            });
         });
 
-        it("should fail to find media Source ", function() {          
-            m = media.startPlayingAudio(["jammin"]);
-        	expect(m.status).toBe(9);
-        	expect(m.message).toBe('Media source argument not found');
+        it("returns success", function() {            
+            expect(media.startPlayingAudio(["jammin", "tunes/wejammin.mp3"])).toEqual({
+                status: 1,
+                message: 'Audio play started'
+            });
         });
-    	
-    	it("should create a media object ", function() {
-            m = media.startPlayingAudio(["jammin", "tunes/wejammin.mp3"]);
-        	expect(m.status).toBe(1);
-        	expect(m.message).toBe('Audio play started');
+
+        it("creates an audio object for the src", function () {
+            media.startPlayingAudio(["push", "pushit.mp3"]);
+            expect(Audio).toHaveBeenCalledWith("pushit.mp3");
+        });
+
+        it("calls play on the audio object", function () {
+            media.startPlayingAudio(["baby", "babybabybabyohhh.mp3"]);
+            expect(audio.play).toHaveBeenCalled();
+        });
+
+        it("calls pause if the audio id already existed", function () {
+            media.startPlayingAudio(["ice", "iceicebaby.mp3"]);
+            media.startPlayingAudio(["ice", "iceicebaby.mp3"]);
+            expect(audio.pause).toHaveBeenCalled();
+        });
+
+        it("doesn't call pause on new id's", function () {
+            media.startPlayingAudio(["loser", "loser.mp3"]);
+            expect(audio.pause).not.toHaveBeenCalled();
         });
     });
 
     describe("stopPlayingAudio", function(){
-    	it("should fail to find the media Object", function() {            
-            m = media.stopPlayingAudio(0);
-        	expect(m.status).toBe(9);
-        	expect(m.message).toBe('Media Object id was not sent in arguments');
+        handlesNoArgs(media.stopPlayingAudio);
+   
+        it("finds that no Audio Object exists", function () {
+            expect(media.stopPlayingAudio(["Free Bird"])).toEqual({
+                status: 2,
+                message: 'Audio Object has not been initialized'   
+            });
         });
 
-    	it("should stop the audio playback ", function() {
-            m = media.stopPlayingAudio(["jammin", "tunes/wejammin.mp3"]);
-        	expect(m.status).toBe(1);
-        	expect(m.message).toBe('Audio play stopped');
-        });
+        describe("when it can find the audio object", function () {
+            beforeEach(function () {
+                media.startPlayingAudio(["thriller", "triller.mp3"]);
+                audio.pause.reset(); //since start will call play
+            });
 
-        it("should find that the Audio Object failed to initialze", function() {
-            global.audio = undefined;
-            m = media.stopPlayingAudio(["jammin"]);
-        	expect(m.status).toBe(2);
-        	expect(m.message).toBe('Audio Object has not been initialized');
-        	delete global.audio;
+            it("returns success", function () {
+                expect(media.stopPlayingAudio(["thriller"])).toEqual({
+                    status: 1,
+                    message: "Audio play stopped"
+                });
+            });
+
+            it("calls pause on the found audio object", function () {
+                media.stopPlayingAudio(["thriller"]);
+                expect(audio.pause).toHaveBeenCalled();
+                
+            });
         });
     });
 
     describe("seekToAudio", function(){
-    	it("should fail to find the media Object", function() {            
-            m = media.seekToAudio(0);
-        	expect(m.status).toBe(9);
-        	expect(m.message).toBe('Media Object id was not sent in arguments');
+        handlesNoArgs(media.seekToAudio);
+        handlesNotFound(media.seekToAudio);
+
+        describe("when it can find an audio object", function () {
+            beforeEach(function () {
+                media.create(["yellowSubmarine", "yellowSubmarine.ogg"]);
+            });
+
+            it("returns a message when no seek time provided", function () {
+                expect(media.seekToAudio(["yellowSubmarine"])).toEqual({
+                    status: 9,
+                    message: 'Media seek time argument not found'   
+                });
+            });
+
+            it("sets the currentTime of the audio object", function () {
+                media.seekToAudio(["yellowSubmarine", 12]);
+                expect(audio.currentTime).toBe(12);
+            });
+
+            describe("when setting the current time fails", function () {
+                beforeEach(function () {
+                    spyOn(console, "log");
+                    audio.__defineSetter__("currentTime", jasmine.createSpy("audio.currentTime").andThrow("holy balls!"));
+                });
+
+                afterEach(function () {
+                    delete audio.currentTime;
+                    audio.currentTime = 800;
+                });
+
+                it("logs the error", function () {
+                    media.seekToAudio(["yellowSubmarine", 33]);
+                    expect(console.log).toHaveBeenCalledWith("Error seeking audio: holy balls!");
+                });
+
+                it("returns the error", function () {
+                    expect(media.seekToAudio(["yellowSubmarine", 33])).toEqual({
+                        status: 3,
+                        message: "Error seeking audio: holy balls!"
+                    });
+                });
+            });
         });
-
-        it("should find that the Audio Object failed to initialze", function() {
-            global.audio = undefined;
-            m = media.seekToAudio(["jammin"]);
-        	expect(m.status).toBe(2);
-        	expect(m.message).toBe('Audio Object has not been initialized');
-        	delete global.audio;
-        });
-
-        it("should find that there is no time argument in the function", function() {
-            media.create(["jammin", "tunes/wejammin.mp3"]);
-            m = media.seekToAudio(["jammin"]);
-        	expect(m.status).toBe(9);
-        	expect(m.message).toBe('Media seek time argument not found');
-        	media.release(["jammin"]);
-        });
-
-        // TODO: review error generators!!! It should have a listener to see when it changes and make calls based on those changes of that particular variable.
-        // it("should result in an error seeking audio", function() {
-        //     media.create(["jammin", "tunes/wejammin.mp3"]);
-        //     m = media.seekToAudio(["jammin", 9000]);
-        	
-        // 	// expect(m.status).toBe(3);
-        // 	expect(m.message).toBe('Seek to audio succeeded');
-        	
-        // 	media.release(["jammin"]);
-        // });
-
-        it("should successfully seek to audio", function() {
-        	media.create(["jammin", "tunes/wejammin.mp3"]);
-            m = media.seekToAudio(["jammin", 800]);
-        	expect(m.status).toBe(1);
-        	expect(m.message).toBe('Seek to audio succeeded');
-        	media.release(["jammin"]);
-        });
-
-    	
     });
 
-	describe("pausePlayingAudio", function(){
-    	it("should fail to find the media Object", function() {            
-            m = media.pausePlayingAudio(0);
-        	expect(m.status).toBe(9);
-        	expect(m.message).toBe('Media Object id was not sent in arguments');
-        });
+    describe("pausePlayingAudio", function(){
+        handlesNoArgs(media.pausePlayingAudio); 
+        handlesNotFound(media.pausePlayingAudio); 
 
-        it("should find that the Audio Object failed to initialze", function() {
-            global.audio = undefined;
-            m = media.pausePlayingAudio(["jammin"]);
-        	expect(m.status).toBe(2);
-        	expect(m.message).toBe('Audio Object has not been initialized');
-        	delete global.audio;
+        it("should pause the existing audio", function () {
+            media.create(["WhatIsLove", "babyDontHurtMe.mp3"]);
+            media.pausePlayingAudio(["WhatIsLove"]);
+            expect(audio.pause).toHaveBeenCalled();
         });
-
-        it("should successfully pause the audio", function() {
-            media.create(["jammin", "tunes/wejammin.mp3"]);
-            m = media.pausePlayingAudio(["jammin"]);
-        	expect(m.status).toBe(1);
-        	expect(m.message).toBe('Audio paused');
-        	media.release(["jammin"]);
+        
+        it("should return Audio paused", function () {
+           media.create(["TheBoysAreBackInTown", "thinLizzyBaby.mp3"]);
+           expect(media.pausePlayingAudio(["TheBoysAreBackInTown"])).toEqual({
+                status: 1,
+                message: 'Audio paused'     
+           });
         });
-    	
     });
 
     describe("getCurrentPositionAudio", function(){
-        it("should fail to find the media Object", function() {            
-            m = media.getCurrentPositionAudio(0);
-            expect(m.status).toBe(9);
-            expect(m.message).toBe('Media Object id was not sent in arguments');
+        handlesNoArgs(media.getCurrentPositionAudio);
+        handlesNotFound(media.getCurrentPositionAudio);
+        
+        it("should return current audio position", function () {
+            media.create(["InTheEnd", "linkinPark/inTheEnd.mp3"]);
+            expect(media.getCurrentPositionAudio(["InTheEnd"])).toEqual({
+                status: 1,
+                message: 800
+            });
         });
-
-        it("should find that the Audio Object failed to initialze", function() {
-            global.audio = undefined;
-            m = media.getCurrentPositionAudio(["jammin"]);
-            expect(m.status).toBe(2);
-            expect(m.message).toBe('Audio Object has not been initialized');
-            delete global.audio;
-        });
-
-        it("should successfully pause the audio", function() {
-            media.create(["jammin", "tunes/wejammin.mp3"]);
-            m = media.getCurrentPositionAudio(["jammin"]);
-            expect(m.status).toBe(1);
-            expect(m.message).toBe(800);
-            media.release(["jammin"]);
-        });
-
     });
 
     describe("getDuration", function(){
-        it("should fail to find the media Object", function() {            
-            m = media.getDuration(0);
-            expect(m.status).toBe(9);
-            expect(m.message).toBe('Media Object id was not sent in arguments');
-        });
+        handlesNoArgs(media.getDuration);
+        handlesNotFound(media.getDuration);
 
-        it("should find that the Audio Object failed to initialze", function() {
-            global.audio = undefined;
-            m = media.getDuration(["jammin"]);
-            expect(m.status).toBe(2);
-            expect(m.message).toBe('Audio Object has not been initialized');
-            delete global.audio;
-        });
+        it("should return errors", function () {
+            expect(media.getDuration(["EndlessLove"])).toEqual({
+                status: 2,
+                message:'Audio Object has not been initialized'
+            });
+        });    
+    });
 
-        it("should successfully pause the audio", function() {
+    xdescribe("startRecordingAudio", function(){
+        handlesNoArgs(media.startRecordingAudio);
+        handlesNotFound(media.startRecordingAudio);
+
+        xit("should successfully pause the audio", function() {
             media.create(["jammin", "tunes/wejammin.mp3"]);
-            m = media.getDuration(["jammin"]);
-            expect(m.status).toBe(1);
-            expect(m.message).toBe(2100);
+            m = media.startRecordingAudio(["jammin"]);
+            expect(m.status).toBe(0);
+            expect(m.message).toBe('WebWorks Is On It');
             media.release(["jammin"]);
         });
         
     });
-
-    describe("startRecordingAudio", function(){
-        it("should fail to find the media Object", function() {            
-            m = media.startRecordingAudio(0);
-            expect(m.status).toBe(9);
-            expect(m.message).toBe('Media Object id was not sent in arguments');
-        });
-
-        it("should find that the Audio Object failed to initialze", function() {
-            global.audio = undefined;
-            m = media.startRecordingAudio(["jammin"]);
-            expect(m.status).toBe(2);
-            expect(m.message).toBe('Media start recording, insufficient arguments');
-            delete global.audio;
-        });
-
-        it("should successfully pause the audio", function() {
-            media.create(["jammin", "tunes/wejammin.mp3"]);
-            m = media.startRecordingAudio(["jammin"]);
-            expect(m.status).toBe(1);
-            expect(m.message).toBe(2100);
-            media.release(["jammin"]);
-        });
-        
-    });
-
-    // describe("getDuration", function(){
-    //     it("should fail to find the media Object", function() {            
-    //         m = media.getDuration(0);
-    //         expect(m.status).toBe(9);
-    //         expect(m.message).toBe('Media Object id was not sent in arguments');
-    //     });
-
-    //     it("should find that the Audio Object failed to initialze", function() {
-    //         global.audio = undefined;
-    //         m = media.getDuration(["jammin"]);
-    //         expect(m.status).toBe(2);
-    //         expect(m.message).toBe('Audio Object has not been initialized');
-    //         delete global.audio;
-    //     });
-
-    //     it("should successfully pause the audio", function() {
-    //         media.create(["jammin", "tunes/wejammin.mp3"]);
-    //         m = media.getDuration(["jammin"]);
-    //         expect(m.status).toBe(1);
-    //         expect(m.message).toBe(2100);
-    //         media.release(["jammin"]);
-    //     });
-        
-    // });
-
 });
