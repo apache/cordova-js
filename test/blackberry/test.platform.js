@@ -23,31 +23,18 @@ describe("blackberry platform", function () {
     var platform = require('cordova/blackberryplatform');
 
     describe("when getting the runtime", function () {
-        beforeEach(function () {
-            global.blackberry = {
-                system: {
-                    softwareVersion: ""
-                }
-            };
-        });
-
-        afterEach(function () {
-            delete global.blackberry;
-        });
-
-        it("returns qnx if webworks exists on window", function () {
-            window.webworks = {};
+        it("returns qnx for the bb10 user agent", function () {
+            navigator.userAgent = "Mozilla/5.0 (BB10; Touch) AppleWebKit/537.1+ (KHTML, like Gecko) Version/10.0.0.1337 Mobile Safari/537.1+";
             expect(platform.runtime()).toBe("qnx");
-            delete window.webworks;
         });
 
-        it("returns air if softwareVersion starts with BlackBerry", function () {
-            blackberry.system.softwareVersion = "BlackBerry PlayBook OS"
+        it("returns air for the playbook user agent", function () {
+            navigator.userAgent = "Mozilla/5.0 (PlayBook; U; RIM Tablet OS 2.1.0; en-US) AppleWebKit/536.2+ (KHTML, like Gecko) Version/7.2.1.0 Safari/536.2+";
             expect(platform.runtime()).toBe("air");
         });
 
-        it("returns java if software version is anything else", function () {
-            blackberry.system.softwareVersion = "7.0"
+        it("returns java for a blackberry user agent", function () {
+            navigator.userAgent = "Mozilla/5.0 (BlackBerry; U; BlackBerry 9100; en) AppleWebKit/534.3+ (KHTML, like Gecko) Version/6.0.0.286 Mobile Safari/534.3+";
             expect(platform.runtime()).toBe("java");
         });
     });
