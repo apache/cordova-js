@@ -27,9 +27,8 @@ describe("accelerometer", function () {
             spyOn(window, "removeEventListener");
             spyOn(window, "addEventListener");
 
-            var callback = function(motion){},
-                win = function(){},
-                fail = function(){},
+            var win = jasmine.createSpy('win'),
+                fail = jasmine.createSpy('fail'),
                 args = {x:1,y:2,z:3},
                 aStart = accelerometer.start(args, win, fail);
 
@@ -51,7 +50,10 @@ describe("accelerometer", function () {
             spyOn(window, "removeEventListener");
             var aStop = accelerometer.stop();
 
-            expect(window.removeEventListener).toHaveBeenCalled();
+            expect(window.removeEventListener).toHaveBeenCalledWith("devicemotion", jasmine.any(Function));
+
+            window.removeEventListener.reset();
+
         	expect(aStop.status).toBe(0);
         	expect(aStop.message).toBe('WebWorks Is On It');
 
@@ -59,4 +61,3 @@ describe("accelerometer", function () {
     });
 
 });
-

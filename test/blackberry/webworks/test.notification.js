@@ -20,10 +20,24 @@
 */
 
 describe("notification", function () {
-    var notification = require('cordova/plugin/webworks/notification'),
-        exec = require('cordova/exec');
+    var notification = require('cordova/plugin/webworks/notification');
 
-    // alerts handled by cordova
+    beforeEach(function(){
+        global.blackberry = {
+            ui:{
+                dialog:{
+                    customAskAsync: {
+                        apply: function(args){ return args; }
+                    }
+                }
+            }
+        }
+    });
+
+    afterEach(function(){
+        delete global.blackberry;
+    });
+
     describe("alert - arguments not equal to three", function() {
         it("should provide an alert notification", function() {            
 
@@ -36,24 +50,17 @@ describe("notification", function () {
         });
     });
 
-    // alerts handled by webworks
     describe("alert - arguments equal to three", function() {
-        it("should call blackberry.ui.dialog.customAskAsync", function() {  
-
-            // spyOn(blackberry.ui.dialog.customAskAsync, "apply");
+        it("should call a webworks action", function() { 
             
-            // var args = ["Danger, danger Will Robinson", "Panic, is my middle name", "PANIC"],
-            // n = notification.alert(args);
+            var n = notification.alert(["Danger, danger Will Robinson", "Panic, is my middle name", "PANIC"]);
 
-
-            // expect(args.length).toBe(3);
-            // expect(n.status).toBe(9);
-            // expect(n.message).toBe('Notification action - alert arguments not found');
+            expect(n.status).toBe(0);
+            expect(n.message).toBe('WebWorks Is On It');
 
         });
     });
 
-    // confirm handled by cordova
     describe("confirm - arguments not equal to three", function() {
         it("should provide a confirm notification", function() {            
 
@@ -68,11 +75,12 @@ describe("notification", function () {
 
     // confirm handled by webworks
     describe("alert - arguments equal to three", function() {
-        it("should call blackberry", function() {            
+        it("should call a webworks action", function() {            
         
-        // var args = ["Danger, danger Will Robinson", "Panic, is my middle name", "PANIC"];
-        // var n = notification.alert(args); 
-        // TALK TO GORD!!!!!
+            var n = notification.confirm(["Danger, danger Will Robinson", "Panic, is my middle name", "PANIC"]);
+            
+            expect(n.status).toBe(0);
+            expect(n.message).toBe('WebWorks Is On It');
 
         });
     });
