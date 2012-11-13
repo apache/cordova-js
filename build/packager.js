@@ -37,7 +37,7 @@ packager.generate = function(platform, commitId) {
     outFile = path.join('pkg', 'cordova.' + platform + '.js')
     fs.writeFileSync(outFile, libraryRelease, 'utf8')
     
-    outFile = path.join('pkg', 'cordova.' + platform + '-debug.js')
+    outFile = path.join('pkg/debug', 'cordova.' + platform + '-debug.js')
     fs.writeFileSync(outFile, libraryDebug, 'utf8')
     
     console.log('generated platform: ' + platform + ' in ' + time + 'ms')

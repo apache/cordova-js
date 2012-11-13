@@ -62,8 +62,11 @@ module.exports = {
             this[key] = window[key] = global[key] = jas[key];
         });
 
+        //regenerate platform file
+        packager.generate('test');
+
         //load in our modules
-        var testLibName = _path.join(__dirname, '..', 'pkg', 'cordova.test-debug.js')
+        var testLibName = _path.join(__dirname, '..', 'pkg', 'cordova.test.js')
         var testLib     = fs.readFileSync(testLibName, 'utf8')
         try {
             eval(testLib);
