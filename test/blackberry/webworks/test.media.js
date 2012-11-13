@@ -24,6 +24,7 @@ describe("media", function () {
         audio = {
             play: jasmine.createSpy("play"), 
             pause: jasmine.createSpy("pause"),
+            src: "file.mp3",
             currentTime: 800,
             duration: 2100
         };
@@ -238,25 +239,81 @@ describe("media", function () {
         handlesNoArgs(media.getDuration);
         handlesNotFound(media.getDuration);
 
-        it("should return errors", function () {
-            expect(media.getDuration(["EndlessLove"])).toEqual({
-                status: 2,
-                message:'Audio Object has not been initialized'
+        it("should return the duration", function () {
+            media.create(["lollypop", "lollypop.mp3"]);
+            expect(media.getDuration(["lollypop"])).toEqual({
+                status: 1,
+                message: 2100
             });
-        });    
+        });
     });
 
-    xdescribe("startRecordingAudio", function(){
+    describe("startRecordingAudio", function(){
         handlesNoArgs(media.startRecordingAudio);
-        handlesNotFound(media.startRecordingAudio);
 
-        xit("should successfully pause the audio", function() {
-            media.create(["jammin", "tunes/wejammin.mp3"]);
-            m = media.startRecordingAudio(["jammin"]);
-            expect(m.status).toBe(0);
-            expect(m.message).toBe('WebWorks Is On It');
-            media.release(["jammin"]);
+        beforeEach(function () {
+            global.blackberry = {
+                media: {
+                    microphone: {
+                        record: jasmine.createSpy("record")
+                    }
+                }
+            };
         });
-        
+
+        afterEach(function () {
+            delete global.blackberry;
+        });
+
+        it("throws an error when not enough arguments", function () {
+            expect(media.startRecordingAudio(["ww"])).toEqual({
+                status: 9,
+                message: "Media start recording, insufficient arguments"
+            });
+        });
+
+        it("calls record", function () {
+            var win = jasmine.createSpy("win"),
+                fail = jasmine.createSpy("fail");
+
+            media.startRecordingAudio(["record", "manifesto.ogg"], win, fail);
+
+            expect(blackberry.media.microphone.record).toHaveBeenCalledWith("manifesto.ogg", win, fail); 
+        });
+
+        it("returns no result", function () {
+            expect(media.startRecordingAudio(["foo", "birdcall.mp3"])).toEqual({
+                status: 0,
+                message: "WebWorks Is On It"
+            });
+        });
+    });
+
+    describe("stopRecordingAudio", function () {
+        it("can be called with no args and all is well", function () {
+            expect(media.stopRecordingAudio).not.toThrow();
+        });
+    });
+
+    describe("release", function () {
+        handlesNoArgs(media.release);
+
+        afterEach(function () {
+            audio.src = "file.mp3";
+        });
+
+        it("sets the src of the audio object to undefined", function () {
+            media.create(["video", "killedtheradiostar.mp3"]);
+            media.release(["video"]);
+            
+            expect(audio.src).not.toBeDefined();
+        });
+
+        it("returns a message that the resources have been released", function () {
+            expect(media.release(["onaboat"])).toEqual({
+                status: 1,
+                message: "Media resources released"
+            });
+        });
     });
 });
