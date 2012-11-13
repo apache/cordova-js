@@ -20,15 +20,16 @@
 */
 
 describe("notification", function () {
-    var notification = require('cordova/plugin/webworks/notification');
+    var notification = require('cordova/plugin/webworks/notification'),
+        cordova = require('cordova');
 
     beforeEach(function(){
         global.blackberry = {
             ui:{
                 dialog:{
-                    customAskAsync: {
-                        apply: function(args){ return args; }
-                    }
+                    customAskAsync: jasmine.createSpy()
+                        // apply: jasmine.createSpy('apply')
+                    
                 }
             }
         }
@@ -38,50 +39,49 @@ describe("notification", function () {
         delete global.blackberry;
     });
 
-    describe("alert - arguments not equal to three", function() {
-        it("should provide an alert notification", function() {            
+    describe("alert", function() {
 
-            var args = "Danger, danger Will Robinson!",
-                n = notification.alert(args);
-
-            expect(args.length).not.toBe(3);
-        	expect(n.status).toBe(9);
-        	expect(n.message).toBe('Notification action - alert arguments not found');
+        it("should return that alert arguments are missing", function() {
+            expect(notification.alert("")).toEqual({
+                status: 9,
+                message: "Notification action - alert arguments not found"
+            });
         });
-    });
 
-    describe("alert - arguments equal to three", function() {
-        it("should call a webworks action", function() { 
-            
-            var n = notification.alert(["Danger, danger Will Robinson", "Panic, is my middle name", "PANIC"]);
-
-            expect(n.status).toBe(0);
-            expect(n.message).toBe('WebWorks Is On It');
-
+        it("should call the blackberry object", function() {
+            var win = jasmine.createSpy('win'); 
+            notification.alert(["Danger, danger Will Robinson!", "Panic, is my middle name", "PANIC!"], win);
+            expect(blackberry.ui.dialog.customAskAsync).toHaveBeenCalledWith("Danger, danger Will Robinson!", [ "PANIC!" ], win, { "title" : "Panic, is my middle name" });
         });
-    });
-
-    describe("confirm - arguments not equal to three", function() {
-        it("should provide a confirm notification", function() {            
-
-            var args = "Are you sure you're ready to jump?",
-                n = notification.confirm(args);
-
-            expect(args.length).not.toBe(3);
-            expect(n.status).toBe(9);
-            expect(n.message).toBe('Notification action - confirm arguments not found');
-        });
-    });
-
-    // confirm handled by webworks
-    describe("alert - arguments equal to three", function() {
-        it("should call a webworks action", function() {            
         
-            var n = notification.confirm(["Danger, danger Will Robinson", "Panic, is my middle name", "PANIC"]);
-            
-            expect(n.status).toBe(0);
-            expect(n.message).toBe('WebWorks Is On It');
+        it("should return that WebWorks Is On It", function() {
+            expect(notification.alert(["Danger, danger Will Robinson!", "Panic, is my middle name", "PANIC!"])).toEqual({
+                status: cordova.callbackStatus.NO_RESULT,
+                message: "WebWorks Is On It"
+            });
+        });
+    });
 
+    describe("confirm", function() {
+        it("should return that alert arguments are missing", function() {
+            expect(notification.confirm("")).toEqual({
+                status: 9,
+                message: "Notification action - confirm arguments not found"
+            });
+        });
+
+        it("should call the blackberry object", function() {
+            var win = jasmine.createSpy('win'); 
+            notification.confirm(["Are you interested in cheaper long distance?", "Serving you better!", "SCREAM,CONFIRM"], win);
+
+            expect(blackberry.ui.dialog.customAskAsync).toHaveBeenCalledWith("Are you interested in cheaper long distance?", [ "SCREAM", "CONFIRM" ], win, { "title" : "Serving you better!" });
+        });
+        
+        it("should return that WebWorks Is On It", function() {
+            expect(notification.confirm(["Danger, danger Will Robinson!", "Panic, is my middle name", "PANIC!"])).toEqual({
+                status: cordova.callbackStatus.NO_RESULT,
+                message: "WebWorks Is On It"
+            });
         });
     });
 

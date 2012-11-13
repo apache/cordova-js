@@ -20,44 +20,66 @@
 */
 
 describe("accelerometer", function () {
-    var accelerometer = require('cordova/plugin/webworks/accelerometer');
+    var accelerometer = require('cordova/plugin/webworks/accelerometer'),
+        cordova = require('cordova');
+
+    beforeEach(function(){
+        spyOn(window, "removeEventListener");
+        spyOn(window, "addEventListener");
+    });
 
     describe("start", function() {
-        it("should start webworks watching the accelerometer", function() {            
-            spyOn(window, "removeEventListener");
-            spyOn(window, "addEventListener");
+        it("returns no result", function () {
+            expect(accelerometer.start()).toEqual({
+                status: cordova.callbackStatus.NO_RESULT,
+                message: "WebWorks Is On It"
+            });
+        });
 
-            var win = jasmine.createSpy('win'),
-                fail = jasmine.createSpy('fail'),
-                args = {x:1,y:2,z:3},
-                aStart = accelerometer.start(args, win, fail);
+        it("removes the event listener", function () {
+            accelerometer.start();
+            expect(window.removeEventListener).toHaveBeenCalledWith("devicemotion", jasmine.any(Function));
+        });
 
-            expect(window.removeEventListener).toHaveBeenCalledWith("devicemotion", undefined);
-
+        it("adds the event listener back", function () {
+            accelerometer.start();
             expect(window.addEventListener).toHaveBeenCalledWith("devicemotion", jasmine.any(Function));
+        });
 
-            window.removeEventListener.reset();
-            window.addEventListener.reset();
-        	
-            expect(aStart.status).toBe(0);
-        	expect(aStart.message).toBe('WebWorks Is On It');
+        it("grabs the motion information from the callback and calls success", function () {
+            var success = jasmine.createSpy("success");
+            accelerometer.start({}, success);
+
+            window.addEventListener.mostRecentCall.args[1]({
+                accelerationIncludingGravity: {
+                    x: 1,
+                    y: 2,
+                    z: 3,
+                },
+                timestamp: "around tea time"
+            });
+
+            expect(success).toHaveBeenCalledWith({
+                x: 1,
+                y: 2,
+                z: 3,
+                timestamp: "around tea time"
+            });
 
         });
     });
 
     describe("stop", function() {
-        it("should stop webworks from watching the accelerometer", function() {            
-            spyOn(window, "removeEventListener");
-            var aStop = accelerometer.stop();
+        it("returns OK", function () {
+            expect(accelerometer.stop()).toEqual({
+                status: cordova.callbackStatus.OK,
+                message: "removed"
+            });
+        });
 
+        it("removes the event listener", function () {
+            accelerometer.stop();
             expect(window.removeEventListener).toHaveBeenCalledWith("devicemotion", jasmine.any(Function));
-
-            window.removeEventListener.reset();
-
-        	expect(aStop.status).toBe(0);
-        	expect(aStop.message).toBe('WebWorks Is On It');
-
         });
     });
-
 });
