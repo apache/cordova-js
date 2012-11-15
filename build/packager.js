@@ -25,22 +25,20 @@ var packager = module.exports
 
 //------------------------------------------------------------------------------
 packager.generate = function(platform, commitId) {
-    var time = new Date().valueOf()
+    var outFile;
+    var time = new Date().valueOf();
+
+    var libraryRelease = packager.bundle(platform, false, commitId);
+    var libraryDebug   = packager.bundle(platform, true, commitId);
     
-    var libraryRelease = packager.bundle(platform, false, commitId)
-    var libraryDebug   = packager.bundle(platform, true, commitId)
+    time = new Date().valueOf() - time;
+    outFile = path.join('pkg', 'cordova.' + platform + '.js');
+    fs.writeFileSync(outFile, libraryRelease, 'utf8');
     
-    time = new Date().valueOf() - time
+    outFile = path.join('pkg', 'debug', 'cordova.' + platform + '-debug.js');
+    fs.writeFileSync(outFile, libraryDebug, 'utf8');
     
-    var outFile
-    
-    outFile = path.join('pkg', 'cordova.' + platform + '.js')
-    fs.writeFileSync(outFile, libraryRelease, 'utf8')
-    
-    outFile = path.join('pkg/debug', 'cordova.' + platform + '-debug.js')
-    fs.writeFileSync(outFile, libraryDebug, 'utf8')
-    
-    console.log('generated platform: ' + platform + ' in ' + time + 'ms')
+    console.log('generated platform: ' + platform + ' in ' + time + 'ms');
 }
 
 //------------------------------------------------------------------------------
@@ -164,9 +162,8 @@ function collectFiles(dir, id) {
 function writeScript(oFile, fileName, debug) {
     var contents = getContents(fileName, 'utf8')
 
-    contents = stripHeader(contents, fileName)
-    
-    writeContents(oFile, fileName, contents, debug)    
+    contents = stripHeader(contents, fileName);
+    writeContents(oFile, fileName, contents, debug);
 }
 
 //------------------------------------------------------------------------------

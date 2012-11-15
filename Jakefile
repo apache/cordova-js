@@ -70,7 +70,7 @@ task('clean', ['set-cwd'], function () {
     var DEPLOY = path.join(__dirname,"pkg");
     var cmd = 'rm -rf ' + DEPLOY + ' && ' +
               'mkdir ' + DEPLOY + ' && ' +
-              'mkdir ' + DEPLOY + '/debug';
+              'mkdir ' + path.join(DEPLOY ,'debug');
 
     childProcess.exec(cmd,complete);
 }, true);
