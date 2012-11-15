@@ -46,15 +46,11 @@ describe("blackberry platform", function () {
     });
 
     describe("when initializing", function () {
-        var builder = require('cordova/builder'),
-            clobber = jasmine.createSpy("intoAndClobber"),
-            merge = jasmine.createSpy("intoAndMerge");
+        var builder = require('cordova/builder');
 
         beforeEach(function () {
-            spyOn(builder, "build").andReturn({
-                intoAndClobber: clobber,
-                intoAndMerge: merge
-            });
+            spyOn(builder, "buildIntoAndClobber");
+            spyOn(builder, "buildIntoAndMerge");
         });
 
         it("calls initialize for the platform from the runtime", function () {
@@ -76,8 +72,7 @@ describe("blackberry platform", function () {
 
             platform.initialize();
 
-            expect(builder.build).toHaveBeenCalledWith(java.objects);
-            expect(clobber).toHaveBeenCalledWith(window);
+            expect(builder.buildIntoAndClobber).toHaveBeenCalledWith(java.clobbers, window);
         });
 
         it("builds given platforms merges into window and merges them", function () {
@@ -88,8 +83,7 @@ describe("blackberry platform", function () {
 
             platform.initialize();
 
-            expect(builder.build).toHaveBeenCalledWith(qnx.merges);
-            expect(merge).toHaveBeenCalledWith(window);
+            expect(builder.buildIntoAndMerge).toHaveBeenCalledWith(qnx.merges, window);
         });
     });
 });

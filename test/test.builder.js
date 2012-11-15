@@ -32,8 +32,8 @@ describe("builder", function () {
                 }
             };
 
-        
-        builder.build(objects).intoAndClobber(target);
+
+        builder.buildIntoAndClobber(objects, target);
         expect(target.foo).toBeDefined();
         expect(target.foo).toBe(require("cordova/plugin/compass"));
     });
@@ -42,7 +42,7 @@ describe("builder", function () {
         var target = {},
             objects = {cat: {}};
 
-        builder.build(objects).intoButDoNotClobber(target);
+        builder.buildIntoButDoNotClobber(objects, target);
 
         expect(target.cat).toBeDefined();
     });
@@ -59,10 +59,10 @@ describe("builder", function () {
                            path: "cordova/plugin/compass"
                        }
                    }
-               } 
+               }
             };
 
-        builder.build(objects).intoButDoNotClobber(target);
+        builder.buildIntoButDoNotClobber(objects, target);
 
         expect(target.homer.bart).toBeDefined();
         expect(target.homer.maggie).toBe(require('cordova/plugin/compass'));
