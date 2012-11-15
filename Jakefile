@@ -69,7 +69,8 @@ task('clean', ['set-cwd'], function () {
     
     var DEPLOY = path.join(__dirname,"pkg");
     var cmd = 'rm -rf ' + DEPLOY + ' && ' +
-              'mkdir ' + DEPLOY;
+              'mkdir ' + DEPLOY + ' && ' +
+              'mkdir ' + DEPLOY + '/debug';
 
     childProcess.exec(cmd,complete);
 }, true);
@@ -88,10 +89,8 @@ task('build', ['clean', 'hint', 'update-version'], function () {
 
         packager.generate("windows8",commitId);
         packager.generate("blackberry",commitId);
-        packager.generate("playbook",commitId);
-        packager.generate("qnx",commitId);
         packager.generate("ios",commitId);
-        packager.generate("wp7",commitId);
+        packager.generate("windowsphone",commitId);
         packager.generate("android",commitId);
         packager.generate("bada",commitId);
         packager.generate("tizen",commitId);
@@ -104,14 +103,14 @@ task('build', ['clean', 'hint', 'update-version'], function () {
 
 desc("drops VERSION into JavaScript-based platforms");
 task('update-version', ['set-cwd'], function() {
-    var version = fs.readFileSync("VERSION", "utf-8").toString().split('\n').join('');
+    var version = fs.readFileSync("VERSION", "utf-8").toString().split(/\r?\n/).join('');
 
     // List of files that need to be interpolated with matching regexes
     var files = {
         "lib/bada/plugin/bada/device.js":/(me\.cordova\s=\s").+(")/,
         "lib/tizen/plugin/tizen/Device.js":/(this\.cordova\s=\s").+(")/,
-        "lib/webworks/qnx/plugin/qnx/device.js":/(cordova:\s").+(")/,
-        "lib/webworks/air/plugin/air/device.js":/(cordova:\s").+(")/
+        "lib/blackberry/plugin/qnx/device.js":/(cordova:\s").+(")/,
+        "lib/blackberry/plugin/air/device.js":/(cordova:\s").+(")/
     };
 
     for (var f in files) if (files.hasOwnProperty(f)) {
