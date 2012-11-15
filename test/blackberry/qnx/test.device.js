@@ -37,7 +37,7 @@ describe("blackberry qnx device", function () {
         //HACK: I know this is a sync call ;)
         device.getDeviceInfo({}, function (i) { info = i; });
 
-        expect(info.platform).toBe("BB10");
+        expect(info.platform).toBe("BlackBerry");
         expect(info.version).toBe("NaN");
         expect(info.name).toBe("Dev Alpha");
         expect(info.uuid).toBe(1);
