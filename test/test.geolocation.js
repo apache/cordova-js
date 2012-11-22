@@ -65,7 +65,7 @@ describe("geolocation", function () {
             });
 
             it("should throw an exception if used with no arguments", function() {
-                expect(function() { geo.getCurrentPosition();}).toThrow("getCurrentPosition must be called with at least one argument.");
+                expect(function() { geo.getCurrentPosition();}).toThrow();
             });
         });
         describe("position acquisition", function() {
@@ -197,7 +197,7 @@ describe("geolocation", function () {
             });
 
             it("should throw an exception if used with no arguments", function() {
-                expect(function() { geo.watchPosition();}).toThrow("watchPosition must be called with at least one argument.");
+                expect(function() { geo.watchPosition();}).toThrow();
             });
         });
         describe("position acquisition", function() {
