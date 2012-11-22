@@ -63,7 +63,7 @@ describe("accelerometer", function () {
                 var success = function () {},
                     error = function () {};
 
-                accelerometer.getCurrentAcceleration(success, error, "options");
+                accelerometer.getCurrentAcceleration(success, error, {});
                 expect(exec).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function), "Accelerometer", "start", []);
             });
         });
