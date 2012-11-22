@@ -29,26 +29,17 @@ describe("compass", function () {
     });
 
     describe("when getting the current heading", function () {
-        it("logs an error and doesn't call exec when no success callback given", function () {
-            spyOn(console, "log");
-            compass.getCurrentHeading();
-            expect(console.log).toHaveBeenCalledWith("Compass Error: successCallback is not a function");
-            expect(exec).not.toHaveBeenCalledWith(jasmine.any(Function), undefined, "Compass", "getHeading", []);
+        it("throws an error and doesn't call exec when no success callback given", function () {
+            expect(function() { compass.getCurrentHeading() }).toThrow();
         });
 
-        it("logs an error and doesn't call exec when success isn't a function", function () {
-            spyOn(console, "log");
-            compass.getCurrentHeading(12);
-            expect(console.log).toHaveBeenCalledWith("Compass Error: successCallback is not a function");
-            expect(exec).not.toHaveBeenCalledWith(jasmine.any(Function), undefined, "Compass", "getHeading", []);
+        it("throws an error and doesn't call exec when success isn't a function", function () {
+            expect(function() { compass.getCurrentHeading(12) }).toThrow();
         });
 
-        it("logs an error and doesn't call exec when error isn't a function", function () {
+        it("throws an error and doesn't call exec when error isn't a function", function () {
             var func = function () {};
-            spyOn(console, "log");
-            compass.getCurrentHeading(func, 12);
-            expect(console.log).toHaveBeenCalledWith("Compass Error: errorCallback is not a function");
-            expect(exec).not.toHaveBeenCalledWith(func, 12, "Compass", "getHeading", []);
+            expect(function() { compass.getCurrentHeading(func, 12) }).toThrow();
         });
 
         it("calls exec", function () {
@@ -65,26 +56,17 @@ describe("compass", function () {
             spyOn(window, "setInterval").andReturn("def");
         });
 
-        it("logs an error and doesn't call exec when no success callback given", function () {
-            spyOn(console, "log");
-            compass.watchHeading();
-            expect(console.log).toHaveBeenCalledWith("Compass Error: successCallback is not a function");
-            expect(exec).not.toHaveBeenCalledWith(jasmine.any(Function), undefined, "Compass", "getHeading", []);
+        it("throws an error and doesn't call exec when no success callback given", function () {
+            expect(function() { compass.watchHeading() }).toThrow();
         });
 
-        it("logs an error and doesn't call exec when success isn't a function", function () {
-            spyOn(console, "log");
-            compass.watchHeading(12);
-            expect(console.log).toHaveBeenCalledWith("Compass Error: successCallback is not a function");
-            expect(exec).not.toHaveBeenCalledWith(jasmine.any(Function), undefined, "Compass", "getHeading", []);
+        it("throws an error and doesn't call exec when success isn't a function", function () {
+            expect(function() { compass.watchHeading(12) }).toThrow();
         });
 
-        it("logs an error and doesn't call exec when error isn't a function", function () {
+        it("throws an error and doesn't call exec when error isn't a function", function () {
             var func = function () {};
-            spyOn(console, "log");
-            compass.watchHeading(func, 12);
-            expect(console.log).toHaveBeenCalledWith("Compass Error: errorCallback is not a function");
-            expect(exec).not.toHaveBeenCalledWith(func, 12, "Compass", "getHeading", []);
+            expect(function() { compass.watchHeading(func, 12) }).toThrow();
         });
 
         it("generates and returns a uuid for the watch", function () {
