@@ -25,6 +25,10 @@ describe("contacts", function () {
         Contact = require('cordova/plugin/Contact'),
         ContactError = require('cordova/plugin/ContactError');
 
+    afterEach(function() {
+        exec.reset();
+    });
+
     describe("create", function () {
         it("returns a new contact", function () {
             expect(contacts.create() instanceof Contact).toBe(true);
@@ -51,34 +55,27 @@ describe("contacts", function () {
 
     describe("find", function () {
         it("throws an error with no success callback", function () {
-            expect(contacts.find).toThrow("You must specify a success callback for the find command.");
-        });
-        
-        it("doesn't call exec with null fields", function () {
-            exec.reset();
-            contacts.find(null, jasmine.createSpy());
-            expect(exec).not.toHaveBeenCalled();
+            expect(function() {contacts.find()}).toThrow();
         });
 
-        it("doesn't call exec with empty fields", function () {
-            exec.reset();
-            contacts.find([], jasmine.createSpy());
-            expect(exec).not.toHaveBeenCalled();
+        it("doesn't call exec with null fields", function () {
+            expect(function() {contacts.find(null, jasmine.createSpy())}).toThrow();
         });
 
         it("calls the error callback when no fields provided", function () {
             var success = jasmine.createSpy(),
                 error = jasmine.createSpy();
 
-            contacts.find(undefined, success, error);
+            contacts.find([], success, error);
+            expect(exec).not.toHaveBeenCalled();
             expect(error).toHaveBeenCalledWith(new ContactError(ContactError.INVALID_ARGUMENT_ERROR));
         });
 
         it("calls exec", function () {
-            //http://www.imdb.com/title/tt0181536/ 
+            //http://www.imdb.com/title/tt0181536/
             var success = jasmine.createSpy(),
                 error = jasmine.createSpy(),
-                fields = {name: "Forrester"},
+                fields = ['*'],
                 options = {};
 
             contacts.find(fields, success, error, options);
@@ -91,14 +88,14 @@ describe("contacts", function () {
             //http://www.imdb.com/title/tt0266543/
             var success = jasmine.createSpy(),
                 error = jasmine.createSpy(),
-                fields = {name: "Nemo"},
+                fields = ['*'],
                 options = {};
 
             spyOn(contacts, "create");
             contacts.find(fields, success, error, options);
             //exec the success callback
             exec.mostRecentCall.args[0]([{
-                name: "Nemo", 
+                name: "Nemo",
                 note: "He has a lucky fin"
             },
             {
@@ -121,7 +118,7 @@ describe("contacts", function () {
             //http://www.imdb.com/title/tt0889134/
             var success = jasmine.createSpy(),
                 error = jasmine.createSpy(),
-                fields = {name: "Amanda"},
+                fields = ['*'],
                 options = {};
 
             spyOn(contacts, "create").andReturn("Rehab");
