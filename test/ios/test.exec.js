@@ -35,11 +35,12 @@ describe('iOS exec', function () {
         failSpy.reset();
         mockxhr.install();
         exec.setJsToNativeBridgeMode(exec.jsToNativeModes.XHR_NO_PAYLOAD);
-        cordova.iOSVCAddr = VC_ADDR;
+        navigator = { userAgent: 'hi there (' + VC_ADDR + ')' };
     });
 
     afterEach(function() {
         expect(mockxhr.activeXhrs.length).toBe(0);
+        delete navigator;
     });
 
     afterEach(mockxhr.uninstall);
