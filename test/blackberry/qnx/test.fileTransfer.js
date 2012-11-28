@@ -51,7 +51,6 @@ describe("blackberry qnx fileTransfer", function () {
                 status: cordova.callbackStatus.NO_RESULT,
                 message: "async"
             });
-        
         });
     });
 
@@ -67,9 +66,6 @@ describe("blackberry qnx fileTransfer", function () {
                 status: cordova.callbackStatus.NO_RESULT,
                 message: "async"
             });
-        
         });
     });
-
-
 });

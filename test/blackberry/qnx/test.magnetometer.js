@@ -38,30 +38,29 @@ describe("blackberry qnx magnetometer", function () {
 
         it('should remove the event listener', function(){
             magnetometer.start();
-            expect(window.removeEventListener).toHaveBeenCalled();
+            expect(window.removeEventListener).toHaveBeenCalledWith("deviceorientation", jasmine.any(Function));
         });
 
         it('should add an event listener', function(){
             magnetometer.start();
-            expect(window.addEventListener).toHaveBeenCalled();
+            expect(window.addEventListener).toHaveBeenCalledWith("deviceorientation", jasmine.any(Function));
         });
 
-        it('should grab the magnetometer', function(){
+        it('call the win callback with the data from the event', function(){
             var win = jasmine.createSpy('win');
             magnetometer.start({}, win);
 
             window.addEventListener.mostRecentCall.args[1]({
-                alpha: 0,
+                alpha: 60,
                 timeStamp: "bout that time, eh chap?"
             });
 
             expect(win).toHaveBeenCalledWith({
-                magneticHeading: 360,
-                trueHeading: 360,
+                magneticHeading: 300,
+                trueHeading: 300,
                 headingAccuracy: 0,
                 timestamp: "bout that time, eh chap?"
             });
-
         });
     });
 
@@ -75,8 +74,7 @@ describe("blackberry qnx magnetometer", function () {
 
         it('should remove the event listener', function(){
             magnetometer.stop();
-            expect(window.removeEventListener).toHaveBeenCalled();
+            expect(window.removeEventListener).toHaveBeenCalledWith("deviceorientation", jasmine.any(Function));
         });
     });
-    
 });
