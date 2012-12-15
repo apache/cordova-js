@@ -121,16 +121,6 @@ describe("blackberry qnx platform", function () {
 
     });
 
-    describe('export objects', function(){
-        it('should define the requestFileSystem path', function(){
-            expect(platform.objects.requestFileSystem.path).toEqual("cordova/plugin/qnx/requestFileSystem");
-        });
-
-        it('should define the resolveLocalFileSystemURI path', function(){
-            expect(platform.objects.resolveLocalFileSystemURI.path).toEqual("cordova/plugin/qnx/resolveLocalFileSystemURI");
-        });
-    });
-
     describe('export merges', function(){
         it('should define the compass path', function(){
             expect(platform.merges.navigator.children.compass.path).toEqual("cordova/plugin/qnx/compass");
