@@ -29,8 +29,9 @@ packager.generate = function(platform, commitId, useWindowsLineEndings) {
     var time = new Date().valueOf();
 
     var libraryRelease = packager.bundle(platform, false, commitId);
+    // if we are using windows line endings, we will also add the BOM
     if(useWindowsLineEndings) {
-        libraryRelease = libraryRelease.split(/\r?\n/).join("\r\n");
+        libraryRelease = "\ufeff" + libraryRelease.split(/\r?\n/).join("\r\n");
     }
     var libraryDebug   = packager.bundle(platform, true, commitId);
     
