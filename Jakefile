@@ -87,10 +87,10 @@ task('build', ['clean', 'hint', 'update-version'], function () {
         
         console.log("building " + commitId);
 
-        packager.generate("windows8",commitId);
+        packager.generate("windows8",commitId,true);
         packager.generate("blackberry",commitId);
         packager.generate("ios",commitId);
-        packager.generate("windowsphone",commitId);
+        packager.generate("windowsphone",commitId,true);
         packager.generate("android",commitId);
         packager.generate("bada",commitId);
         packager.generate("tizen",commitId);

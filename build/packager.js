@@ -24,11 +24,14 @@ var path  = require('path')
 var packager = module.exports
 
 //------------------------------------------------------------------------------
-packager.generate = function(platform, commitId) {
+packager.generate = function(platform, commitId, useWindowsLineEndings) {
     var outFile;
     var time = new Date().valueOf();
 
     var libraryRelease = packager.bundle(platform, false, commitId);
+    if(useWindowsLineEndings) {
+        libraryRelease = libraryRelease.split(/\r?\n/).join("\r\n");
+    }
     var libraryDebug   = packager.bundle(platform, true, commitId);
     
     time = new Date().valueOf() - time;
