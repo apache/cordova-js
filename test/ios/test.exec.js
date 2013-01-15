@@ -48,7 +48,7 @@ describe('iOS exec', function () {
     function expectXhr() {
         expect(mockxhr.activeXhrs.length).toBeGreaterThan(0, 'expected an XHR to have been sent.');
         var mockXhr = mockxhr.activeXhrs[0];
-        expect(mockXhr.url).toBe('/!gap_exec');
+        expect(mockXhr.url).toMatch(/^\/!gap_exec\\?/);
         expect(mockXhr.requestHeaders['vc']).toBe(VC_ADDR, 'missing vc header');
         expect(mockXhr.requestHeaders['rc']).toBeDefined('missing rc header.');
         expect(mockXhr.requestHeaders['cmds']).not.toBeDefined();
