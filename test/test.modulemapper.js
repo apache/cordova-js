@@ -135,15 +135,20 @@ describe('modulemapper', function() {
         expect(context.obj.obj).toBe(testmodule.obj);
     });
     it('should return undefined for getOriginalSymbol("unknown")', function() {
-        expect(modulemapper.getOriginalSymbol(context, 'obj')).toBeUndefined();
+        expect(modulemapper.getOriginalSymbol(context, 'blah')).toBeUndefined();
         modulemapper.mapModules(context);
-        expect(modulemapper.getOriginalSymbol(context, 'obj')).toBeUndefined();
+        expect(modulemapper.getOriginalSymbol(context, 'obj.foo.bar')).toBeUndefined('obj.foo.bar');
     });
     it('should remember original symbols when clobbering', function() {
         var orig = context.obj;
         modulemapper.clobbers('cordova/testmodule', 'obj');
         modulemapper.mapModules(context);
         expect(modulemapper.getOriginalSymbol(context, 'obj')).toBe(orig);
+    });
+    it('should return original symbols when symbol was not clobbered', function() {
+        modulemapper.mapModules(context);
+        expect(modulemapper.getOriginalSymbol(context, 'obj')).toBe(context.obj);
+        expect(modulemapper.getOriginalSymbol(context, 'obj.str')).toBe(context.obj.str);
     });
     it('should load modules with loadMatchingModules', function() {
         var spyModules = {};
