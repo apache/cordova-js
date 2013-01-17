@@ -145,4 +145,28 @@ describe('modulemapper', function() {
         modulemapper.mapModules(context);
         expect(modulemapper.getOriginalSymbol(context, 'obj')).toBe(orig);
     });
+    it('should load modules with loadMatchingModules', function() {
+        var spyModules = {};
+        this.after(function() {
+            Object.keys(spyModules).forEach(define.remove);
+        });
+        function addModule(name) {
+            spyModules[name] = jasmine.createSpy(name);
+            define(name, spyModules[name]);
+        }
+        function expectCalled(names) {
+            for (var k in spyModules) {
+                expect(spyModules[k].wasCalled).toBe(names.indexOf(k) != -1, 'for module:' + k);
+            }
+        }
+        addModule('foo/a');
+        addModule('foo/b');
+        addModule('foo/symbols1');
+        addModule('foo/symbols');
+        addModule('foo/bar/symbols');
+        addModule('baz/symbols');
+        modulemapper.loadMatchingModules(/^foo.*\/symbols$/);
+        expectCalled(['foo/symbols', 'foo/bar/symbols']);
+    });
 });
+
