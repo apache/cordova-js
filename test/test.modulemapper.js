@@ -173,5 +173,21 @@ describe('modulemapper', function() {
         modulemapper.loadMatchingModules(/^foo.*\/symbols$/);
         expectCalled(['foo/symbols', 'foo/bar/symbols']);
     });
+    it('should log about deprecated property access', function() {
+        var origConsoleLog = console.log;
+        console.log = jasmine.createSpy('console.log');
+        this.after(function() {
+            console.log = origConsoleLog;
+        });
+        modulemapper.clobbers('cordova/testmodule', 'obj', 'Use foo instead');
+        modulemapper.defaults('cordova/testmodule', 'newProp', 'Use foo instead');
+        modulemapper.mapModules(context);
+        context.obj.func();
+        context.obj.func();
+        expect(console.log.callCount).toBe(1);
+        context.newProp.func();
+        context.newProp.func();
+        expect(console.log.callCount).toBe(2);
+    });
 });
 
