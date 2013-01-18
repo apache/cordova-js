@@ -24,11 +24,15 @@ var path  = require('path')
 var packager = module.exports
 
 //------------------------------------------------------------------------------
-packager.generate = function(platform, commitId) {
+packager.generate = function(platform, commitId, useWindowsLineEndings) {
     var outFile;
     var time = new Date().valueOf();
 
     var libraryRelease = packager.bundle(platform, false, commitId);
+    // if we are using windows line endings, we will also add the BOM
+    if(useWindowsLineEndings) {
+        libraryRelease = "\ufeff" + libraryRelease.split(/\r?\n/).join("\r\n");
+    }
     var libraryDebug   = packager.bundle(platform, true, commitId);
     
     time = new Date().valueOf() - time;
@@ -53,7 +57,7 @@ packager.bundle = function(platform, debug, commitId ) {
 
         //Test platform needs to bring in platform specific plugin's for testing
         copyProps(modules, collectFiles(path.join('lib', 'blackberry', 'plugin'), 'plugin'));
-        copyProps(modules, collectFiles(path.join('lib', 'tizen', 'plugin', 'tizen'), 'plubin/tizen'));
+        copyProps(modules, collectFiles(path.join('lib', 'tizen', 'plugin', 'tizen'), 'plugin/tizen'));
         copyProps(modules, collectFiles(path.join('lib', 'windowsphone', 'plugin', 'windowsphone'), 'plugin/windowsphone'));
         copyProps(modules, collectFiles(path.join('lib', 'windows8', 'plugin', 'windows8'), 'plugin/windows8'));
         copyProps(modules, collectFiles(path.join('lib', 'ios', 'plugin', 'ios'), 'plugin/ios/'));
