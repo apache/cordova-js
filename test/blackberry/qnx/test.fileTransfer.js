@@ -20,10 +20,12 @@
 */
 
 describe("blackberry qnx fileTransfer", function () {
-    var fileTransfer = require('cordova/plugin/qnx/fileTransfer'),
-        cordova = require('cordova'),
+    var fileTransfer = require('cordova/plugin/qnx/fileTransfer');
+    var cordova = require('cordova'),
         win = jasmine.createSpy('win'),
-        fail = jasmine.createSpy('fail');
+        fail = jasmine.createSpy('fail')
+        xhrSend = jasmine.createSpy('xhr send');
+        xhrOpen = jasmine.createSpy('xhr open');
 
     beforeEach(function () {
         global.blackberry = {
@@ -33,17 +35,29 @@ describe("blackberry qnx fileTransfer", function () {
                     upload: jasmine.createSpy('upload')
                 }
             }
-        }
+        };
+        XMLHttpRequest = function () {
+            var xhr = {
+                send: xhrSend,
+                open: xhrOpen
+            };
+            return xhr;
+        };
+        window.webkitResolveLocalFileSystemURL = jasmine.createSpy("resolveFS")
     });
 
     afterEach(function () {
         delete global.blackberry;
+        delete XMLHttpRequest;
+        delete webkitResolveLocalFileSystemURL;
+        delete window.webkitResolveLocalFileSystemURL;
     });
 
     describe("download", function(){
-        it('should call the blackberry download', function(){
+        it('should call the blackberry download', function () {
             fileTransfer.download(["source/file", "target/file"], win, fail);
-            expect(blackberry.io.filetransfer.download).toHaveBeenCalledWith("source/file", "target/file", win, fail);
+            expect(xhrOpen).toHaveBeenCalled();
+            expect(xhrSend).toHaveBeenCalled();
         });
 
         it('should return No Result', function(){
@@ -54,11 +68,11 @@ describe("blackberry qnx fileTransfer", function () {
         });
     });
 
-    describe('uplaod', function(){
+    describe('upload', function(){
         it('should call the blackberry upload', function(){
             fileTransfer.upload(["source", "target", "fileKey", "fileName", "mimeType", "params", "chunkedMode"], win, fail);
-
-            expect(blackberry.io.filetransfer.upload).toHaveBeenCalledWith("source", "target", win, fail, {fileKey: "fileKey", fileName: "fileName", mimeType: "mimeType", params: "params", chunkedMode: "chunkedMode"});
+            expect(xhrOpen).toHaveBeenCalled();
+            expect(xhrSend).toHaveBeenCalled();
         });
 
         it('should return No Result', function(){
