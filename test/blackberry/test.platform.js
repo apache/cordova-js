@@ -20,7 +20,18 @@
 */
 
 describe("blackberry platform", function () {
-    var platform = require('cordova/blackberryplatform');
+    var modulemapper = require('cordova/modulemapper'),
+        modulereplacer = require('cordova/modulereplacer'),
+        platform = require('cordova/blackberryplatform');
+
+    org = {};
+    org.apache = {};
+    org.apache.cordova = {};
+    org.apache.cordova.JavaPluginManager = {};
+
+    beforeEach(function () {
+        modulereplacer.replace('cordova/platform', platform);
+    });
 
     describe("when getting the runtime", function () {
         it("returns qnx for the bb10 user agent", function () {
@@ -46,11 +57,16 @@ describe("blackberry platform", function () {
     });
 
     describe("when initializing", function () {
-        var builder = require('cordova/builder');
-
         beforeEach(function () {
-            spyOn(builder, "buildIntoAndClobber");
-            spyOn(builder, "buildIntoAndMerge");
+            platform.contextObj = {};
+            var count = 0;
+            // Don't load non-blackberry symbol modules.
+            var loadMatchingModulesSpy = spyOn(modulemapper, 'loadMatchingModules');
+            loadMatchingModulesSpy.andCallFake(function(pattern) {
+                if (!pattern.exec('cordova/foo/symbols')) {
+                    return loadMatchingModulesSpy.originalValue.apply(this, arguments);
+                }
+            });
         });
 
         it("calls initialize for the platform from the runtime", function () {
@@ -58,32 +74,31 @@ describe("blackberry platform", function () {
 
             spyOn(air, "initialize");
             spyOn(platform, "runtime").andReturn("air");
-
             platform.initialize();
 
             expect(air.initialize).toHaveBeenCalled();
         });
 
-        it("builds given platforms objects into window and clobbers them", function () {
+        it("builds java platforms objects into window", function () {
             var java = require('cordova/plugin/java/platform');
 
             spyOn(java, "initialize");
             spyOn(platform, "runtime").andReturn("java");
-
             platform.initialize();
 
-            expect(builder.buildIntoAndClobber).toHaveBeenCalledWith(java.clobbers, window);
+            expect(platform.contextObj.File).not.toBeUndefined();
+            expect(platform.contextObj.navigator.app).not.toBeUndefined();
         });
 
-        it("builds given platforms merges into window and merges them", function () {
+        it("builds qnx objects into window", function () {
             var qnx = require('cordova/plugin/qnx/platform');
 
             spyOn(qnx, "initialize");
             spyOn(platform, "runtime").andReturn("qnx");
-
             platform.initialize();
 
-            expect(builder.buildIntoAndMerge).toHaveBeenCalledWith(qnx.merges, window);
+            expect(platform.contextObj.open).not.toBeUndefined();
+            expect(platform.contextObj.navigator.compass).not.toBeUndefined();
         });
     });
 });

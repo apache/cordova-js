@@ -120,11 +120,4 @@ describe("blackberry qnx platform", function () {
         });
 
     });
-
-    describe('export merges', function(){
-        it('should define the compass path', function(){
-            expect(platform.merges.navigator.children.compass.path).toEqual("cordova/plugin/qnx/compass");
-        });
-    });
-    
 });
