@@ -137,17 +137,6 @@ Build the .js file and drop it in as a replacement for cordova.js.
 - Bada (WAC implementation)
 - Windows 8 ( experimental work in progress )
 
-## Ripple
-
-Load this in Ripple to play with it. You will have to use the cordova prototype branch to better simulate the phone environment and use this javascript rather than Ripple's emulated code.
-
-    git clone git@github.com:blackberry-webworks/Ripple-UI.git
-    git checkout winnie.the.pooh
-    ./configure
-    jake
-
-and then load the unpacked extension in chrome in the pkg/chromium folder. Use the cordova.proto platform in ripple.
-
 # Adding a New Platform
 
 1. Add your platform as a directory under the `lib` folder.
