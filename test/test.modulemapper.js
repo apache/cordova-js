@@ -154,6 +154,13 @@ describe('modulemapper', function() {
         modulemapper.mapModules(context);
         expect(modulemapper.getOriginalSymbol(context, 'obj')).toBe(orig);
     });
+    it('should remember original symbols when double clobbering', function() {
+        var orig = context.obj;
+        modulemapper.clobbers('cordova/testmodule', 'obj');
+        modulemapper.clobbers('cordova/testmodule', 'obj');
+        modulemapper.mapModules(context);
+        expect(modulemapper.getOriginalSymbol(context, 'obj')).toBe(orig);
+    });
     it('should return original symbols when symbol was not clobbered', function() {
         modulemapper.mapModules(context);
         expect(modulemapper.getOriginalSymbol(context, 'obj')).toBe(context.obj);
