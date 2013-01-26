@@ -43,6 +43,10 @@
     {
       "name":"Anis Kadri",
       "email":""
+    },
+    {
+      "name":"Dan Silivestru",
+      "email":"dansilivestru@apache.org"
     }
   ],
   "dependencies": {
