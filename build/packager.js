@@ -57,7 +57,7 @@ packager.bundle = function(platform, debug, commitId ) {
 
         //Test platform needs to bring in platform specific plugin's for testing
         copyProps(modules, collectFiles(path.join('lib', 'blackberry', 'plugin'), 'plugin'));
-        copyProps(modules, collectFiles(path.join('lib', 'b2g', 'plugin', 'b2g'), 'plugin/b2g'));
+        copyProps(modules, collectFiles(path.join('lib', 'firefoxos', 'plugin', 'firefoxos'), 'plugin/firefoxos'));
         copyProps(modules, collectFiles(path.join('lib', 'tizen', 'plugin', 'tizen'), 'plugin/tizen'));
         copyProps(modules, collectFiles(path.join('lib', 'windowsphone', 'plugin', 'windowsphone'), 'plugin/windowsphone'));
         copyProps(modules, collectFiles(path.join('lib', 'windows8', 'plugin', 'windows8'), 'plugin/windows8'));
@@ -71,6 +71,7 @@ packager.bundle = function(platform, debug, commitId ) {
 
     var output = [];
 	
+    output.push("// Platform: " + platform + "\n");
     output.push("// "  + commitId + "\n");
 	output.push("// File generated at :: "  + new Date() + "\n");
 

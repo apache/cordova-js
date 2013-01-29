@@ -89,7 +89,7 @@ task('build', ['clean', 'hint', 'update-version'], function () {
 
         packager.generate("windows8",commitId,true);
         packager.generate("blackberry",commitId);
-        packager.generate("b2g",commitId);
+        packager.generate("firefoxos",commitId);
         packager.generate("ios",commitId);
         packager.generate("windowsphone",commitId,true);
         packager.generate("android",commitId);
@@ -110,7 +110,7 @@ task('update-version', ['set-cwd'], function() {
     var files = {
         "lib/bada/plugin/bada/device.js":/(me\.cordova\s=\s").+(")/,
         "lib/tizen/plugin/tizen/Device.js":/(this\.cordova\s=\s").+(")/,
-        "lib/b2g/plugin/b2g/Device.js":/(this\.cordova\s=\s").+(")/,
+        "lib/firefoxos/plugin/firefoxos/Device.js":/(this\.cordova\s=\s").+(")/,
         "lib/blackberry/plugin/qnx/device.js":/(cordova:\s").+(")/,
         "lib/blackberry/plugin/air/device.js":/(cordova:\s").+(")/
     };
