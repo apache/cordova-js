@@ -110,7 +110,7 @@ task('update-version', ['set-cwd'], function() {
     var files = {
         "lib/bada/plugin/bada/device.js":/(me\.cordova\s=\s").+(")/,
         "lib/tizen/plugin/tizen/Device.js":/(this\.cordova\s=\s").+(")/,
-        "lib/firefoxos/plugin/firefoxos/Device.js":/(this\.cordova\s=\s").+(")/,
+        "lib/firefoxos/plugin/firefoxos/device.js":/(this\.cordova\s=\s").+(")/,
         "lib/blackberry/plugin/qnx/device.js":/(cordova:\s").+(")/,
         "lib/blackberry/plugin/air/device.js":/(cordova:\s").+(")/
     };
