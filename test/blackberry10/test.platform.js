@@ -19,8 +19,8 @@
  *
 */
 
-describe("blackberry qnx platform", function () {
-    var platform = require('cordova/plugin/qnx/platform'),
+describe("blackberry10 platform", function () {
+    var platform = require('cordova/plugin/blackberry10/platform'),
         cordova = require('cordova');
 
     beforeEach(function () {
@@ -57,12 +57,6 @@ describe("blackberry qnx platform", function () {
 
     afterEach(function(){
         delete global.blackberry;
-    });
-
-    describe("exports", function(){
-        it('should have the qnx id', function(){
-            expect(platform.id).toBe("qnx");
-        });
     });
 
     describe("initialize", function(){

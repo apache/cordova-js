@@ -19,9 +19,9 @@
  *
 */
 
-describe("blackberry qnx fileTransfer", function () {
-    var fileTransfer = require('cordova/plugin/qnx/fileTransfer');
-    var cordova = require('cordova'),
+describe("blackberry10 fileTransfer", function () {
+    var fileTransfer = require('cordova/plugin/blackberry10/fileTransfer'),
+        cordova = require('cordova'),
         win = jasmine.createSpy('win'),
         fail = jasmine.createSpy('fail')
         xhrSend = jasmine.createSpy('xhr send');

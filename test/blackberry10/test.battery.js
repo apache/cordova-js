@@ -19,8 +19,8 @@
  *
 */
 
-describe("blackberry qnx battery", function () {
-    var battery = require('cordova/plugin/qnx/battery'),
+describe("blackberry10 battery", function () {
+    var battery = require('cordova/plugin/blackberry10/battery'),
         cordova = require('cordova');
 
     beforeEach(function () {

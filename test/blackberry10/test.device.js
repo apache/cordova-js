@@ -19,26 +19,30 @@
  *
 */
 
-var cordova = require('cordova');
+describe("blackberry10 device", function () {
+    var device = require('cordova/plugin/blackberry10/device');
+    
+    it("calls the win callback with the device info", function () {
+        global.blackberry = {
+            system: {
+                softwareVersion: "NaN"
+            },
+            identity: {
+                uuid: 1
+            }
+        };
 
-module.exports = {
-    id: "qnx",
-    initialize: function () {
-        document.addEventListener("deviceready", function () {
-            blackberry.event.addEventListener("pause", function () {
-                cordova.fireDocumentEvent("pause");
-            });
-            blackberry.event.addEventListener("resume", function () {
-                cordova.fireDocumentEvent("resume");
-            });
+        var info;
 
-            window.addEventListener("online", function () {
-                cordova.fireDocumentEvent("online");
-            });
+        //HACK: I know this is a sync call ;)
+        device.getDeviceInfo({}, function (i) { info = i; });
 
-            window.addEventListener("offline", function () {
-                cordova.fireDocumentEvent("offline");
-            });
-        });
-    }
-};
+        expect(info.platform).toBe("BlackBerry");
+        expect(info.version).toBe("NaN");
+        expect(info.name).toBe("Dev Alpha");
+        expect(info.uuid).toBe(1);
+        expect(info.cordova).toBeDefined();
+        
+        delete global.blackberry;
+    });
+});

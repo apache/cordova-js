@@ -19,30 +19,21 @@
  *
 */
 
-describe("blackberry qnx device", function () {
-    var device = require('cordova/plugin/qnx/device');
-    
-    it("calls the win callback with the device info", function () {
+describe("blackberry10 network", function () {
+    var cordova = require('cordova'),
+        network = require('cordova/plugin/blackberry10/network');
+
+    it("returns the connection info", function () {
         global.blackberry = {
-            system: {
-                softwareVersion: "NaN"
-            },
-            identity: {
-                uuid: 1
+            connection: {
+                type: "pigeon"
             }
         };
+        expect(network.getConnectionInfo()).toEqual({
+            status: cordova.callbackStatus.OK,
+            message: "pigeon"
+        });
 
-        var info;
-
-        //HACK: I know this is a sync call ;)
-        device.getDeviceInfo({}, function (i) { info = i; });
-
-        expect(info.platform).toBe("BlackBerry");
-        expect(info.version).toBe("NaN");
-        expect(info.name).toBe("Dev Alpha");
-        expect(info.uuid).toBe(1);
-        expect(info.cordova).toBeDefined();
-        
         delete global.blackberry;
     });
 });

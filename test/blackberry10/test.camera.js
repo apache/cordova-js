@@ -19,8 +19,8 @@
  *
 */
 
-describe("blackberry qnx camera", function () {
-    var camera = require('cordova/plugin/qnx/camera'),
+describe("blackberry10 camera", function () {
+    var camera = require('cordova/plugin/blackberry10/camera'),
         cordova = require('cordova');
 
     beforeEach(function () {

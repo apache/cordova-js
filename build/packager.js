@@ -57,6 +57,7 @@ packager.bundle = function(platform, debug, commitId ) {
 
         //Test platform needs to bring in platform specific plugin's for testing
         copyProps(modules, collectFiles(path.join('lib', 'blackberry', 'plugin'), 'plugin'));
+        copyProps(modules, collectFiles(path.join('lib', 'blackberry10', 'plugin'), 'plugin'));
         copyProps(modules, collectFiles(path.join('lib', 'firefoxos', 'plugin', 'firefoxos'), 'plugin/firefoxos'));
         copyProps(modules, collectFiles(path.join('lib', 'tizen', 'plugin', 'tizen'), 'plugin/tizen'));
         copyProps(modules, collectFiles(path.join('lib', 'windowsphone', 'plugin', 'windowsphone'), 'plugin/windowsphone'));

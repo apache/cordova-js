@@ -19,8 +19,8 @@
  *
 */
 
-describe("blackberry qnx magnetometer", function () {
-    var magnetometer = require('cordova/plugin/qnx/magnetometer'),
+describe("blackberry10 magnetometer", function () {
+    var magnetometer = require('cordova/plugin/blackberry10/magnetometer'),
         cordova = require('cordova');
 
     beforeEach(function () {

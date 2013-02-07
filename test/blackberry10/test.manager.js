@@ -19,11 +19,11 @@
  *
 */
 
-describe("blackberry qnx manager", function () {
-    var manager = require('cordova/plugin/qnx/manager');
+describe("blackberry10 manager", function () {
+    var manager = require('cordova/plugin/blackberry10/manager');
 
     it("calls the plugin", function () {
-        var device = require('cordova/plugin/qnx/device'),
+        var device = require('cordova/plugin/blackberry10/device'),
             win = jasmine.createSpy('win'),
             fail = jasmine.createSpy('fail'),
             args = {};
@@ -35,7 +35,7 @@ describe("blackberry qnx manager", function () {
     });
 
     it("returns the result of the plugin", function () {
-        var camera = require('cordova/plugin/qnx/camera');
+        var camera = require('cordova/plugin/blackberry10/camera');
         spyOn(camera, "takePicture").andReturn("duckface");
         expect(manager.exec(null, null, "Camera", "takePicture")).toBe("duckface");
     });
