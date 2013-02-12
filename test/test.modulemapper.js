@@ -62,6 +62,15 @@ describe('modulemapper', function() {
         expect(context.foo2.newProp).toBe(testmodule);
         expect(context.foo3.newProp).toBe(testmodule);
     });
+    it('should properly set a new non-top-level property #2', function() {
+        modulemapper.clobbers('cordova/testmodule', 'foo1.bar.newProp');
+        modulemapper.defaults('cordova/testmodule', 'foo2.bar.newProp');
+        modulemapper.merges('cordova/testmodule', 'foo3.bar.newProp');
+        modulemapper.mapModules(context);
+        expect(context.foo1.bar.newProp).toBe(testmodule);
+        expect(context.foo2.bar.newProp).toBe(testmodule);
+        expect(context.foo3.bar.newProp).toBe(testmodule);
+    });
     it('should properly set a non-new non-top-level property', function() {
         modulemapper.clobbers('cordova/testmodule', 'obj.newProp1');
         modulemapper.defaults('cordova/testmodule', 'obj.newProp2');
