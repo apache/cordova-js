@@ -112,7 +112,8 @@ task('update-version', ['set-cwd'], function() {
         "lib/tizen/plugin/tizen/Device.js":/(this\.cordova\s=\s").+(")/,
         "lib/firefoxos/plugin/firefoxos/device.js":/(this\.cordova\s=\s").+(")/,
         "lib/blackberry/plugin/qnx/device.js":/(cordova:\s").+(")/,
-        "lib/blackberry/plugin/air/device.js":/(cordova:\s").+(")/
+        "lib/blackberry/plugin/air/device.js":/(cordova:\s").+(")/,
+        "lib/windows8/plugin/windows8/DeviceProxy.js":/(cordova:\s").+(")/
     };
 
     for (var f in files) if (files.hasOwnProperty(f)) {
