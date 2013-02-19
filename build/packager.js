@@ -69,10 +69,12 @@ packager.bundle = function(platform, debug, commitId ) {
         copyProps(modules, collectFiles(path.join('lib', platform)))
     }
 
+    var version = fs.readFileSync("VERSION", "utf-8").toString().split(/\r?\n/).join('');
     var output = [];
 	
     output.push("// Platform: " + platform + "\n");
-    output.push("// "  + commitId + "\n");
+    output.push("// "  + commitId);
+    output.push("// version " + version);
 	output.push("// File generated at :: "  + new Date() + "\n");
 
     // write header     
