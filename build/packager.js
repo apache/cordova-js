@@ -70,10 +70,10 @@ packager.bundle = function(platform, debug, commitId ) {
     }
 
     var output = [];
-	
+
     output.push("// Platform: " + platform + "\n");
     output.push("// "  + commitId + "\n");
-	output.push("// File generated at :: "  + new Date() + "\n");
+    output.push("// File generated at :: "  + new Date() + "\n");
 
     // write header     
     output.push('/*\n' + getContents('LICENSE-for-js-file.txt') + '\n*/')
@@ -244,9 +244,9 @@ function stripHeader(contents, fileName) {
             break;
         }
         else {
-        	console.log("WARNING: file name " + fileName + " is missing the license header");
-        	break;
-    	}
+            console.log("WARNING: file name " + fileName + " is missing the license header");
+            break;
+        }
     }
     return ls.join('\n');
 }
