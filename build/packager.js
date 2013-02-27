@@ -192,8 +192,17 @@ function writeModule(oFile, fileName, moduleId, debug) {
 }
 
 //------------------------------------------------------------------------------
+function isBrokenSymlink(contents) {
+    var pattern = /^\.\..*js$/;
+    return pattern.test(contents);
+}
 function getContents(file) {
-    return fs.readFileSync(file, 'utf8');
+    var contents = fs.readFileSync(file, 'utf8');
+    if (isBrokenSymlink(contents)) {
+        file = path.resolve(path.dirname(file), contents);
+        contents = fs.readFileSync(file, 'utf8');
+    }
+    return contents;
 }
 
 //------------------------------------------------------------------------------
