@@ -36,8 +36,15 @@ function collect(path, files, matches) {
             collect(_path.join(path, item), files, matches);
         });
     } else if (matches(path)) {
+        path = fixWindowsSeparators(path);
         files.push(path);
     }
+}
+function fixWindowsSeparators(path) {
+    if (_path.sep === '\\') {
+        path = path.replace(/\\/g, '/');
+    }
+    return path;
 }
 
 module.exports = {
@@ -98,7 +105,7 @@ module.exports = {
         env.execute();
     },
     browser: function () {
-        console.log('starting browser-based tests')
+        console.log('starting browser-based tests server')
         var connect = require('connect'),
             html = fs.readFileSync(__dirname + "/suite.html", "utf-8"),
             doc,
@@ -140,6 +147,7 @@ module.exports = {
 
         process.stdout.write("Test Server running on:\n");
         process.stdout.write("http://127.0.0.1:3000\n");
+        process.stdout.write("Run the tests by pointing your browser there.\n");
 
         exec('open http://127.0.0.1:3000');
     }

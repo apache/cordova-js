@@ -34,7 +34,10 @@ packager.generate = function(platform, commitId, useWindowsLineEndings) {
         libraryRelease = "\ufeff" + libraryRelease.split(/\r?\n/).join("\r\n");
     }
     var libraryDebug   = packager.bundle(platform, true, commitId);
-    
+
+    mkdir('pkg');
+    mkdir(path.join('pkg', 'debug'));
+
     time = new Date().valueOf() - time;
     outFile = path.join('pkg', 'cordova.' + platform + '.js');
     fs.writeFileSync(outFile, libraryRelease, 'utf8');
@@ -70,10 +73,10 @@ packager.bundle = function(platform, debug, commitId ) {
     }
 
     var output = [];
-	
+
     output.push("// Platform: " + platform + "\n");
     output.push("// "  + commitId + "\n");
-	output.push("// File generated at :: "  + new Date() + "\n");
+    output.push("// File generated at :: "  + new Date() + "\n");
 
     // write header     
     output.push('/*\n' + getContents('LICENSE-for-js-file.txt') + '\n*/')
@@ -189,8 +192,17 @@ function writeModule(oFile, fileName, moduleId, debug) {
 }
 
 //------------------------------------------------------------------------------
+function isBrokenSymlink(contents) {
+    var pattern = /^\.\..*js$/;
+    return pattern.test(contents);
+}
 function getContents(file) {
-    return fs.readFileSync(file, 'utf8');
+    var contents = fs.readFileSync(file, 'utf8');
+    if (isBrokenSymlink(contents)) {
+        file = path.resolve(path.dirname(file), contents);
+        contents = fs.readFileSync(file, 'utf8');
+    }
+    return contents;
 }
 
 //------------------------------------------------------------------------------
@@ -244,9 +256,20 @@ function stripHeader(contents, fileName) {
             break;
         }
         else {
-        	console.log("WARNING: file name " + fileName + " is missing the license header");
-        	break;
-    	}
+            console.log("WARNING: file name " + fileName + " is missing the license header");
+            break;
+        }
     }
     return ls.join('\n');
+}
+
+//------------------------------------------------------------------------------
+function mkdir(name) {
+    try {
+        fs.mkdirSync(name);
+    } catch (e) {
+        if (e.code !== 'EEXIST') {
+            throw e;
+        }
+    }
 }
