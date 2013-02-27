@@ -34,7 +34,10 @@ packager.generate = function(platform, commitId, useWindowsLineEndings) {
         libraryRelease = "\ufeff" + libraryRelease.split(/\r?\n/).join("\r\n");
     }
     var libraryDebug   = packager.bundle(platform, true, commitId);
-    
+
+    mkdir('pkg');
+    mkdir(path.join('pkg', 'debug'));
+
     time = new Date().valueOf() - time;
     outFile = path.join('pkg', 'cordova.' + platform + '.js');
     fs.writeFileSync(outFile, libraryRelease, 'utf8');
@@ -249,4 +252,15 @@ function stripHeader(contents, fileName) {
         }
     }
     return ls.join('\n');
+}
+
+//------------------------------------------------------------------------------
+function mkdir(name) {
+    try {
+        fs.mkdirSync(name);
+    } catch (e) {
+        if (e.code !== 'EEXIST') {
+            throw e;
+        }
+    }
 }
