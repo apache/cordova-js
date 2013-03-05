@@ -49,7 +49,7 @@ module.exports = {
 
         try {
             jsdom = require("jsdom").jsdom;
-            document = jsdom("<html>");
+            document = jsdom("<html><head></head></html>");
             window = document.createWindow();
         } catch (e) {
             //no jsDom (some people don't have compilers)
