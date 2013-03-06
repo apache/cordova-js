@@ -47,6 +47,10 @@
     {
       "name":"Dan Silivestru",
       "email":"dansilivestru@apache.org"
+    },
+    {
+      "name":"Shazron Abdullah",
+      "email":"shazron@apache.org"
     }
   ],
   "dependencies": {

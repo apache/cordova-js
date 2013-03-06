@@ -96,6 +96,7 @@ task('build', ['clean', 'hint', 'update-version'], function () {
         packager.generate("bada",commitId);
         packager.generate("tizen",commitId);
         packager.generate("webos", commitId);
+        packager.generate("osx", commitId);
         packager.generate("errgen",commitId);
         packager.generate("test",commitId);
         complete();

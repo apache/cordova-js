@@ -64,6 +64,7 @@ packager.bundle = function(platform, debug, commitId ) {
         copyProps(modules, collectFiles(path.join('lib', 'ios', 'plugin', 'ios'), 'plugin/ios/'));
         copyProps(modules, collectFiles(path.join('lib', 'bada', 'plugin', 'bada'), 'plugin/bada/'));
         copyProps(modules, collectFiles(path.join('lib', 'android', 'plugin', 'android'), 'plugin/android/'));
+        copyProps(modules, collectFiles(path.join('lib', 'osx', 'plugin', 'osx'), 'plugin/osx/'));
     }
     else {
         copyProps(modules, collectFiles(path.join('lib', platform)))
