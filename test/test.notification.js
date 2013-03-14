@@ -50,7 +50,7 @@ describe("notification", function () {
 
         it("passes the provided params to the exec method", function () {
             var cb = jasmine.createSpy();
-            notification.confirm("and thats the way it is", cb, "It's like that", "Yes,Yes");
+            notification.confirm("and thats the way it is", cb, "It's like that", ["Yes", "Yes"]);
             expect(exec).toHaveBeenCalledWith(
                 cb, null, "Notification", "confirm",
                 ["and thats the way it is", "It's like that", "Yes,Yes"]);
