@@ -57,6 +57,23 @@ describe("notification", function () {
         });
     });
 
+    describe("when prompting", function () {
+        it("defaults the title to Prompt, the message to Prompt message and the buttons to OK,Cancel", function () {
+            notification.prompt();
+            expect(exec).toHaveBeenCalledWith(
+                undefined, null, "Notification", "prompt",
+                ["Prompt message", "Prompt", ['OK','Cancel']]);
+        });
+
+        it("passes the provided params to the exec method", function () {
+            var cb = jasmine.createSpy();
+            notification.prompt("baby prompt me one more time!", cb, "oh baby baby", ["Yes", "No"]);
+            expect(exec).toHaveBeenCalledWith(
+                cb, null, "Notification", "prompt", 
+                ["baby prompt me one more time!", "oh baby baby", ['Yes','No']]);
+        });
+    });
+
     it("causes the device to vibrate", function () {
         notification.vibrate(1000);
         expect(exec).toHaveBeenCalledWith(
