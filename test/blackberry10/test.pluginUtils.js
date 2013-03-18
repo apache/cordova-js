@@ -21,7 +21,8 @@
 
 describe('blackberry10 pluginUtils', function () {
 
-    var pluginUtils = require('cordova/plugin/blackberry10/pluginUtils');
+    var pluginUtils = require('cordova/plugin/blackberry10/pluginUtils'),
+        builder = require('cordova/builder');
 
     describe('loadClientJs', function () {
 
@@ -35,6 +36,8 @@ describe('blackberry10 pluginUtils', function () {
             });
             spyOn(document.head, "appendChild");
             callback = jasmine.createSpy();
+            spyOn(builder, "buildIntoAndClobber");
+            spyOn(builder, "buildIntoAndMerge");
         });
 
         it('does nothing for 0 plugins', function () {
@@ -46,7 +49,7 @@ describe('blackberry10 pluginUtils', function () {
         });
 
         it('adds a script tag for 1 plugin', function () {
-            var plugins = { foo : { client: ['bar.js'] } };
+            var plugins = { foo : { modules: ['bar.js'] } };
             pluginUtils.loadClientJs(plugins, callback);
             expect(document.createElement).toHaveBeenCalled();
             expect(script.src).toEqual('plugins/foo/bar.js');
@@ -56,7 +59,7 @@ describe('blackberry10 pluginUtils', function () {
         });
 
         it('adds multiple script tags for 1 plugin', function () {
-            var plugins = { foo: { client: ['bar.js', '2.js'] } };
+            var plugins = { foo: { modules: ['bar.js', '2.js'] } };
             pluginUtils.loadClientJs(plugins, callback);
             expect(document.createElement.callCount).toBe(2);
             expect(document.head.appendChild.callCount).toBe(2);
@@ -66,7 +69,7 @@ describe('blackberry10 pluginUtils', function () {
         });
 
         it('adds script tags for multiple plugins', function () {
-            var plugins = { foo: { client: ['1.js'] }, bar: { client: ['1.js', '2.js' ] } };
+            var plugins = { foo: { modules: ['1.js'] }, bar: { modules: ['1.js', '2.js' ] } };
             pluginUtils.loadClientJs(plugins, callback);
             expect(document.createElement.callCount).toBe(3);
             expect(document.head.appendChild.callCount).toBe(3);
@@ -74,6 +77,22 @@ describe('blackberry10 pluginUtils', function () {
             script.onload();
             script.onload();
             expect(callback.callCount).toBe(1);
+        });
+
+        it('calls clobber', function () {
+            var plugins = { foo: { modules : ['bar.js'], clobbers: { bar: { path: 'foo.bar' } } } };
+            pluginUtils.loadClientJs(plugins, callback);
+            script.onload();
+            expect(callback.callCount).toBe(1);
+            expect(builder.buildIntoAndClobber).toHaveBeenCalledWith(plugins.foo.clobbers, window);
+        });
+
+        it('calls merge', function () {
+            var plugins = { foo: { modules : ['bar.js'], merges: { bar: { path: 'foo.bar' } } } };
+            pluginUtils.loadClientJs(plugins, callback);
+            script.onload();
+            expect(callback.callCount).toBe(1);
+            expect(builder.buildIntoAndMerge).toHaveBeenCalledWith(plugins.foo.merges, window);
         });
 
     });
