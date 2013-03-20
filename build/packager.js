@@ -111,6 +111,16 @@ packager.bundle = function(platform, debug, commitId ) {
         writeScript(output, scripts[bootstrapPlatform], debug)
     }
 
+    // Include the plugin loading code.
+    if (platform !== 'test') {
+        // NB: This should probably run last of all, and definitely after the bootstrap.
+        if (!scripts['plugin_loader']) {
+            throw new Error("didn't find a script for 'plugin_loader'");
+        }
+
+        writeScript(output, scripts['plugin_loader'], debug);
+    }
+
     // write trailer
     output.push('\n})();')
 
