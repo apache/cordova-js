@@ -119,7 +119,7 @@ describe('blackberry10 pluginUtils', function () {
 
         it('sends XHR for plugins.json', function () {
             pluginUtils.getPlugins(success, error);
-            expect(xhr.open).toHaveBeenCalledWith('GET', 'plugins/plugins.json', true);
+            expect(xhr.open).toHaveBeenCalledWith('GET', 'local:///plugins/plugins.json', true);
             expect(xhr.send).toHaveBeenCalled();
         });
 
