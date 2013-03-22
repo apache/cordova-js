@@ -52,7 +52,7 @@ describe('blackberry10 pluginUtils', function () {
             var plugins = { foo : { modules: ['bar.js'] } };
             pluginUtils.loadClientJs(plugins, callback);
             expect(document.createElement).toHaveBeenCalled();
-            expect(script.src).toEqual('plugins/foo/bar.js');
+            expect(script.src).toEqual('local:///plugins/foo/bar.js');
             expect(document.head.appendChild).toHaveBeenCalled();
             script.onload();
             expect(callback).toHaveBeenCalled();
