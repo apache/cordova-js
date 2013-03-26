@@ -45,7 +45,7 @@ describe('blackberry10 pluginUtils', function () {
             pluginUtils.loadClientJs(plugins, callback);
             expect(document.createElement).not.toHaveBeenCalled();
             expect(document.head.appendChild).not.toHaveBeenCalled();
-            expect(callback).not.toHaveBeenCalled();
+            expect(callback).toHaveBeenCalled();
         });
 
         it('adds a script tag for 1 plugin', function () {
