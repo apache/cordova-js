@@ -175,6 +175,14 @@ describe("utils", function () {
         it("handles two extra args", function() {
             expect(utils.vformat("a%sb", ["1","2","3"])).toBe("a1b 2 3")
         })
+
+        it("handles unformatted strings", function() {
+            expect(utils.vformat("a", ["b","c"])).toBe("a b c")
+        })
+
+        it("handles numeric args", function() {
+            expect(utils.vformat(1, [2,3])).toBe("1 2 3")
+        })
     })
         
     describe("format() method", function () {
