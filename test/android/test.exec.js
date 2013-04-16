@@ -56,39 +56,40 @@ describe('exec.processMessages', function () {
     }
 
     describe('exec', function() {
-        it('should return payload value when plugin is synchronous', function() {
-            var winSpy = jasmine.createSpy('win');
+        it('should process messages in order even when called recursively', function() {
+            var firstCallbackId = null;
+            var callCount = 0;
             nativeApi.exec.andCallFake(function(service, action, callbackId, argsJson) {
-                return createCallbackMessage(true, true, 1, callbackId, 't');
+                ++callCount;
+                if (callCount == 1) {
+                    firstCallbackId = callbackId;
+                    return '';
+                }
+                if (callCount == 2) {
+                    return createCallbackMessage(true, false, 1, firstCallbackId, 't') +
+                           createCallbackMessage(true, false, 1, callbackId, 'stwo');
+                }
+                return createCallbackMessage(true, false, 1, callbackId, 'sthree');
             });
 
-            var result = exec(winSpy, null, 'Service', 'action', []);
-            expect(winSpy).toHaveBeenCalledWith(true);
-            expect(result).toBe(true);
-        });
-        it('should return payload value when plugin is synchronous and no callbacks are used', function() {
-            nativeApi.exec.andCallFake(function(service, action, callbackId, argsJson) {
-                return createCallbackMessage(true, true, 1, callbackId, 't');
-            });
+            var win2Called = false;
+            var winSpy3 = jasmine.createSpy('win3');
 
-            var result = exec(null, null, 'Service', 'action', []);
-            expect(result).toBe(true);
-        });
-        it('should return payload value when plugin is synchronous even when called recursively', function() {
-            var winSpy = jasmine.createSpy('win');
-            nativeApi.exec.andCallFake(function(service, action, callbackId, argsJson) {
-                return createCallbackMessage(true, true, 1, callbackId, 't');
-            });
-
-            function firstWin(value) {
+            function win1(value) {
                 expect(value).toBe(true);
-                var result = exec(winSpy, null, 'Service', 'action', []);
-                expect(result).toBe(true);
+                exec(winSpy3, null, 'Service', 'action', []);
+                expect(win2Called).toBe(false, 'win1 should finish before win2 starts');
             }
 
-            var result2 = exec(firstWin, null, 'Service', 'action', []);
-            expect(winSpy).toHaveBeenCalledWith(true);
-            expect(result2).toBe(true);
+            function win2(value) {
+                win2Called = true;
+                expect(value).toBe('two');
+                expect(winSpy3).not.toHaveBeenCalled();
+            }
+
+            exec(win1, null, 'Service', 'action', []);
+            exec(win2, null, 'Service', 'action', []);
+            expect(winSpy3).toHaveBeenCalledWith('three');
         });
     });
 
