@@ -28,6 +28,138 @@ logger.__onDeviceReady()
 
 //(function() { 
 
+
+
+    describe("format() method", function () {
+        it("handles passing nothing", function() {
+            expect(logger.format()).toBe("")
+        })
+
+        it("handles empty args", function() {
+            expect(logger.format("abc")).toBe("abc")
+        })
+
+        it("handles empty args and format char", function() {
+            expect(logger.format("ab%oc")).toBe("ab%oc")
+        })
+
+        it("handles one arg", function() {
+            expect(logger.format("a%sb", "-")).toBe("a-b")
+        })
+
+        it("handles two args", function() {
+            expect(logger.format("a%sb%sc", "-", "_")).toBe("a-b_c")
+        })
+
+        it("handles an extra arg", function() {
+            expect(logger.format("a%sb", "1", "2")).toBe("a1b 2")
+        })
+
+        it("handles two extra args", function() {
+            expect(logger.format("a%sb", "1", "2", "3")).toBe("a1b 2 3")
+        })
+
+        it("handles unformatted strings", function() {
+            expect(logger.format("a", "b", "c")).toBe("a b c")
+        })
+
+        it("handles numeric args", function() {
+            expect(logger.format(1, 2, 3)).toBe("1 2 3")
+        })
+
+        it("handles the empty string", function() {
+            expect(logger.format("")).toBe("")
+        })
+
+        it("handles null", function() {
+            expect(logger.format(null)).toBe("")
+        })
+
+        it("handles undefined", function() {
+            expect(logger.format(undefined)).toBe("")
+        })
+
+        it("handles NaN", function() {
+            expect(logger.format(1/'x')).toBe('NaN')
+        })
+
+        it("handles Infinity", function() {
+            expect(logger.format(1/0)).toBe('Infinity')
+        })
+
+        it("handles ('x')", function() {
+            expect(logger.format('x')).toBe('x')
+        })
+
+        it("handles ('x',1)", function() {
+            expect(logger.format('x', 1)).toBe('x 1')
+        })
+
+        it("handles ('%d',1)", function() {
+            expect(logger.format('%d', 1)).toBe('1')
+        })
+
+        it("handles ('%d','x')", function() {
+            expect(logger.format('%d', 'x')).toBe('x')
+        })
+
+        it("handles ('%s %s %s',1,2,3)", function() {
+            expect(logger.format('%s %s %s', 1, 2, 3)).toBe('1 2 3')
+        })
+
+        it("handles ('1%c2%c3',1,2,3)", function() {
+            expect(logger.format('1%c2%c3', 1, 2, 3)).toBe('123 3')
+        })
+
+        it("handles ('%j',{a:1})", function() {
+            expect(logger.format('%j', {a:1})).toBe('{"a":1}')
+        })
+
+        it("handles ('%d: %o',1,{b:2})", function() {
+            expect(logger.format('%d: %o', 1, {b:2})).toBe('1: {"b":2}')
+        })
+
+        it("handles ('%j',function(){})", function() {
+            expect(logger.format('%j', function(){})).toBe('')
+        })
+
+        it("handles ('%s',function(){})", function() {
+            expect(logger.format('%s', function(){})).toBe('function (){}')
+        })
+
+        it("handles ('1%%2%%3',4)", function() {
+            expect(logger.format('1%%2%%3', 4)).toBe('1%2%3 4')
+        })
+
+        it("handles ('1%x2%y3',4,5)", function() {
+            expect(logger.format('1%x2%y3', 4, 5)).toBe('14253')
+        })
+
+        var cycler
+
+        beforeEach(function(){
+            cycler = {a: 1}
+            cycler.cycler = cycler
+        })
+
+        it("handles cyclic objects as format string", function() {
+            expect(logger.format(cycler)).toBe("[object Object]")
+        })
+
+        it("handles cyclic objects as object arg", function() {
+            expect(logger.format("%o", cycler)).toMatch(/^error JSON\.stringify\(\)ing argument:/)
+        })
+
+        it("handles cyclic objects as string arg", function() {
+            expect(logger.format("%s", cycler)).toBe("[object Object]")
+        })
+
+    })
+
+
+
+
+
 describe("logger using exec", function () {
 
     var savedLevel 
