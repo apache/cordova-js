@@ -60,6 +60,12 @@ function forEachFile(root, cbFile, cbDone) {
     scan(root);
 }
 
+function computeGitVersion(callback) {
+    childProcess.exec('git describe --tags --long', function(err, stdout, stderr) {
+        var version = stdout.trim().replace(/^2.5.0-.*?-/, 'dev-');
+        callback(version);
+    });
+}
 
 desc("runs build");
 task('default', ['build','test'], function () {});
@@ -78,27 +84,21 @@ task('clean', ['set-cwd'], function () {
 desc("compiles the source files for all extensions");
 task('build', ['clean', 'hint', 'update-version'], function () {
     var packager = require("./build/packager");
-    var commitId = "";
-    childProcess.exec("git log -1",function(err,stdout,stderr) {
-        var stdoutLines = stdout.split("\n");
-        if(stdoutLines.length > 0) {
-            commitId = stdoutLines[0];
-        }
-        
-        console.log("building " + commitId);
+    computeGitVersion(function(version) {
+        console.log("building " + version);
 
-        packager.generate("windows8",commitId,true);
-        packager.generate("blackberry",commitId);
-        packager.generate("firefoxos",commitId);
-        packager.generate("ios",commitId);
-        packager.generate("windowsphone",commitId,true);
-        packager.generate("android",commitId);
-        packager.generate("bada",commitId);
-        packager.generate("tizen",commitId);
-        packager.generate("webos", commitId);
-        packager.generate("osx", commitId);
-        packager.generate("errgen",commitId);
-        packager.generate("test",commitId);
+        packager.generate("windows8", version,true);
+        packager.generate("blackberry", version);
+        packager.generate("firefoxos", version);
+        packager.generate("ios", version);
+        packager.generate("windowsphone", version,true);
+        packager.generate("android", version);
+        packager.generate("bada", version);
+        packager.generate("tizen", version);
+        packager.generate("webos",  version);
+        packager.generate("osx",  version);
+        packager.generate("errgen", version);
+        packager.generate("test", version);
         complete();
     });
 }, true);
