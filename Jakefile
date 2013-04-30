@@ -82,7 +82,7 @@ task('clean', ['set-cwd'], function () {
 }, true);
 
 desc("compiles the source files for all extensions");
-task('build', ['clean', 'hint', 'update-version'], function () {
+task('build', ['clean', 'hint'], function () {
     var packager = require("./build/packager");
     computeGitVersion(function(version) {
         console.log("building " + version);
@@ -102,26 +102,6 @@ task('build', ['clean', 'hint', 'update-version'], function () {
         complete();
     });
 }, true);
-
-desc("drops VERSION into JavaScript-based platforms");
-task('update-version', ['set-cwd'], function() {
-    var version = fs.readFileSync("VERSION", "utf-8").toString().split(/\r?\n/).join('');
-
-    // List of files that need to be interpolated with matching regexes
-    var files = {
-        "lib/bada/plugin/bada/device.js":/(me\.cordova\s=\s").+(")/,
-        "lib/tizen/plugin/tizen/Device.js":/(this\.cordova\s=\s").+(")/,
-        "lib/firefoxos/plugin/firefoxos/device.js":/(this\.cordova\s=\s").+(")/,
-        "lib/blackberry/plugin/qnx/device.js":/(cordova:\s").+(")/,
-        "lib/blackberry/plugin/air/device.js":/(cordova:\s").+(")/,
-        "lib/windows8/plugin/windows8/DeviceProxy.js":/(cordova:\s").+(")/
-    };
-
-    for (var f in files) if (files.hasOwnProperty(f)) {
-        var interpolatedContent = fs.readFileSync(f, "utf-8").toString().replace(files[f], "$1" + version + "$2");
-        fs.writeFileSync(f, interpolatedContent);
-    }
-});
 
 desc("prints a dalek");
 task('dalek', ['set-cwd'], function () {
