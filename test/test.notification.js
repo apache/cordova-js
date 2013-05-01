@@ -62,15 +62,15 @@ describe("notification", function () {
             notification.prompt();
             expect(exec).toHaveBeenCalledWith(
                 undefined, null, "Notification", "prompt",
-                ["Prompt message", "Prompt", ['OK','Cancel']]);
+                ["Prompt message", "Prompt", ['OK','Cancel'], "Default text"]);
         });
 
         it("passes the provided params to the exec method", function () {
             var cb = jasmine.createSpy();
-            notification.prompt("baby prompt me one more time!", cb, "oh baby baby", ["Yes", "No"]);
+            notification.prompt("baby prompt me one more time!", cb, "oh baby baby", ["Yes", "No"], "prompt text input");
             expect(exec).toHaveBeenCalledWith(
                 cb, null, "Notification", "prompt", 
-                ["baby prompt me one more time!", "oh baby baby", ['Yes','No']]);
+                ["baby prompt me one more time!", "oh baby baby", ['Yes','No'], "prompt text input"]);
         });
     });
 
