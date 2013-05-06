@@ -29,7 +29,7 @@ describe("notification", function () {
                 dialog:{
                     customAskAsync: jasmine.createSpy()
                         // apply: jasmine.createSpy('apply')
-                    
+
                 }
             }
         }
@@ -49,11 +49,11 @@ describe("notification", function () {
         });
 
         it("should call the blackberry object", function() {
-            var win = jasmine.createSpy('win'); 
+            var win = jasmine.createSpy('win');
             notification.alert(["Danger, danger Will Robinson!", "Panic, is my middle name", "PANIC!"], win);
             expect(blackberry.ui.dialog.customAskAsync).toHaveBeenCalledWith("Danger, danger Will Robinson!", [ "PANIC!" ], win, { "title" : "Panic, is my middle name" });
         });
-        
+
         it("should return that WebWorks Is On It", function() {
             expect(notification.alert(["Danger, danger Will Robinson!", "Panic, is my middle name", "PANIC!"])).toEqual({
                 status: cordova.callbackStatus.NO_RESULT,
@@ -71,12 +71,12 @@ describe("notification", function () {
         });
 
         it("should call the blackberry object", function() {
-            var win = jasmine.createSpy('win'); 
-            notification.confirm(["Are you interested in cheaper long distance?", "Serving you better!", "SCREAM,CONFIRM"], win);
+            var win = jasmine.createSpy('win');
+            notification.confirm(["Are you interested in cheaper long distance?", "Serving you better!", ["SCREAM", "CONFIRM"]], win);
 
             expect(blackberry.ui.dialog.customAskAsync).toHaveBeenCalledWith("Are you interested in cheaper long distance?", [ "SCREAM", "CONFIRM" ], win, { "title" : "Serving you better!" });
         });
-        
+
         it("should return that WebWorks Is On It", function() {
             expect(notification.confirm(["Danger, danger Will Robinson!", "Panic, is my middle name", "PANIC!"])).toEqual({
                 status: cordova.callbackStatus.NO_RESULT,
