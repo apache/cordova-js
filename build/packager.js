@@ -74,13 +74,12 @@ packager.bundle = function(platform, debug, commitId ) {
 	
     output.push("// Platform: " + platform);
     output.push("// "  + commitId);
-    output.push("// File generated at :: " + new Date());
 
     // write header
     output.push('/*', getContents('LICENSE-for-js-file.txt'), '*/')
     output.push(';(function() {')
     output.push("var CORDOVA_JS_BUILD_LABEL = '"  + commitId + "';");
-    
+
     // write initial scripts
     if (!scripts['require']) {
         throw new Error("didn't find a script for 'require'")
