@@ -36,6 +36,10 @@ packager.generate = function(platform, commitId, useWindowsLineEndings) {
     var libraryDebug   = packager.bundle(platform, true, commitId);
     
     time = new Date().valueOf() - time;
+    if (!fs.existsSync('pkg')) {
+      fs.mkdirSync('pkg');
+      fs.mkdirSync('pkg/debug');
+    }
     outFile = path.join('pkg', 'cordova.' + platform + '.js');
     fs.writeFileSync(outFile, libraryRelease, 'utf8');
     
