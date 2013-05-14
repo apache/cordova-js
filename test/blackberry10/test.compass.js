@@ -19,8 +19,8 @@
  *
 */
 
-xdescribe("blackberry qnx compass", function () {
-    var compass = require('cordova/plugin/qnx/compass'),
+xdescribe("blackberry10 compass", function () {
+    var compass = require('cordova/plugin/blackberry10/compass'),
         cordova = require('cordova'),
         exec = require('cordova/exec'),
         utils = require('cordova/utils'),
