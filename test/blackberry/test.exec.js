@@ -25,12 +25,12 @@ describe("blackberry exec", function () {
 
     it("calls the managers exec for the given runtime", function () {
         var platform = require('cordova/platform'),
-            manager = require('cordova/plugin/qnx/manager'),
+            manager = require('cordova/plugin/air/manager'),
             win = jasmine.createSpy("win"),
             fail = jasmine.createSpy("fail"),
             args = {};
 
-        spyOn(platform, "runtime").andReturn("qnx");
+        spyOn(platform, "runtime").andReturn("air");
         spyOn(manager, "exec");
 
         exec(win, fail, "foo", "bar", args);
@@ -40,10 +40,10 @@ describe("blackberry exec", function () {
 
     describe("when the callback status is ok", function () {
         var platform = require('cordova/platform'),
-            manager = require('cordova/plugin/qnx/manager');
+            manager = require('cordova/plugin/air/manager');
 
         beforeEach(function () {
-            spyOn(platform, "runtime").andReturn("qnx");
+            spyOn(platform, "runtime").andReturn("air");
             spyOn(manager, "exec").andReturn({
                 status: cordova.callbackStatus.OK,
                 message: "sometimes I drink from the milk carton"
@@ -85,10 +85,10 @@ describe("blackberry exec", function () {
 
     describe("when the callback status is no_result", function () {
         var platform = require('cordova/platform'),
-            manager = require('cordova/plugin/qnx/manager');
+            manager = require('cordova/plugin/air/manager');
 
         beforeEach(function () {
-            spyOn(platform, "runtime").andReturn("qnx");
+            spyOn(platform, "runtime").andReturn("air");
             spyOn(manager, "exec").andReturn({
                 status: cordova.callbackStatus.NO_RESULT,
                 message: "I know what you did last summer"
@@ -114,11 +114,11 @@ describe("blackberry exec", function () {
 
     describe("when the callback status is anything else", function () {
         var platform = require('cordova/platform'),
-            manager = require('cordova/plugin/qnx/manager');
+            manager = require('cordova/plugin/air/manager');
 
         beforeEach(function () {
             spyOn(console, "log");
-            spyOn(platform, "runtime").andReturn("qnx");
+            spyOn(platform, "runtime").andReturn("air");
             spyOn(manager, "exec").andReturn({
                 status: "poop",
                 message: "the bed"

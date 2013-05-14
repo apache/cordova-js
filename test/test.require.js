@@ -93,7 +93,7 @@ describe("require + define", function () {
             define("dino", factory);
             require("dino");
 
-            expect(factory).toHaveBeenCalledWith(require,
+            expect(factory).toHaveBeenCalledWith(jasmine.any(Function),
                 {}, {
                     id: "dino",
                     exports: {}
