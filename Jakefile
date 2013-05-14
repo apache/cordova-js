@@ -61,10 +61,36 @@ function forEachFile(root, cbFile, cbDone) {
 }
 
 function computeGitVersion(callback) {
-    childProcess.exec('git describe --tags --long', function(err, stdout, stderr) {
+    var gitPath = 'git';
+    var args = 'describe --tags --long';
+    childProcess.exec(gitPath + ' ' + args, function(err, stdout, stderr) {
+        var isWindows = process.platform.slice(0, 3) == 'win';
+        if (err && isWindows) {
+            gitPath = '"' + path.join(process.env['ProgramFiles'], 'Git', 'bin', 'git.exe') + '"';
+            childProcess.exec(gitPath + ' ' + args, function(err, stdout, stderr) {
+                if (err) {
+                    error(err);
+                } else {
+                    done(stdout);
+                }
+            });
+        } else if (err) {
+            error(err);
+        } else {
+            done(stdout);
+        }
+    });
+
+    function error(err) {
+        console.error('Git command failed: git ' + args);
+        console.error('Error: ' + err);
+        process.exit(1);
+    }
+
+    function done(stdout) {
         var version = stdout.trim().replace(/^2.5.0-.*?-/, 'dev-');
         callback(version);
-    });
+    };
 }
 
 desc("runs build");
