@@ -60,6 +60,38 @@ function forEachFile(root, cbFile, cbDone) {
     scan(root);
 }
 
+function computeGitVersion(callback) {
+    var gitPath = 'git';
+    var args = 'describe --tags --long';
+    childProcess.exec(gitPath + ' ' + args, function(err, stdout, stderr) {
+        var isWindows = process.platform.slice(0, 3) == 'win';
+        if (err && isWindows) {
+            gitPath = '"' + path.join(process.env['ProgramFiles'], 'Git', 'bin', 'git.exe') + '"';
+            childProcess.exec(gitPath + ' ' + args, function(err, stdout, stderr) {
+                if (err) {
+                    error(err);
+                } else {
+                    done(stdout);
+                }
+            });
+        } else if (err) {
+            error(err);
+        } else {
+            done(stdout);
+        }
+    });
+
+    function error(err) {
+        console.error('Git command failed: git ' + args);
+        console.error('Error: ' + err);
+        process.exit(1);
+    }
+
+    function done(stdout) {
+        var version = stdout.trim().replace(/^2.5.0-.*?-/, 'dev-');
+        callback(version);
+    };
+}
 
 desc("runs build");
 task('default', ['build','test'], function () {});
@@ -76,52 +108,27 @@ task('clean', ['set-cwd'], function () {
 }, true);
 
 desc("compiles the source files for all extensions");
-task('build', ['clean', 'hint', 'update-version'], function () {
+task('build', ['clean', 'hint'], function () {
     var packager = require("./build/packager");
-    var commitId = "";
-    childProcess.exec("git log -1",function(err,stdout,stderr) {
-        var stdoutLines = stdout.split("\n");
-        if(stdoutLines.length > 0) {
-            commitId = stdoutLines[0];
-        }
-        
-        console.log("building " + commitId);
+    computeGitVersion(function(version) {
+        console.log("building " + version);
 
-        packager.generate("windows8",commitId,true);
-        packager.generate("blackberry",commitId);
-        packager.generate("firefoxos",commitId);
-        packager.generate("ios",commitId);
-        packager.generate("windowsphone",commitId,true);
-        packager.generate("android",commitId);
-        packager.generate("bada",commitId);
-        packager.generate("tizen",commitId);
-        packager.generate("webos", commitId);
-        packager.generate("osx", commitId);
-        packager.generate("errgen",commitId);
-        packager.generate("test",commitId);
+        packager.generate("windows8", version,true);
+        packager.generate("blackberry", version);
+        packager.generate("blackberry10", version);
+        packager.generate("firefoxos", version);
+        packager.generate("ios", version);
+        packager.generate("windowsphone", version,true);
+        packager.generate("android", version);
+        packager.generate("bada", version);
+        packager.generate("tizen", version);
+        packager.generate("webos",  version);
+        packager.generate("osx",  version);
+        packager.generate("errgen", version);
+        packager.generate("test", version);
         complete();
     });
 }, true);
-
-desc("drops VERSION into JavaScript-based platforms");
-task('update-version', ['set-cwd'], function() {
-    var version = fs.readFileSync("VERSION", "utf-8").toString().split(/\r?\n/).join('');
-
-    // List of files that need to be interpolated with matching regexes
-    var files = {
-        "lib/bada/plugin/bada/device.js":/(me\.cordova\s=\s").+(")/,
-        "lib/tizen/plugin/tizen/Device.js":/(this\.cordova\s=\s").+(")/,
-        "lib/firefoxos/plugin/firefoxos/device.js":/(this\.cordova\s=\s").+(")/,
-        "lib/blackberry/plugin/qnx/device.js":/(cordova:\s").+(")/,
-        "lib/blackberry/plugin/air/device.js":/(cordova:\s").+(")/,
-        "lib/windows8/plugin/windows8/DeviceProxy.js":/(cordova:\s").+(")/
-    };
-
-    for (var f in files) if (files.hasOwnProperty(f)) {
-        var interpolatedContent = fs.readFileSync(f, "utf-8").toString().replace(files[f], "$1" + version + "$2");
-        fs.writeFileSync(f, interpolatedContent);
-    }
-});
 
 desc("prints a dalek");
 task('dalek', ['set-cwd'], function () {
