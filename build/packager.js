@@ -36,6 +36,10 @@ packager.generate = function(platform, commitId, useWindowsLineEndings) {
     var libraryDebug   = packager.bundle(platform, true, commitId);
     
     time = new Date().valueOf() - time;
+    if (!fs.existsSync('pkg')) {
+      fs.mkdirSync('pkg');
+      fs.mkdirSync('pkg/debug');
+    }
     outFile = path.join('pkg', 'cordova.' + platform + '.js');
     fs.writeFileSync(outFile, libraryRelease, 'utf8');
     
@@ -57,6 +61,7 @@ packager.bundle = function(platform, debug, commitId ) {
 
         //Test platform needs to bring in platform specific plugin's for testing
         copyProps(modules, collectFiles(path.join('lib', 'blackberry', 'plugin'), 'plugin'));
+        copyProps(modules, collectFiles(path.join('lib', 'blackberry10', 'plugin'), 'plugin'));
         copyProps(modules, collectFiles(path.join('lib', 'firefoxos', 'plugin', 'firefoxos'), 'plugin/firefoxos'));
         copyProps(modules, collectFiles(path.join('lib', 'tizen', 'plugin', 'tizen'), 'plugin/tizen'));
         copyProps(modules, collectFiles(path.join('lib', 'windowsphone', 'plugin', 'windowsphone'), 'plugin/windowsphone'));
@@ -74,13 +79,12 @@ packager.bundle = function(platform, debug, commitId ) {
 	
     output.push("// Platform: " + platform);
     output.push("// "  + commitId);
-    output.push("// File generated at :: " + new Date());
 
     // write header
     output.push('/*', getContents('LICENSE-for-js-file.txt'), '*/')
     output.push(';(function() {')
     output.push("var CORDOVA_JS_BUILD_LABEL = '"  + commitId + "';");
-    
+
     // write initial scripts
     if (!scripts['require']) {
         throw new Error("didn't find a script for 'require'")
