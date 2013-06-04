@@ -36,8 +36,15 @@ function collect(path, files, matches) {
             collect(_path.join(path, item), files, matches);
         });
     } else if (matches(path)) {
+        path = fixWindowsSeparators(path);
         files.push(path);
     }
+}
+function fixWindowsSeparators(path) {
+    if (_path.sep === '\\') {
+        path = path.replace(/\\/g, '/');
+    }
+    return path;
 }
 
 module.exports = {
