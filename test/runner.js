@@ -24,7 +24,8 @@ var fs = require('fs'),
     _path = require('path'),
     tests = [],
     packager = require('../build/packager'),
-    exec = require('child_process').exec;
+    exec = require('child_process').exec,
+    os = require('os');
 
 function collect(path, files, matches) {
     matches = matches || function (path) {
@@ -111,6 +112,7 @@ module.exports = {
             doc,
             modules,
             specs,
+            verb,
             app = connect(
                 connect.static(_path.join(__dirname, '..', 'thirdparty')),
                 connect.static(__dirname),
@@ -148,6 +150,7 @@ module.exports = {
         process.stdout.write("Test Server running on:\n");
         process.stdout.write("http://127.0.0.1:3000\n");
 
-        exec('open http://127.0.0.1:3000');
+        verb = os.platform() === "win32"? "start" : "open";
+        exec(verb + ' http://127.0.0.1:3000');
     }
 };
