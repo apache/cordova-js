@@ -206,7 +206,16 @@ function writeModule(oFile, fileName, moduleId, debug) {
 
 //------------------------------------------------------------------------------
 function getContents(file) {
-    return fs.readFileSync(file, 'utf8');
+    var contents = fs.readFileSync(file, 'utf8');
+    if (isWindowsBrokenSymlink(contents)) {
+        file = path.resolve(path.dirname(file), contents);
+        contents = fs.readFileSync(file, 'utf8');
+    }
+    return contents;
+}
+function isWindowsBrokenSymlink(contents) {
+    var pattern = /^\.\..*js$/;
+    return pattern.test(contents);
 }
 
 //------------------------------------------------------------------------------
