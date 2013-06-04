@@ -19,8 +19,8 @@
  *
 */
 
-describe("blackberry qnx capture", function () {
-    var capture = require('cordova/plugin/qnx/capture'),
+describe("blackberry10 capture", function () {
+    var capture = require('cordova/plugin/blackberry10/capture'),
         cordova = require('cordova');
 
     describe("getSupportedAudioModes", function(){
