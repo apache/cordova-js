@@ -115,6 +115,7 @@ task('build', ['clean', 'hint'], function () {
 
         packager.generate("windows8", version,true);
         packager.generate("blackberry", version);
+        packager.generate("blackberry10", version);
         packager.generate("firefoxos", version);
         packager.generate("ios", version);
         packager.generate("windowsphone", version,true);
