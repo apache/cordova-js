@@ -36,6 +36,10 @@ packager.generate = function(platform, commitId, useWindowsLineEndings) {
     var libraryDebug   = packager.bundle(platform, true, commitId);
     
     time = new Date().valueOf() - time;
+    if (!fs.existsSync('pkg')) {
+      fs.mkdirSync('pkg');
+      fs.mkdirSync('pkg/debug');
+    }
     outFile = path.join('pkg', 'cordova.' + platform + '.js');
     fs.writeFileSync(outFile, libraryRelease, 'utf8');
     
@@ -75,13 +79,12 @@ packager.bundle = function(platform, debug, commitId ) {
 	
     output.push("// Platform: " + platform);
     output.push("// "  + commitId);
-    output.push("// File generated at :: " + new Date());
 
     // write header
     output.push('/*', getContents('LICENSE-for-js-file.txt'), '*/')
     output.push(';(function() {')
     output.push("var CORDOVA_JS_BUILD_LABEL = '"  + commitId + "';");
-    
+
     // write initial scripts
     if (!scripts['require']) {
         throw new Error("didn't find a script for 'require'")
