@@ -38,8 +38,11 @@ packager.generate = function(platform, commitId, useWindowsLineEndings) {
     time = new Date().valueOf() - time;
     if (!fs.existsSync('pkg')) {
       fs.mkdirSync('pkg');
-      fs.mkdirSync('pkg/debug');
     }
+    if(!fs.existsSync('pkg/debug')) {
+        fs.mkdirSync('pkg/debug');
+    }
+
     outFile = path.join('pkg', 'cordova.' + platform + '.js');
     fs.writeFileSync(outFile, libraryRelease, 'utf8');
     
@@ -226,7 +229,7 @@ function writeContents(oFile, fileName, contents, debug) {
     }
     
     else {
-        contents = '// file: ' + fileName + '\n' + contents    
+        contents = '// file: ' + fileName.split("\\").join("/") + '\n' + contents;
     }
 
     oFile.push(contents)
