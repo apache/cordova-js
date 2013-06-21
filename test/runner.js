@@ -53,7 +53,7 @@ module.exports = {
             window = document.createWindow();
         } catch (e) {
             //no jsDom (some people don't have compilers)
-            throw new Error("can't run tests in node: run jake btest instead, or install jsdom via: npm install");
+            throw new Error("can't run tests in node: run grunt btest instead, or install jsdom via: npm install");
         }
 
         //Put jasmine in scope
