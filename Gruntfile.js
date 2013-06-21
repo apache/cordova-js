@@ -17,7 +17,6 @@
  * under the License.
 */
 module.exports = function(grunt) {
-    var childProcess = require('child_process');
     var fs = require('fs');
     var path = require('path');
 
@@ -83,43 +82,6 @@ module.exports = function(grunt) {
         scan(root);
     }
 
-    var cachedGitVersion = null;
-    function computeGitVersion(callback) {
-        if (cachedGitVersion) {
-            callback(cachedGitVersion);
-            return;
-        }
-        var gitPath = 'git';
-        var args = 'describe --tags --long';
-        childProcess.exec(gitPath + ' ' + args, function(err, stdout, stderr) {
-            var isWindows = process.platform.slice(0, 3) == 'win';
-            if (err && isWindows) {
-                gitPath = '"' + path.join(process.env['ProgramFiles'], 'Git', 'bin', 'git.exe') + '"';
-                childProcess.exec(gitPath + ' ' + args, function(err, stdout, stderr) {
-                    if (err) {
-                        error(err);
-                    } else {
-                        done(stdout);
-                    }
-                });
-            } else if (err) {
-                error(err);
-            } else {
-                done(stdout);
-            }
-        });
-
-        function error(err) {
-            throw new Error(err);
-        }
-
-        function done(stdout) {
-            var version = stdout.trim().replace(/^2.5.0-.*?-/, 'dev-');
-            cachedGitVersion = version;
-            callback(version);
-        };
-    }
-
     function processWhiteSpace(processor, callback) {
         var rexp_minified = new RegExp("\\.min\\.js$");
         var rexp_src = new RegExp('\\.js$');
@@ -152,11 +114,7 @@ module.exports = function(grunt) {
         var done = this.async();
         var platformName = this.target;
         var useWindowsLineEndings = this.data.useWindowsLineEndings;
-        computeGitVersion(function(version) {
-            grunt.log.writeln('Build label: ' + version);
-            packager.generate(platformName, version, useWindowsLineEndings);
-            done();
-        });
+        packager.generate(platformName, useWindowsLineEndings, done);
     });
 
     grunt.registerTask('test', 'Runs test in node', function() {
