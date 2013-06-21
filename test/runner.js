@@ -41,7 +41,7 @@ function collect(path, files, matches) {
 }
 
 module.exports = {
-    node: function () {
+    node: function(callback) {
         console.log('starting node-based tests')
         var jas = require("../thirdparty/jasmine/jasmine"),
             TerminalReporter = require('./reporter').TerminalReporter,
@@ -53,17 +53,13 @@ module.exports = {
             window = document.createWindow();
         } catch (e) {
             //no jsDom (some people don't have compilers)
-            console.log("can't run tests in node: run jake btest instead, or install jsdom via: npm install");
-            return;
+            throw new Error("can't run tests in node: run jake btest instead, or install jsdom via: npm install");
         }
 
         //Put jasmine in scope
         Object.keys(jas).forEach(function (key) {
             this[key] = window[key] = global[key] = jas[key];
         });
-
-        //regenerate platform file
-        packager.generate('test');
 
         //load in our modules
         var testLibName = _path.join(__dirname, '..', 'pkg', 'cordova.test.js')
@@ -90,7 +86,7 @@ module.exports = {
         var env = jasmine.getEnv();
         env.addReporter(new TerminalReporter({
             color: true,
-            onComplete: process.exit
+            onComplete: function() { callback(true); }
         }));
 
         console.log("------------");
