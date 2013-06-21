@@ -5,57 +5,61 @@
   "version": "1.8.1",
   "homepage": "http://incubator.apache.org/cordova/",
   "repository": {
-    "type":"git",
+    "type": "git",
     "url": "http://git-wip-us.apache.org/repos/asf/incubator-cordova-js.git"
   },
   "engines": {
     "node": "~0.6.15"
   },
-  "contributors":[
+  "contributors": [
     {
-      "name":"Fil Maj",
-      "email":"filmaj@apache.org"
+      "name": "Fil Maj",
+      "email": "filmaj@apache.org"
     },
     {
-      "name":"Jesse MacFadyen",
-      "email":"purplecabbage@apache.org"
+      "name": "Jesse MacFadyen",
+      "email": "purplecabbage@apache.org"
     },
     {
-      "name":"Bryce Curtis",
-      "email":""
+      "name": "Bryce Curtis",
+      "email": ""
     },
     {
-      "name":"Drew Walters",
-      "email":""
+      "name": "Drew Walters",
+      "email": ""
     },
     {
-      "name":"Patrick Mueller",
-      "email":""
+      "name": "Patrick Mueller",
+      "email": ""
     },
     {
-      "name":"Simon MacDonald",
-      "email":""
+      "name": "Simon MacDonald",
+      "email": ""
     },
     {
-      "name":"Becky Gibson",
-      "email":""
+      "name": "Becky Gibson",
+      "email": ""
     },
     {
-      "name":"Anis Kadri",
-      "email":""
+      "name": "Anis Kadri",
+      "email": ""
     },
     {
-      "name":"Dan Silivestru",
-      "email":"dansilivestru@apache.org"
+      "name": "Dan Silivestru",
+      "email": "dansilivestru@apache.org"
     },
     {
-      "name":"Shazron Abdullah",
-      "email":"shazron@apache.org"
+      "name": "Shazron Abdullah",
+      "email": "shazron@apache.org"
     }
   ],
   "dependencies": {
-    "jsdom":"0.2.14",
-    "connect":"1.8.5"
+    "jsdom": "0.2.14",
+    "connect": "1.8.5"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-clean": "~0.4.1",
+    "grunt-contrib-jshint": "~0.6.0"
+  }
 }
