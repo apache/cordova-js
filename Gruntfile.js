@@ -120,7 +120,7 @@ module.exports = function(grunt) {
 
     grunt.registerTask('test', 'Runs test in node', function() {
         var done = this.async();
-        require('./test/runner').node();
+        require('./test/runner').node(done);
     });
 
     grunt.registerTask('btest', 'Runs tests in the browser', function() {
