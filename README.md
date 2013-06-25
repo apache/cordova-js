@@ -18,7 +18,7 @@
 # under the License.
 #
 -->
-A unified JavaScript layer for [Apache Cordova](http://incubator.apache.org/projects/callback.html) projects.
+A unified JavaScript layer for [Apache Cordova](http://cordova.apache.org/) projects.
 
 # Project Structure
 
@@ -83,19 +83,13 @@ Make sure you have [node.js](http://nodejs.org) installed. It should come pre-in
 
     npm install
 
-All of the build tasks can be run via the `jake` node module. Install it globally first by running:
+All of the build tasks can be run via the `grunt` node module. Install it globally first by running:
 
-    sudo npm install -g jake
-
-Every build also runs the scripts through [JSHint](http://jshint.com). It is best
-installed globally, but it is _not_ necessary for building cordova-js
-(you just won't get syntax and style hints when you build):
-
-    sudo npm install -g jshint
+    sudo npm install -g grunt-cli
 
 Then from the repository root run:
 
-    jake
+    grunt
 
 This will run the `build`, `hint` and `test` tasks by default. All of the available tasks are:
 
@@ -134,13 +128,13 @@ The `boot` method does all the work.  First, it grabs the common platform defini
 
 Tests run in node or the browser. To run the tests in node:
     
-    jake test
+    grunt test
 
 To run them in the browser:
 
-    jake btest
+    grunt btest
 
-Final testing should always be done with the [Mobile Spec test application](https://github.com/apache/incubator-cordova-mobile-spec).
+Final testing should always be done with the [Mobile Spec test application](https://github.com/apache/cordova-mobile-spec).
 
 # Integration
 
