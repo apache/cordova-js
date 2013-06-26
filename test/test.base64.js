@@ -47,4 +47,17 @@ describe("base64", function () {
 
       expect(base64.fromArrayBuffer(arrayBuffer)).toBe(base64string);
     });
+
+    it("can base64 encode an text string in an ArrayBuffer", function () {
+      var buffer = new Buffer('Some Awesome Test This Is!', 'binary')
+        , base64string = buffer.toString('base64')
+        , arrayBuffer = new ArrayBuffer(buffer.length)
+        , view = new Uint8Array(arrayBuffer);
+
+      for (var i = 0; i < buffer.length; i++) {
+        view[i] = buffer[i];
+      }
+
+      expect(base64.fromArrayBuffer(arrayBuffer)).toBe(base64string);
+    });
 });
