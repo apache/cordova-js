@@ -146,5 +146,18 @@ describe("utils", function () {
         expect(uuid).toMatch(/^(\{{0,1}([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){12}\}{0,1})$/);
         expect(uuid).not.toEqual(utils.createUUID());
     });
-    
+
+    it("can base64 encode an ArrayBuffer", function () {
+      var buffer = new Buffer('Some Awesome Test This Is!', 'binary')
+        , base64 = buffer.toString('base64')
+        , arrayBuffer = new ArrayBuffer(buffer.length)
+        , view = new Uint8Array(arrayBuffer);
+
+      for (var i = 0; i < buffer.length; i++) {
+        view[i] = buffer[i];
+      }
+
+      expect(utils.encodeBase64(arrayBuffer)).toBe(base64);
+    });
+
 });
