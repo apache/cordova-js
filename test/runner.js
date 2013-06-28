@@ -86,7 +86,7 @@ module.exports = {
         var env = jasmine.getEnv();
         env.addReporter(new TerminalReporter({
             color: true,
-            onComplete: function() { callback(true); }
+            onComplete: function(runner) { callback(runner.results().passed()); }
         }));
 
         console.log("------------");
