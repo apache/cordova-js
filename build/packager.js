@@ -99,24 +99,11 @@ packager.bundle = function(platform, debug, commitId) {
     var scripts = collectFiles('lib/scripts')
     
     modules[''] = 'lib/cordova.js'
-    
-    if (platform === 'test') {
-        copyProps(modules, collectFiles(path.join('lib', platform)));
+    copyProps(modules, collectFiles(path.join('lib', platform)));
 
-        //Test platform needs to bring in platform specific plugin's for testing
-        copyProps(modules, collectFiles(path.join('lib', 'blackberry', 'plugin'), 'plugin'));
-        copyProps(modules, collectFiles(path.join('lib', 'blackberry10', 'plugin'), 'plugin'));
-        copyProps(modules, collectFiles(path.join('lib', 'firefoxos', 'plugin', 'firefoxos'), 'plugin/firefoxos'));
-        copyProps(modules, collectFiles(path.join('lib', 'tizen', 'plugin', 'tizen'), 'plugin/tizen'));
-        copyProps(modules, collectFiles(path.join('lib', 'windowsphone', 'plugin', 'windowsphone'), 'plugin/windowsphone'));
-        copyProps(modules, collectFiles(path.join('lib', 'windows8', 'plugin', 'windows8'), 'plugin/windows8'));
-        copyProps(modules, collectFiles(path.join('lib', 'ios', 'plugin', 'ios'), 'plugin/ios/'));
-        copyProps(modules, collectFiles(path.join('lib', 'bada', 'plugin', 'bada'), 'plugin/bada/'));
+    if (platform === 'test') {
+        // TODO: move plugin files used in tests out of plugins
         copyProps(modules, collectFiles(path.join('lib', 'android', 'plugin', 'android'), 'plugin/android/'));
-        copyProps(modules, collectFiles(path.join('lib', 'osx', 'plugin', 'osx'), 'plugin/osx/'));
-    }
-    else {
-        copyProps(modules, collectFiles(path.join('lib', platform)))
     }
 
     var output = [];
@@ -187,35 +174,28 @@ function collectFiles(dir, id) {
     if (!id) id = ''
 
     var result = {}    
-    
-    try {
-        var entries = fs.readdirSync(dir)
+    var entries = fs.readdirSync(dir)
 
-        entries = entries.filter(function(entry) {
-            if (entry.match(/\.js$/)) return true
-            
-            var stat = fs.statSync(path.join(dir, entry))
-            if (stat.isDirectory())  return true
-        })
+    entries = entries.filter(function(entry) {
+        if (entry.match(/\.js$/)) return true
+        
+        var stat = fs.statSync(path.join(dir, entry))
+        if (stat.isDirectory())  return true
+    })
 
-        entries.forEach(function(entry) {
-            var moduleId = path.join(id, entry)
-            var fileName = path.join(dir, entry)
-            
-            var stat = fs.statSync(fileName)
-            if (stat.isDirectory()) {
-                copyProps(result, collectFiles(fileName, moduleId))
-            }
-            else {
-                moduleId         = getModuleId(moduleId)
-                result[moduleId] = fileName
-            }
-        })
-    }
-    catch(ex) {
-
-    }
-    
+    entries.forEach(function(entry) {
+        var moduleId = path.join(id, entry)
+        var fileName = path.join(dir, entry)
+        
+        var stat = fs.statSync(fileName)
+        if (stat.isDirectory()) {
+            copyProps(result, collectFiles(fileName, moduleId))
+        }
+        else {
+            moduleId         = getModuleId(moduleId)
+            result[moduleId] = fileName
+        }
+    })
     return copyProps({}, result)
 }
 

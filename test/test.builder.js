@@ -28,14 +28,14 @@ describe("builder", function () {
         var target = {},
             objects = {
                 foo: {
-                    path: "cordova/plugin/compass"
+                    path: "cordova/builder"
                 }
             };
 
 
         builder.buildIntoAndClobber(objects, target);
         expect(target.foo).toBeDefined();
-        expect(target.foo).toBe(require("cordova/plugin/compass"));
+        expect(target.foo).toBe(require("cordova/builder"));
     });
 
     it("returns an empty object literal if no path", function () {
@@ -56,7 +56,7 @@ describe("builder", function () {
                        bart: {},
                        lisa: {},
                        maggie: {
-                           path: "cordova/plugin/compass"
+                           path: "cordova/builder"
                        }
                    }
                }
@@ -65,7 +65,7 @@ describe("builder", function () {
         builder.buildIntoButDoNotClobber(objects, target);
 
         expect(target.homer.bart).toBeDefined();
-        expect(target.homer.maggie).toBe(require('cordova/plugin/compass'));
+        expect(target.homer.maggie).toBe(require('cordova/builder'));
         expect(target.homer.lisa).toBeDefined();
     });
 });
