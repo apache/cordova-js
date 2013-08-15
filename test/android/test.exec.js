@@ -22,7 +22,7 @@
 describe('exec.processMessages', function () {
     var cordova = require('cordova'),
         exec = require('cordova/androidexec'),
-        nativeApiProvider = require('cordova/plugin/android/nativeapiprovider'),
+        nativeApiProvider = require('cordova/android/nativeapiprovider'),
         origNativeApi = nativeApiProvider.get();
 
     var nativeApi = {

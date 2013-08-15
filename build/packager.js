@@ -102,8 +102,7 @@ packager.bundle = function(platform, debug, commitId) {
     copyProps(modules, collectFiles(path.join('lib', platform)));
 
     if (platform === 'test') {
-        // TODO: move plugin files used in tests out of plugins
-        copyProps(modules, collectFiles(path.join('lib', 'android', 'plugin', 'android'), 'plugin/android/'));
+        copyProps(modules, collectFiles(path.join('lib', 'android', 'android'), 'android/'));
     }
 
     var output = [];
