@@ -32,6 +32,7 @@ module.exports = function(grunt) {
           "test": {},
           "windows8": { useWindowsLineEndings: true },
           "windowsphone": { useWindowsLineEndings: true },
+          "firefoxos": {}
         },
         clean: ['pkg'],
         jshint: {
