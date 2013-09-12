@@ -30,32 +30,36 @@ packager.computeCommitId = function(callback) {
         callback(cachedGitVersion);
         return;
     }
-    var gitPath = 'git';
-    var args = 'describe --tags --long';
-    childProcess.exec(gitPath + ' ' + args, function(err, stdout, stderr) {
-        var isWindows = process.platform.slice(0, 3) == 'win';
-        if (err && isWindows) {
-            gitPath = '"' + path.join(process.env['ProgramFiles'], 'Git', 'bin', 'git.exe') + '"';
-            childProcess.exec(gitPath + ' ' + args, function(err, stdout, stderr) {
-                if (err) {
-                    error(err);
-                } else {
-                    done(stdout);
-                }
-            });
-        } else if (err) {
-            error(err);
-        } else {
-            done(stdout);
-        }
-    });
+    if (fs.existsSync('.git')) {
+        var gitPath = 'git';
+        var args = 'describe --tags --long';
+        childProcess.exec(gitPath + ' ' + args, function(err, stdout, stderr) {
+            var isWindows = process.platform.slice(0, 3) == 'win';
+            if (err && isWindows) {
+                gitPath = '"' + path.join(process.env['ProgramFiles'], 'Git', 'bin', 'git.exe') + '"';
+                childProcess.exec(gitPath + ' ' + args, function(err, stdout, stderr) {
+                    if (err) {
+                        error(err);
+                    } else {
+                        done(stdout);
+                    }
+                });
+            } else if (err) {
+                error(err);
+            } else {
+                done(stdout);
+            }
+        });
+    } else {
+        done(fs.readFileSync('VERSION', { encoding: 'utf8' }));
+    }
 
     function error(err) {
         throw new Error(err);
     }
 
     function done(stdout) {
-        var version = stdout.trim().replace(/^2.5.0-.*?-/, 'dev-');
+        var version = stdout.trim();
         cachedGitVersion = version;
         callback(version);
     };
