@@ -32,7 +32,7 @@ packager.computeCommitId = function(callback) {
     }
     if (fs.existsSync('.git')) {
         var gitPath = 'git';
-        var args = 'describe --tags --long';
+        var args = 'describe --tags';
         childProcess.exec(gitPath + ' ' + args, function(err, stdout, stderr) {
             var isWindows = process.platform.slice(0, 3) == 'win';
             if (err && isWindows) {
