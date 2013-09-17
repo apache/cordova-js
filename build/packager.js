@@ -30,9 +30,10 @@ packager.computeCommitId = function(callback) {
         callback(cachedGitVersion);
         return;
     }
-    if (fs.existsSync('.git')) {
+    var versionFileId = fs.readFileSync('VERSION', { encoding: 'utf8' }).trim();
+    if (/-dev$/.test(versionFileId) && fs.existsSync('.git')) {
         var gitPath = 'git';
-        var args = 'describe --tags';
+        var args = 'rev-list HEAD --max-count=1 --abbrev-commit';
         childProcess.exec(gitPath + ' ' + args, function(err, stdout, stderr) {
             var isWindows = process.platform.slice(0, 3) == 'win';
             if (err && isWindows) {
@@ -41,13 +42,13 @@ packager.computeCommitId = function(callback) {
                     if (err) {
                         error(err);
                     } else {
-                        done(stdout);
+                        done(versionFileId + '-' + stdout);
                     }
                 });
             } else if (err) {
                 error(err);
             } else {
-                done(stdout);
+                done(versionFileId + '-' + stdout);
             }
         });
     } else {
