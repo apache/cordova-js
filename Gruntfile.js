@@ -148,36 +148,11 @@ module.exports = function(grunt) {
         }, done);
     });
 
-    // TODO - Delete this task and use Grunt's built-in jshint (CB-3964).
-    grunt.registerTask('_hint', 'Runs jshint.', function() {
-        var done = this.async();
-        var knownWarnings = [
-            "Redefinition of 'FileReader'",
-            "Redefinition of 'require'",
-            "Read only",
-            "Redefinition of 'console'"
-        ];
-        var filterKnownWarnings = function(el, index, array) {
-            var wut = true;
-            // filter out the known warnings listed out above
-            knownWarnings.forEach(function(e) {
-                wut = wut && (el.indexOf(e) == -1);
-            });
-            wut = wut && (!el.match(/\d+ errors/));
-            return wut;
-        };
-
-        childProcess.exec("jshint lib", function(err,stdout,stderr) {
-            var exs = stdout.split('\n');
-            grunt.log.writeln(exs.filter(filterKnownWarnings).join('\n'));
-            done();
-        });
-    });
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-jshint');
 
     // Default task(s).
-    grunt.registerTask('build', ['cordovajs', '_hint', '_complainwhitespace']);
+    grunt.registerTask('build', ['cordovajs', 'jshint', '_complainwhitespace']);
     grunt.registerTask('default', ['build', '_test']);
     grunt.registerTask('test', ['build', '_test']);
     grunt.registerTask('btest', ['build', '_btest']);
