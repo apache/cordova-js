@@ -25,6 +25,7 @@ module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         cordovajs: {
+          "amazon-fireos": {},
           "android": {},
           "blackberry10": {},
           "ios": {},
