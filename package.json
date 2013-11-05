@@ -2,11 +2,11 @@
   "author": "Gord Tanner <gtanner@gmail.com> (http://github.com/gtanner)",
   "name": "cordova-js",
   "description": "Cordova JavaScript: a unified JavaScript layer for the Cordova suite of projects enabling cross-platform native mobile development of applications using HTML, CSS and JavaScript.",
-  "version": "1.8.1",
-  "homepage": "http://incubator.apache.org/cordova/",
+  "version": "3.1.0",
+  "homepage": "http://cordova.apache.org",
   "repository": {
     "type": "git",
-    "url": "http://git-wip-us.apache.org/repos/asf/incubator-cordova-js.git"
+    "url": "http://git-wip-us.apache.org/repos/asf/cordova-js.git"
   },
   "engines": {
     "node": "~0.6.15"
