@@ -28,7 +28,7 @@ process.chdir(path.join(__dirname, ".."))
 var platforms = getPlatforms()
 
 console.log("//-------------------------------------------------------")
-console.log("// graphviz .dot file for cordova requires by platform")
+console.log("// graphviz .dot file for Cordova requires by platform")
 console.log("// http://www.graphviz.org/")
 console.log("// ")
 console.log("//   - ./build/gv-requires.js > ~/tmp/requires.dot")
