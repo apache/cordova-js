@@ -20,7 +20,7 @@
 */
 
 describe("require + define", function () {
-    it("exist off of cordova", function () {
+    it("exists off of cordova", function () {
         var cordova = require('cordova');
         expect(cordova.require).toBeDefined();
         expect(cordova.define).toBeDefined();
