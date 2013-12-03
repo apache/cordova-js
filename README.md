@@ -198,7 +198,7 @@ Build the .js file and drop it in as a replacement for cordova.js.
     {
       id:"atari",
       initialize:function(){
-        console.log('firing up cordova in my atari, yo.');
+        console.log('firing up Cordova in my Atari, yo.');
       },
       objects:{
         cordova:{
