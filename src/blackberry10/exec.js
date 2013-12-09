@@ -40,15 +40,42 @@ function RemoteFunctionCall(functionUri) {
         params[name] = encodeURIComponent(JSON.stringify(value));
     };
 
-    this.makeSyncCall = function () {
+    this.makeAsyncCall = function () {
         var requestUri = composeUri(),
-        request = createXhrRequest(requestUri, false),
-        response;
-        request.send(JSON.stringify(params));
-        response = JSON.parse(decodeURIComponent(request.responseText) || "null");
-        return response;
-    };
+            request = new XMLHttpRequest(),
+            didSucceed,
+            response,
+            fail = function () {
+                var callbackId = JSON.parse(decodeURIComponent(params.callbackId));
+                response = JSON.parse(decodeURIComponent(request.responseText) || "null");
+                cordova.callbacks[callbackId].fail && cordova.callbacks[callbackId].fail(response.msg, response);
+                delete cordova.callbacks[callbackId];
+            };
 
+        request.open("POST", requestUri, true /* async */);
+        request.setRequestHeader("Content-Type", "application/json");
+        request.timeout = 1000; // Timeout in 1000ms
+        request.ontimeout = fail;
+        request.onerror = fail;
+
+        request.onload = function () {
+            response = JSON.parse(decodeURIComponent(request.responseText) || "null");
+            if (request.status === 200) {
+                didSucceed = response.code === cordova.callbackStatus.OK || response.code === cordova.callbackStatus.NO_RESULT;
+                cordova.callbackFromNative(
+                        JSON.parse(decodeURIComponent(params.callbackId)),
+                        didSucceed,
+                        response.code,
+                        [ didSucceed ? response.data : response.msg ],
+                        !!response.keepCallback
+                        );
+            } else {
+                fail();
+            }
+        };
+
+        request.send(JSON.stringify(params));
+    };
 }
 
 module.exports = function (success, fail, service, action, args) {
@@ -56,7 +83,6 @@ module.exports = function (success, fail, service, action, args) {
     request = new RemoteFunctionCall(uri),
     callbackId = service + cordova.callbackId++,
     proxy,
-    response,
     name,
     didSucceed;
 
@@ -81,23 +107,7 @@ module.exports = function (success, fail, service, action, args) {
             }
         }
 
-        response = request.makeSyncCall();
-
-        if (response.code < 0) {
-            if (fail) {
-                fail(response.msg, response);
-            }
-            delete cordova.callbacks[callbackId];
-        } else {
-            didSucceed = response.code === cordova.callbackStatus.OK || response.code === cordova.callbackStatus.NO_RESULT;
-            cordova.callbackFromNative(
-                callbackId,
-                didSucceed,
-                response.code,
-                [ didSucceed ? response.data : response.msg ],
-                !!response.keepCallback
-            );
-        }
+        request.makeAsyncCall();
     }
 
 };
