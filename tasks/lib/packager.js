@@ -17,20 +17,35 @@
  * under the License.
  */
 
-var childProcess = require('child_process');
-var fs    = require('fs')
-var util  = require('util')
-var path  = require('path')
+var childProcess  = require('child_process');
+var fs            = require('fs');
+var util          = require('util');
+var path          = require('path');
+var stripHeader   = require('./strip-header');
+var copyProps     = require('./copy-props');
+var getModuleId   = require('./get-module-id');
+var writeContents = require('./write-contents');
+var writeModule   = require('./write-module');
+var writeScript   = require('./write-script');
+var collectFiles  = require('./collect-files');
+var collectFile   = require('./collect-file');
+
+
+
+
 
 var packager = module.exports
-
 var cachedGitVersion = null;
+
 packager.computeCommitId = function(callback) {
+
     if (cachedGitVersion) {
         callback(cachedGitVersion);
         return;
     }
+
     var versionFileId = fs.readFileSync('VERSION', { encoding: 'utf8' }).trim();
+    
     if (/-dev$/.test(versionFileId) && fs.existsSync('.git')) {
         var gitPath = 'git';
         var args = 'rev-list HEAD --max-count=1 --abbrev-commit';
@@ -116,7 +131,7 @@ packager.bundle = function(platform, debug, commitId) {
     output.push("// "  + commitId);
 
     // write header
-    output.push('/*', getContents('LICENSE-for-js-file.txt'), '*/')
+    output.push('/*', fs.readFileSync('LICENSE-for-js-file.txt', 'utf8'), '*/')
     output.push(';(function() {')
     output.push("var CORDOVA_JS_BUILD_LABEL = '"  + commitId + "';");
 
@@ -159,133 +174,7 @@ packager.bundle = function(platform, debug, commitId) {
 
 //------------------------------------------------------------------------------
 
-function collectFile(dir, id, entry) {
-    if (!id) id = ''
-    var moduleId = path.join(id,  entry)
-    var fileName = path.join(dir, entry)
-    
-    var stat = fs.statSync(fileName)
 
-    var result = {};
 
-    moduleId         = getModuleId(moduleId)
-    result[moduleId] = fileName
 
-    return copyProps({}, result)
-}
 
-function collectFiles(dir, id) {
-    if (!id) id = ''
-
-    var result = {}    
-    var entries = fs.readdirSync(dir)
-
-    entries = entries.filter(function(entry) {
-        if (entry.match(/\.js$/)) return true
-        
-        var stat = fs.statSync(path.join(dir, entry))
-        if (stat.isDirectory())  return true
-    })
-
-    entries.forEach(function(entry) {
-        var moduleId = path.join(id, entry)
-        var fileName = path.join(dir, entry)
-        
-        var stat = fs.statSync(fileName)
-        if (stat.isDirectory()) {
-            copyProps(result, collectFiles(fileName, moduleId))
-        }
-        else {
-            moduleId         = getModuleId(moduleId)
-            result[moduleId] = fileName
-        }
-    })
-    return copyProps({}, result)
-}
-
-//------------------------------------------------------------------------------
-function writeScript(oFile, fileName, debug) {
-    var contents = getContents(fileName, 'utf8')
-
-    contents = stripHeader(contents, fileName);
-    writeContents(oFile, fileName, contents, debug);
-}
-
-//------------------------------------------------------------------------------
-function writeModule(oFile, fileName, moduleId, debug) {
-    var contents = getContents(fileName, 'utf8')
-
-    contents = '\n' + stripHeader(contents, fileName) + '\n'
-
-	// Windows fix, '\' is an escape, but defining requires '/' -jm
-    moduleId = path.join('cordova', moduleId).split("\\").join("/");
-    
-    var signature = 'function(require, exports, module)';
-    
-    contents = 'define("' + moduleId + '", ' + signature + ' {' + contents + '});\n'
-
-    writeContents(oFile, fileName, contents, debug)    
-}
-
-//------------------------------------------------------------------------------
-function getContents(file) {
-    return fs.readFileSync(file, 'utf8');
-}
-
-//------------------------------------------------------------------------------
-function writeContents(oFile, fileName, contents, debug) {
-    
-    if (debug) {
-        contents += '\n//@ sourceURL=' + fileName
-        
-        contents = 'eval(' + JSON.stringify(contents) + ')'
-        
-        // this bit makes it easier to identify modules
-        // with syntax errors in them
-        var handler = 'console.log("exception: in ' + fileName + ': " + e);'
-        handler += 'console.log(e.stack);'
-        
-        contents = 'try {' + contents + '} catch(e) {' + handler + '}'
-    }
-    
-    else {
-        contents = '// file: ' + fileName.split("\\").join("/") + '\n' + contents;
-    }
-
-    oFile.push(contents)
-}
-
-//------------------------------------------------------------------------------
-function getModuleId(fileName) {
-    return fileName.match(/(.*)\.js$/)[1]
-}
-
-//------------------------------------------------------------------------------
-function copyProps(target, source) {
-    for (var key in source) {
-        if (!source.hasOwnProperty(key)) continue
-        
-        target[key] = source[key]
-    }
-    
-    return target
-}
-//-----------------------------------------------------------------------------
-// Strips the license header. Basically only the first multi-line comment up to to the closing */
-function stripHeader(contents, fileName) {
-    var ls = contents.split(/\r?\n/);
-    while (ls[0]) {
-        if (ls[0].match(/^\s*\/\*/) || ls[0].match(/^\s*\*/)) {
-            ls.shift();
-        }
-        else if (ls[0].match(/^\s*\*\//)) {
-            ls.shift();
-            break;
-        }
-        else {
-        	console.log("WARNING: file name " + fileName + " is missing the license header");
-        	break;
-    	}
-    }
-    return ls.join('\n');
-}

@@ -17,25 +17,21 @@
  * under the License.
 */
 module.exports = function(grunt) {
-    var childProcess = require('child_process');
-    var fs = require('fs');
-    var path = require('path');
 
-    // Project configuration.
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
-        cordovajs: {
-          "amazon-fireos": {},
-          "android": {},
-          "blackberry10": {},
-          "ios": {},
-          "osx": {},
-          "test": {},
-          "windows8": { useWindowsLineEndings: true },
-          "windowsphone": { useWindowsLineEndings: true },
-          "firefoxos": {},
-          "ubuntu": {},
-          "browser": {}
+        compile: {
+            "amazon-fireos": {},
+            "android": {},
+            "blackberry10": {},
+            "ios": {},
+            "osx": {},
+            "test": {},
+            "windows8": { useWindowsLineEndings: true },
+            "windowsphone": { useWindowsLineEndings: true },
+            "firefoxos": {},
+            "ubuntu": {},
+            "browser": {}
         },
         clean: ['pkg'],
         jshint: {
@@ -46,117 +42,15 @@ module.exports = function(grunt) {
         },
     });
 
-    // Iterates over a directory
-    function forEachFile(root, cbFile, cbDone) {
-        var count = 0;
-
-        function scan(name) {
-            ++count;
-
-            fs.stat(name, function (err, stats) {
-                if (err) cbFile(err);
-
-                if (stats.isDirectory()) {
-                    fs.readdir(name, function (err, files) {
-                        if (err) cbFile(err);
-
-                        files.forEach(function (file) {
-                            scan(path.join(name, file));
-                        });
-                        done();
-                    });
-                } else if (stats.isFile()) {
-                    cbFile(null, name, stats, done);
-                } else {
-                    done();
-                }
-            });
-        }
-
-        function done() {
-            --count;
-            if (count === 0 && cbDone) cbDone();
-        }
-
-        scan(root);
-    }
-
-    function processWhiteSpace(processor, callback) {
-        var rexp_minified = new RegExp("\\.min\\.js$");
-        var rexp_src = new RegExp('\\.js$');
-        forEachFile('lib', function(err, file, stats, cbDone) {
-            //if (err) throw err;
-            if (rexp_minified.test(file) || !rexp_src.test(file)) {
-                cbDone();
-            } else {
-                var origsrc = src = fs.readFileSync(file, 'utf8');
-
-                // tabs -> four spaces
-                if (src.indexOf('\t') >= 0) {
-                    src = src.split('\t').join('    ');
-                }
-
-                // eliminate trailing white space
-                src = src.replace(/ +\n/g, '\n');
-
-                if (origsrc !== src) {
-                    // write it out yo
-                    processor(file, src);
-                }
-                cbDone();
-            }
-        }, callback);
-    }
-
-    grunt.registerMultiTask('cordovajs', 'Packages cordova.js', function() {
-        var packager = require("./build/packager");
-        var done = this.async();
-        var platformName = this.target;
-        var useWindowsLineEndings = this.data.useWindowsLineEndings;
-        packager.generate(platformName, useWindowsLineEndings, done);
-    });
-
-    grunt.registerTask('_test', 'Runs test in node', function() {
-        var done = this.async();
-        require('./test/runner').node(done);
-    });
-
-    grunt.registerTask('_btest', 'Runs tests in the browser', function() {
-        require('./test/runner').browser();
-        this.async(); // never finish.
-    });
-
-    grunt.registerTask('_complainwhitespace', 'Complain about what fixwhitespace would fix', function() {
-        var done = this.async();
-        var complainedAboutWhitespace = false;
-        processWhiteSpace(function(file, newSource) {
-            if (!complainedAboutWhitespace) {
-                grunt.log.writeln("files with whitespace issues: (to fix: `grunt fixwhitespace`)");
-                complainedAboutWhitespace = true;
-            }
-            grunt.log.writeln("   " + file);
-        }, done);
-    });
-
-    grunt.registerTask('_fixwhitespace', 'Converts tabs to four spaces, eliminates trailing white space, converts newlines to proper form - enforcing style guide ftw!', function() {
-        var done = this.async();
-        var complainedAboutWhitespace = false;
-        processWhiteSpace(function(file, newSource) {
-            if (!complainedAboutWhitespace) {
-                grunt.log.writeln("Fixed whitespace issues in:");
-                complainedAboutWhitespace = true;
-            }
-            fs.writeFileSync(file, newSource, 'utf8');
-            grunt.log.writeln("   " + file);
-        }, done);
-    });
-
+    // external tasks
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-jshint');
 
-    // Default task(s).
-    grunt.registerTask('build', ['cordovajs', 'jshint', '_complainwhitespace']);
-    grunt.registerTask('default', ['build', '_test']);
-    grunt.registerTask('test', ['build', '_test']);
-    grunt.registerTask('btest', ['build', '_btest']);
+    // custom tasks
+    grunt.loadTasks('tasks');
+
+    // defaults
+    grunt.registerTask('default', ['build', 'test']);
+    grunt.registerTask('build', ['compile', 'jshint', 'whitespace-check']);
+    grunt.registerTask('test', ['_test', '_btest']);
 };
