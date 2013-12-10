@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
 */
-var packager = require('./lib/packager');
+var generate = require('./lib/packager');
 
 module.exports = function(grunt) {
     grunt.registerMultiTask('compile', 'Packages cordova.js', function() {
@@ -25,6 +25,6 @@ module.exports = function(grunt) {
         var platformName = this.target;
         var useWindowsLineEndings = this.data.useWindowsLineEndings;
 
-        packager.generate(platformName, useWindowsLineEndings, done);
+        generate(platformName, useWindowsLineEndings, done);
     });
 }
