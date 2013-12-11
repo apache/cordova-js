@@ -20,18 +20,7 @@ var fs              = require('fs');
 var path            = require('path');
 var bundle          = require('./bundle');
 var computeCommitId = require('./compute-commit-id');
-/*
-var childProcess    = require('child_process');
-var util            = require('util');
-var stripHeader     = require('./strip-header');
-var copyProps       = require('./copy-props');
-var getModuleId     = require('./get-module-id');
-var writeContents   = require('./write-contents');
-var writeModule     = require('./write-module');
-var writeScript     = require('./write-script');
-var collectFiles    = require('./collect-files');
-var collectFile     = require('./collect-file');
-*/
+
 
 module.exports = function generate(platform, useWindowsLineEndings, callback) {
     computeCommitId(function(commitId) {

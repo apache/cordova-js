@@ -1,4 +1,5 @@
-
+// FIXME I think this is unused
+// smh
 module.exports = function collectFile(dir, id, entry) {
     if (!id) id = ''
     var moduleId = path.join(id,  entry)
