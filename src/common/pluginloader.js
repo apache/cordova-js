@@ -91,19 +91,17 @@ function handlePluginsObject(path, moduleList, finishPluginLoading) {
 function injectPluginScript(pathPrefix, finishPluginLoading) {
     var pluginPath = pathPrefix + 'cordova_plugins.js';
 
-    if (urlutil.exists(pluginPath)) {
-        injectScript(pluginPath, function() {
-            try {
-                var moduleList = require("cordova/plugin_list");
-                handlePluginsObject(pathPrefix, moduleList, finishPluginLoading);
-            }
-            catch (e) {
-                // Error loading cordova_plugins.js, file not found or something
-                // this is an acceptable error, pre-3.0.0, so we just move on.
-                finishPluginLoading();
-            }
-        }, finishPluginLoading); // also, add script load error handler for file not found
-    }
+    injectScript(pluginPath, function() {
+        try {
+            var moduleList = require("cordova/plugin_list");
+            handlePluginsObject(pathPrefix, moduleList, finishPluginLoading);
+        }
+        catch (e) {
+            // Error loading cordova_plugins.js, file not found or something
+            // this is an acceptable error, pre-3.0.0, so we just move on.
+            finishPluginLoading();
+        }
+    }, finishPluginLoading); // also, add script load error handler for file not found
 }
 
 function findCordovaPath() {

@@ -30,12 +30,3 @@ exports.makeAbsolute = function makeAbsolute(url) {
     return anchorEl.href;
 };
 
-/**
- * Sync test if a URL exists.
- */
-exports.exists = function exists(url) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('HEAD', url, false);
-    xhr.send();
-    return xhr.status != 404;
-};
