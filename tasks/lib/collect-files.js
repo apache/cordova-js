@@ -16,9 +16,10 @@
  * specific language governing permissions and lim
  * under the License.
  */
-var fs        = require('fs');
-var path      = require('path');
-var copyProps = require('./copy-props');
+var fs          = require('fs');
+var path        = require('path');
+var copyProps   = require('./copy-props');
+var getModuleId = require('./get-module-id');
 
 
 function collectFiles(dir, id) {

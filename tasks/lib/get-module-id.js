@@ -17,6 +17,6 @@
  * under the License.
  */
 
-module.exports = function getModuleId(fileName) {
-    return fileName.match(/(.*)\.js$/)[1]
+module.exports = function getModuleId(filename) {
+    return filename.match(/(.*)\.js$/)[1]
 }

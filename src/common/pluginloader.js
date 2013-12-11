@@ -90,7 +90,7 @@ function handlePluginsObject(path, moduleList, finishPluginLoading) {
 
 function injectPluginScript(pathPrefix, finishPluginLoading) {
     var pluginPath = pathPrefix + 'cordova_plugins.js';
-    
+
     if (urlutil.exists(pluginPath)) {
         injectScript(pluginPath, function() {
             try {

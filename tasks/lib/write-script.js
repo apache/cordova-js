@@ -17,8 +17,9 @@
  * under the License.
  */
 
-var fs = require('fs');
+var fs            = require('fs');
 var writeContents = require('./write-contents');
+var stripHeader   = require('./strip-header');
 
 module.exports = function writeScript(oFile, fileName, debug) {
     var contents = fs.readFileSync(fileName, 'utf8');

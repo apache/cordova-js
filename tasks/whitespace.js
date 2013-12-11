@@ -17,6 +17,7 @@
  * under the License.
 */
 var processWhiteSpace = require('./lib/process-white-space');
+var fs = require('fs');
 
 module.exports = function(grunt) {
 

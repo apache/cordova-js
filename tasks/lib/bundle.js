@@ -17,6 +17,7 @@
  * under the License.
  */
 var fs           = require('fs');
+var path         = require('path');
 var collectFiles = require('./collect-files');
 var copyProps    = require('./copy-props');
 var writeModule  = require('./write-module');
@@ -24,15 +25,15 @@ var writeScript  = require('./write-script');
 
 
 module.exports = function bundle(platform, debug, commitId) {
-    var modules = collectFiles('lib/common')
-    var scripts = collectFiles('lib/scripts')
+    var modules = collectFiles('src/common')
+    var scripts = collectFiles('src/scripts')
     
-    modules[''] = 'lib/cordova.js'
-    copyProps(modules, collectFiles(path.join('lib', platform)));
+    modules[''] = 'src/cordova.js'
+    copyProps(modules, collectFiles(path.join('src', platform)));
 
     if (platform === 'test') {
         // FIXME why does 'test' resolve a bunch of android stuff?! 
-        var testFilesPath = path.join('lib', 'android', 'android');
+        var testFilesPath = path.join('src', 'android', 'android');
         copyProps(modules, collectFiles(testFilesPath, 'android/'));
     }
 
@@ -42,7 +43,7 @@ module.exports = function bundle(platform, debug, commitId) {
     output.push("// "  + commitId);
 
     // write header
-    var licensePath = path.join(__dirname, 'tasks', 'lib', 'LICENSE-for-js-file.txt');
+    var licensePath = path.join(__dirname, 'LICENSE-for-js-file.txt');
     output.push('/*', fs.readFileSync(licensePath, 'utf8'), '*/');
     output.push(';(function() {');
     output.push("var CORDOVA_JS_BUILD_LABEL = '"  + commitId + "';");

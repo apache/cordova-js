@@ -16,8 +16,9 @@
  * specific language governing permissions and lim
  * under the License.
  */
-var fs = require('fs');
-var stripHeader = require('./strip-header');
+var fs            = require('fs');
+var path          = require('path');
+var stripHeader   = require('./strip-header');
 var writeContents = require('./write-contents');
 
 
