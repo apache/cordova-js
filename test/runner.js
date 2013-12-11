@@ -24,6 +24,7 @@ var fs = require('fs'),
     _path = require('path'),
     tests = [],
     packager = require('./../tasks/lib/packager'),
+    bundle = require('./../tasks/lib/packager'),
     exec = require('child_process').exec;
 
 // FIXME this seems to be a copy of module in tasks/lib =/
@@ -110,7 +111,7 @@ module.exports = {
                             "Cache-Control": "no-cache",
                             "Content-Type": "text/javascript"
                         });
-                        res.end(packager.bundle('test'));
+                        res.end(bundle('test'));
                     }),
                     app.get('/', function (req, res) {
                         res.writeHead(200, {
