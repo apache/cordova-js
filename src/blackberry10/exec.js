@@ -80,7 +80,7 @@ module.exports = function (success, fail, service, action, args) {
                 request.addParam(name, args[name]);
             }
         }
-        
+
         response = request.makeSyncCall();
 
         if (response.code < 0) {

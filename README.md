@@ -22,60 +22,25 @@ A unified JavaScript layer for [Apache Cordova](http://cordova.apache.org/) proj
 
 # Project Structure
 
-    cordova-js
-      |
-      |-build/
-      | Will contain any build modules (currently nothing here as it is all
-      | hacked into the JakeFile)
-      |
-      |-lib
-      |  |-cordova.js
-      |  | Common Cordova stuff such as callback handling and
-      |  | window/document add/removeEventListener hijacking 
-      |  | 
-      |  |-common/
-      |  | Contains the common-across-platforms base modules
-      |  |
-      |  |-common/builder.js
-      |  | Injects in our classes onto window and navigator (or wherever else 
-      |  | is needed)
-      |  |
-      |  |-common/channel.js
-      |  | A pub/sub implementation to handle custom framework events 
-      |  |
-      |  |-common/common.js
-      |  | Common locations to add Cordova objects to browser globals.
-      |  |
-      |  |-common/exec.js
-      |  | Stub for platform's specific version of exec.js
-      |  |
-      |  |-common/platform.js
-      |  | Stub for platform's specific version of platform.js
-      |  |
-      |  |-common/utils.js
-      |  | General purpose JS utility stuff: closures, uuids, object
-      |  | cloning, extending prototypes
-      |  |
-      |  |-common/plugin
-      |  | Contains the common-across-platforms plugin modules
-      |  |
-      |  |-scripts/
-      |  | Contains non-module JavaScript source that gets added to the
-      |  | resulting cordova.<platform>.js files closures, uuids, object
-      |  |
-      |  |-scripts/bootstrap.js
-      |  | Code to bootstrap the Cordova platform, inject APIs and fire events
-      |  |
-      |  |-scripts/require.js
-      |  | Our own module definition and require implementation. 
-      |  |
-      |  |-<platform>/
-      |  | Contains the platform-specific base modules.
-      |  |
-      |  |-<platform>/plugin/<platform>
-      |  | Contains the platform-specific plugin modules.
-
-The way the resulting `cordova.<platform>.js` files will be built is by combining the scripts in the `lib/scripts` directory with modules from the `lib/common` and `lib/<platform>` directories.  For cases where there is the same named module in `lib/common` and `lib/<platform>/plugin/<platform>`, the `lib/<platform>` version wins.  For instance, every `lib/<platform>` includes an `exec.js`, and there is also a version in `lib/common`, so the `lib/<platform>` version will always be used.  In fact, the `lib/common` one will throw errors, so if you build a new platform and forget `exec.js`, the resulting `cordova.<platform>.js` file will also throw errors.
+    ./
+     |-src/
+     |  |-cordova.js ........ common Cordova stuff
+     |  |-common/ ........... base modules shared across platfoms
+     |  |  |-builder.js ..... injects in our classes onto window and navigator
+     |  |  |-channel.js ..... pub/sub impl for custom framework events 
+     |  |  |-common.js ...... common locations to add Cordova objects to browser globals
+     |  |  |-exec.js ........ interace stub for each platform specific version of exec.js
+     |  |  |-platform.js .... stub for platform's specific version of platform.js
+     |  |  '-utils.js ....... closures, uuids, object, cloning, extending prototypes
+     |  |
+     |  |-scripts/ .......... non-module JS that gets concated to cordova.<platform>.js
+     |  |  |-bootstrap.js ... bootstrap the Cordova platform, inject APIs and fire events
+     |  |  '-require.js ..... module definition and require() impl
+     |  |
+     |  '-<platform>/ ....... contains the platform-specific base modules
+     |
+     |-tasks/ ............... custom grunt tasks
+     '-tests/ ............... unit tests
 
 # Building
 
@@ -91,21 +56,8 @@ Then from the repository root run:
 
     grunt
 
-This will run the `build`, `hint` and `test` tasks by default. All of the available tasks are:
-
-- `build`: creates platform versions of cordova-js and builds them into
-  the `pkg/` directory
-- `test`: runs all of the unit tests inside node
-- `btest`: creates a server so you can run the tests inside a browser
-- `clean`: cleans out the `pkg/` directory
-- `hint`: runs all of the script files through JSHint
-- `fixwhitespace`: converts all tabs to four spaces, removes carriage returns and cuts out trailing whitespace within the script files
-
 ## Known Issues
 
-- On Mac OS 10.7.3, there were issues with the contextify module not
-    being able to build properly when using node v0.6.10 and running `npm
-	install`. Using node v0.6.6 works, though.
 - On Windows, when you run `npm install`, you may get errors regarding
   contextify. This is necessary for running the tests. Make sure you
   are running node v0.6.15 at the least (and npm v1.1.16 which should
@@ -141,15 +93,6 @@ Final testing should always be done with the [Mobile Spec test application](http
 ## Cordova
 
 Build the .js file and drop it in as a replacement for cordova.js.
-
-### Supported Platforms
-
-- Android
-- iOS
-- BlackBerry
-- Windows Phone 7 ( 7.5 )
-- Bada (WAC implementation)
-- Windows 8 ( experimental work in progress )
 
 # Adding a New Platform
 

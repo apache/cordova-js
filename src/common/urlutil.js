@@ -19,30 +19,14 @@
  *
 */
 
-var cordova = require('cordova');
-var execProxy = require('cordova/exec/proxy');
 
-module.exports = function(success, fail, service, action, args) {
-    
-    var proxy = execProxy.get(service, action);
-
-    if (proxy) {
-        var callbackId = service + cordova.callbackId++;
-
-        if (typeof success == "function" || typeof fail == "function") {
-            cordova.callbacks[callbackId] = {success:success, fail:fail};
-        }
-
-        try {
-            proxy(success, fail, args);
-        }
-        catch(e) {
-            // TODO throw maybe?
-            var msg = "Exception calling :: " + service + " :: " + action  + " ::exception=" + e;
-            console.log(msg);
-        }
-    }
-    else {
-        fail && fail("Missing Command Error");
-    }
+/**
+ * For already absolute URLs, returns what is passed in.
+ * For relative URLs, converts them to absolute ones.
+ */
+exports.makeAbsolute = function makeAbsolute(url) {
+    var anchorEl = document.createElement('a');
+    anchorEl.href = url;
+    return anchorEl.href;
 };
+

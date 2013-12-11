@@ -1,5 +1,4 @@
 /*
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,17 +15,16 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *
 */
+var generate = require('./lib/packager');
 
-var urlutil = exports;
-var anchorEl = document.createElement('a');
+module.exports = function(grunt) {
+    grunt.registerMultiTask('compile', 'Packages cordova.js', function() {
 
-/**
- * For already absolute URLs, returns what is passed in.
- * For relative URLs, converts them to absolute ones.
- */
-urlutil.makeAbsolute = function(url) {
-    anchorEl.href = url;
-    return anchorEl.href;
-};
+        var done = this.async();
+        var platformName = this.target;
+        var useWindowsLineEndings = this.data.useWindowsLineEndings;
+
+        generate(platformName, useWindowsLineEndings, done);
+    });
+}

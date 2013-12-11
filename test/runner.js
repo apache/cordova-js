@@ -23,9 +23,11 @@ var fs = require('fs'),
     util = require('util'),
     _path = require('path'),
     tests = [],
-    packager = require('../build/packager'),
+    packager = require('./../tasks/lib/packager'),
+    bundle = require('./../tasks/lib/packager'),
     exec = require('child_process').exec;
 
+// FIXME this seems to be a copy of module in tasks/lib =/
 function collect(path, files, matches) {
     matches = matches || function (path) {
         return path.match(/test\.(\w|-)+\.js$/);
@@ -43,7 +45,7 @@ function collect(path, files, matches) {
 module.exports = {
     node: function(callback) {
         console.log('starting node-based tests')
-        var jas = require("../thirdparty/jasmine/jasmine"),
+        var jas = require("./../tasks/vendor/jasmine/jasmine"),
             TerminalReporter = require('./reporter').TerminalReporter,
             jsdom, document, window;
 
@@ -109,7 +111,7 @@ module.exports = {
                             "Cache-Control": "no-cache",
                             "Content-Type": "text/javascript"
                         });
-                        res.end(packager.bundle('test'));
+                        res.end(bundle('test'));
                     }),
                     app.get('/', function (req, res) {
                         res.writeHead(200, {
