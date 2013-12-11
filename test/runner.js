@@ -19,28 +19,15 @@
  *
 */
 
-var fs = require('fs'),
-    util = require('util'),
-    _path = require('path'),
-    tests = [],
-    packager = require('./../tasks/lib/packager'),
-    bundle = require('./../tasks/lib/packager'),
-    exec = require('child_process').exec;
+var fs       = require('fs');
+var util     = require('util');
+var _path    = require('path');
+var exec     = require('child_process').exe;
+var tests    = [];
+var packager = require('./../tasks/lib/packager');
+var bundle   = require('./../tasks/lib/bundle');
+var collect  = require('./../tasks/lib/collect');
 
-// FIXME this seems to be a copy of module in tasks/lib =/
-function collect(path, files, matches) {
-    matches = matches || function (path) {
-        return path.match(/test\.(\w|-)+\.js$/);
-    };
-
-    if (fs.statSync(path).isDirectory()) {
-        fs.readdirSync(path).forEach(function (item) {
-            collect(_path.join(path, item), files, matches);
-        });
-    } else if (matches(path)) {
-        files.push(path);
-    }
-}
 
 module.exports = {
     node: function(callback) {
@@ -103,7 +90,7 @@ module.exports = {
             modules,
             specs,
             app = connect(
-                connect.static(_path.join(__dirname, '..', 'thirdparty')),
+                connect.static(_path.join(__dirname, '..', 'tasks', 'vendor')),
                 connect.static(__dirname),
                 connect.router(function (app) {
                     app.get('/cordova.test.js', function (req, res) {
