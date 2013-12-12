@@ -29,7 +29,7 @@ var collect  = require('./collect');
 
 var pathToTemplate = path.join(__dirname, '..', 'templates', 'suite.html');
 var pathToVendor   = path.join(__dirname, '..', 'vendor');
-var pathToTests    = path.join(__dirname, '..', '..', 'tests');
+var pathToTests    = path.join(__dirname, '..', '..', 'test');
 
 var template = fs.readFileSync(pathToTemplate, "utf-8");
 
