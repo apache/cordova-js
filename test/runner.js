@@ -30,58 +30,6 @@ var collect  = require('./../tasks/lib/collect');
 
 
 module.exports = {
-    node: function(callback) {
-        console.log('starting node-based tests')
-        var jas = require("./../tasks/vendor/jasmine/jasmine"),
-            TerminalReporter = require('./reporter').TerminalReporter,
-            jsdom, document, window;
-
-        try {
-            jsdom = require("jsdom").jsdom;
-            document = jsdom(null, null, { url: 'http://jsdomtest.info/a?b#c' });
-            window = document.createWindow();
-        } catch (e) {
-            //no jsDom (some people don't have compilers)
-            throw new Error("can't run tests in node: run grunt btest instead, or install jsdom via: npm install");
-        }
-
-        //Put jasmine in scope
-        Object.keys(jas).forEach(function (key) {
-            this[key] = window[key] = global[key] = jas[key];
-        });
-
-        //load in our modules
-        var testLibName = _path.join(__dirname, '..', 'pkg', 'cordova.test.js')
-        var testLib     = fs.readFileSync(testLibName, 'utf8')
-        try {
-            eval(testLib);
-        }
-        catch (e) {
-            console.log("error eval()ing " + testLibName + ": " + e)
-            console.log(e.stack)
-            throw e
-        }
-
-        //hijack require
-        require = window.cordova.require;
-        define  = window.cordova.define;
-
-        //load in our tests
-        collect(__dirname, tests);
-        for (var x in tests) {
-            eval(fs.readFileSync(tests[x], "utf-8"));
-        }
-
-        var env = jasmine.getEnv();
-        env.addReporter(new TerminalReporter({
-            color: true,
-            onComplete: function(runner) { callback(runner.results().passed()); }
-        }));
-
-        console.log("------------");
-        console.log("Unit Tests:");
-        env.execute();
-    },
     browser: function () {
         console.log('starting browser-based tests')
         var connect = require('connect'),

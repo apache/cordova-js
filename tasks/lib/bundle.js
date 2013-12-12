@@ -22,6 +22,7 @@ var collectFiles = require('./collect-files');
 var copyProps    = require('./copy-props');
 var writeModule  = require('./write-module');
 var writeScript  = require('./write-script');
+var licensePath = path.join(__dirname, '..', 'templates', 'LICENSE-for-js-file.txt');
 
 
 module.exports = function bundle(platform, debug, commitId) {
@@ -43,7 +44,6 @@ module.exports = function bundle(platform, debug, commitId) {
     output.push("// "  + commitId);
 
     // write header
-    var licensePath = path.join(__dirname, 'LICENSE-for-js-file.txt');
     output.push('/*', fs.readFileSync(licensePath, 'utf8'), '*/');
     output.push(';(function() {');
     output.push("var CORDOVA_JS_BUILD_LABEL = '"  + commitId + "';");

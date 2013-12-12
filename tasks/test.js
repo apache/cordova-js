@@ -19,11 +19,11 @@
 module.exports = function(grunt) {
     grunt.registerTask('_test', 'Runs test in node', function() {
         var done = this.async();
-        require('./../test/runner').node(done);
+        require('./lib/test-jsdom')(done);
     });
 
     grunt.registerTask('_btest', 'Runs tests in the browser', function() {
-        require('./../test/runner').browser();
+        require('./lib/test-browser')();
         this.async(); // never finish.
     });
 }
