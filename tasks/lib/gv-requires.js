@@ -23,7 +23,7 @@ fs   = require('fs')
 path = require('path')
 
 //------------------------------------------------------------------------------
-process.chdir(path.join(__dirname, ".."))
+//process.chdir(path.join(__dirname, ".."))
 
 var platforms = getPlatforms()
 
@@ -46,7 +46,7 @@ for (var i=0; i<platforms.length; i++) {
 
 //------------------------------------------------------------------------------
 function getPlatforms() {
-    var entries = fs.readdirSync("pkg")
+    var entries = fs.readdirSync(path.join(__dirname, '..', '..', "pkg"))
     
     var platforms = []
     
