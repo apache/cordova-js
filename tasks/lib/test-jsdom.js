@@ -24,7 +24,7 @@ var path             = require('path');
 var fs               = require('fs');
 var collect          = require('./collect');
 var jas              = require("./../vendor/jasmine/jasmine");
-var TerminalReporter = require('./reporter').TerminalReporter;
+var TerminalReporter = require('./test-reporter').TerminalReporter;
 var testLibName      = path.join(__dirname, '..', '..', 'pkg', 'cordova.test.js')
 var testLib          = fs.readFileSync(testLibName, 'utf8')
 
