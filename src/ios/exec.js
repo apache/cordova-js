@@ -29,11 +29,17 @@ var cordova = require('cordova'),
     channel = require('cordova/channel'),
     utils = require('cordova/utils'),
     base64 = require('cordova/base64'),
+    // XHR mode does not work on iOS 4.2, so default to IFRAME_NAV for such devices.
+    // XHR mode's main advantage is working around a bug in -webkit-scroll, which
+    // doesn't exist in 4.X devices anyways.
+    // HASH_* modes are newer and better in every way :)
     jsToNativeModes = {
         IFRAME_NAV: 0,
         XHR_NO_PAYLOAD: 1,
         XHR_WITH_PAYLOAD: 2,
-        XHR_OPTIONAL_PAYLOAD: 3
+        XHR_OPTIONAL_PAYLOAD: 3,
+        HASH_NO_PAYLOAD: 4,
+        HASH_OPTIONAL_PAYLOAD: 5
     },
     bridgeMode,
     execIframe,
@@ -42,6 +48,9 @@ var cordova = require('cordova'),
     vcHeaderValue = null,
     commandQueue = [], // Contains pending JS->Native messages.
     isInContextOfEvalJs = 0;
+
+// TODO: Play with this number.
+var MAX_HASH_PAYLOAD_LENGTH = 4000;
 
 function createExecIframe() {
     var iframe = document.createElement("iframe");
@@ -54,13 +63,13 @@ function shouldBundleCommandJson() {
     if (bridgeMode == jsToNativeModes.XHR_WITH_PAYLOAD) {
         return true;
     }
-    if (bridgeMode == jsToNativeModes.XHR_OPTIONAL_PAYLOAD) {
+    if (bridgeMode == jsToNativeModes.XHR_OPTIONAL_PAYLOAD || jsToNativeModes.HASH_OPTIONAL_PAYLOAD) {
         var payloadLength = 0;
         for (var i = 0; i < commandQueue.length; ++i) {
             payloadLength += commandQueue[i].length;
         }
         // The value here was determined using the benchmark within CordovaLibApp on an iPad 3.
-        return payloadLength < 4500;
+        return payloadLength < (bridgeMode == jsToNativeModes.XHR_OPTIONAL_PAYLOAD ? 4500 : MAX_HASH_PAYLOAD_LENGTH);
     }
     return false;
 }
@@ -174,7 +183,10 @@ function iOSExec() {
     // Also, if there is already a command in the queue, then we've already
     // poked the native side, so there is no reason to do so again.
     if (!isInContextOfEvalJs && commandQueue.length == 1) {
-        if (bridgeMode != jsToNativeModes.IFRAME_NAV) {
+        switch (bridgeMode) {
+        case jsToNativeModes.XHR_NO_PAYLOAD:
+        case jsToNativeModes.XHR_WITH_PAYLOAD:
+        case jsToNativeModes.XHR_OPTIONAL_PAYLOAD:
             // This prevents sending an XHR when there is already one being sent.
             // This should happen only in rare circumstances (refer to unit tests).
             if (execXhr && execXhr.readyState != 4) {
@@ -195,7 +207,16 @@ function iOSExec() {
                 execXhr.setRequestHeader('cmds', iOSExec.nativeFetchMessages());
             }
             execXhr.send(null);
-        } else {
+            break;
+        case jsToNativeModes.HASH_NO_PAYLOAD:
+        case jsToNativeModes.HASH_OPTIONAL_PAYLOAD:
+            var hashValue = '%01';
+            if (shouldBundleCommandJson()) {
+                hashValue += iOSExec.nativeFetchMessages();
+            }
+            location.hash = hashValue;
+            break;
+        default:
             execIframe = execIframe || createExecIframe();
             execIframe.src = "gap://ready";
         }
