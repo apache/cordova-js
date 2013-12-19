@@ -60,10 +60,10 @@ function createExecIframe() {
 }
 
 function shouldBundleCommandJson() {
-    if (bridgeMode === jsToNativeModes.XHR_WITH_PAYLOAD) {
+    if (bridgeMode == jsToNativeModes.XHR_WITH_PAYLOAD) {
         return true;
     }
-    if (bridgeMode === jsToNativeModes.XHR_OPTIONAL_PAYLOAD || bridgeMode === jsToNativeModes.HASH_OPTIONAL_PAYLOAD) {
+    if (bridgeMode == jsToNativeModes.XHR_OPTIONAL_PAYLOAD || jsToNativeModes.HASH_OPTIONAL_PAYLOAD) {
         var payloadLength = 0;
         for (var i = 0; i < commandQueue.length; ++i) {
             payloadLength += commandQueue[i].length;
@@ -124,8 +124,11 @@ function convertMessageToArgsNativeToJs(message) {
 }
 
 function iOSExec() {
+    // XHR mode does not work on iOS 4.2, so default to IFRAME_NAV for such devices.
+    // XHR mode's main advantage is working around a bug in -webkit-scroll, which
+    // doesn't exist in 4.X devices anyways.
     if (bridgeMode === undefined) {
-        bridgeMode = jsToNativeModes.HASH_OPTIONAL_PAYLOAD;
+        bridgeMode = navigator.userAgent.indexOf(' 4_') == -1 ? jsToNativeModes.XHR_NO_PAYLOAD : jsToNativeModes.IFRAME_NAV;
     }
 
     var successCallback, failCallback, service, action, actionArgs, splitCommand;
