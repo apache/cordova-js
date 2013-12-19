@@ -60,10 +60,10 @@ function createExecIframe() {
 }
 
 function shouldBundleCommandJson() {
-    if (bridgeMode == jsToNativeModes.XHR_WITH_PAYLOAD) {
+    if (bridgeMode === jsToNativeModes.XHR_WITH_PAYLOAD) {
         return true;
     }
-    if (bridgeMode == jsToNativeModes.XHR_OPTIONAL_PAYLOAD || jsToNativeModes.HASH_OPTIONAL_PAYLOAD) {
+    if (bridgeMode === jsToNativeModes.XHR_OPTIONAL_PAYLOAD || bridgeMode === jsToNativeModes.HASH_OPTIONAL_PAYLOAD) {
         var payloadLength = 0;
         for (var i = 0; i < commandQueue.length; ++i) {
             payloadLength += commandQueue[i].length;
