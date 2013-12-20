@@ -22,21 +22,29 @@
 /**
  * Creates a gap bridge iframe used to notify the native code about queued
  * commands.
- *
- * @private
  */
 var cordova = require('cordova'),
     channel = require('cordova/channel'),
     utils = require('cordova/utils'),
     base64 = require('cordova/base64'),
+    // XHR mode does not work on iOS 4.2.
+    // XHR mode's main advantage is working around a bug in -webkit-scroll, which
+    // doesn't exist only on iOS 5.x devices.
+    // IFRAME_NAV is the fastest.
+    // IFRAME_HASH could be made to enable synchronous bridge calls if we wanted this feature.
     jsToNativeModes = {
         IFRAME_NAV: 0,
         XHR_NO_PAYLOAD: 1,
         XHR_WITH_PAYLOAD: 2,
-        XHR_OPTIONAL_PAYLOAD: 3
+        XHR_OPTIONAL_PAYLOAD: 3,
+        IFRAME_HASH_NO_PAYLOAD: 4,
+        // Bundling the payload turns out to be slower. Probably since it has to be URI encoded / decoded.
+        IFRAME_HASH_WITH_PAYLOAD: 5
     },
     bridgeMode,
     execIframe,
+    execHashIframe,
+    hashToggle = 1,
     execXhr,
     requestCount = 0,
     vcHeaderValue = null,
@@ -50,11 +58,18 @@ function createExecIframe() {
     return iframe;
 }
 
+function createHashIframe() {
+    var ret = createExecIframe();
+    // Hash changes don't work on about:blank, so switch it to file:///.
+    ret.contentWindow.history.replaceState(null, null, 'file:///#');
+    return ret;
+}
+
 function shouldBundleCommandJson() {
-    if (bridgeMode == jsToNativeModes.XHR_WITH_PAYLOAD) {
+    if (bridgeMode === jsToNativeModes.XHR_WITH_PAYLOAD) {
         return true;
     }
-    if (bridgeMode == jsToNativeModes.XHR_OPTIONAL_PAYLOAD) {
+    if (bridgeMode === jsToNativeModes.XHR_OPTIONAL_PAYLOAD) {
         var payloadLength = 0;
         for (var i = 0; i < commandQueue.length; ++i) {
             payloadLength += commandQueue[i].length;
@@ -120,6 +135,7 @@ function iOSExec() {
     // doesn't exist in 4.X devices anyways.
     if (bridgeMode === undefined) {
         bridgeMode = navigator.userAgent.indexOf(' 4_') == -1 ? jsToNativeModes.XHR_NO_PAYLOAD : jsToNativeModes.IFRAME_NAV;
+        bridgeMode = jsToNativeModes.XHR_NO_PAYLOAD;
     }
 
     var successCallback, failCallback, service, action, actionArgs, splitCommand;
@@ -174,7 +190,10 @@ function iOSExec() {
     // Also, if there is already a command in the queue, then we've already
     // poked the native side, so there is no reason to do so again.
     if (!isInContextOfEvalJs && commandQueue.length == 1) {
-        if (bridgeMode != jsToNativeModes.IFRAME_NAV) {
+        switch (bridgeMode) {
+        case jsToNativeModes.XHR_NO_PAYLOAD:
+        case jsToNativeModes.XHR_WITH_PAYLOAD:
+        case jsToNativeModes.XHR_OPTIONAL_PAYLOAD:
             // This prevents sending an XHR when there is already one being sent.
             // This should happen only in rare circumstances (refer to unit tests).
             if (execXhr && execXhr.readyState != 4) {
@@ -195,8 +214,28 @@ function iOSExec() {
                 execXhr.setRequestHeader('cmds', iOSExec.nativeFetchMessages());
             }
             execXhr.send(null);
-        } else {
+            break;
+        case jsToNativeModes.IFRAME_HASH_NO_PAYLOAD:
+        case jsToNativeModes.IFRAME_HASH_WITH_PAYLOAD:
+            execHashIframe = execHashIframe || createHashIframe();
+            // Check if they've removed it from the DOM, and put it back if so.
+            if (!execHashIframe.contentWindow) {
+                execHashIframe = createHashIframe();
+            }
+            // The delegate method is called only when the hash changes, so toggle it back and forth.
+            hashToggle = hashToggle ^ 3;
+            var hashValue = '%0' + hashToggle;
+            if (bridgeMode === jsToNativeModes.IFRAME_HASH_WITH_PAYLOAD) {
+                hashValue += iOSExec.nativeFetchMessages();
+            }
+            execHashIframe.contentWindow.location.hash = hashValue;
+            break;
+        default:
             execIframe = execIframe || createExecIframe();
+            // Check if they've removed it from the DOM, and put it back if so.
+            if (!execIframe.contentWindow) {
+                execIframe = createExecIframe();
+            }
             execIframe.src = "gap://ready";
         }
     }
