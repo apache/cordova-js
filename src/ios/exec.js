@@ -130,12 +130,11 @@ function convertMessageToArgsNativeToJs(message) {
 }
 
 function iOSExec() {
-    // XHR mode does not work on iOS 4.2, so default to IFRAME_NAV for such devices.
-    // XHR mode's main advantage is working around a bug in -webkit-scroll, which
-    // doesn't exist in 4.X devices anyways.
+    // Use XHR for iOS 5 to work around a bug in -webkit-scroll.
+    // Use IFRAME_NAV elsewhere since it's faster and XHR bridge
+    // seems to have bugs in newer OS's (CB-3900, CB-3359, CB-5457, CB-4970, CB-4998, CB-5134)
     if (bridgeMode === undefined) {
-        bridgeMode = navigator.userAgent.indexOf(' 4_') == -1 ? jsToNativeModes.XHR_NO_PAYLOAD : jsToNativeModes.IFRAME_NAV;
-        bridgeMode = jsToNativeModes.XHR_NO_PAYLOAD;
+        bridgeMode = navigator.userAgent.indexOf(' 5_') == -1 ? jsToNativeModes.IFRAME_NAV: jsToNativeModes.XHR_NO_PAYLOAD;
     }
 
     var successCallback, failCallback, service, action, actionArgs, splitCommand;
