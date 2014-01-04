@@ -166,6 +166,9 @@ function iOSExec() {
             return;
         } catch (e) {}
     }
+    
+    // If actionArgs is not provided, default to an empty array
+    actionArgs = actionArgs || [];
 
     // Register the callbacks and add the callbackId to the positional
     // arguments if given.
