@@ -38,7 +38,7 @@ module.exports = function(grunt) {
             options: {
                 jshintrc: '.jshintrc',
             },
-            src: [ 'src/**/*.js' ]
+            src: ['src/**/*.js', '!src/test/androidexec.js', '!src/test/iosexec.js']
         },
     });
 
