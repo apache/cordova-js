@@ -33,6 +33,9 @@ module.exports = function(grunt) {
             "ubuntu": {},
             "browser": {}
         },
+        "compile-browserify": {
+            "ios": {}
+        },
         clean: ['pkg'],
         jshint: {
             options: {
