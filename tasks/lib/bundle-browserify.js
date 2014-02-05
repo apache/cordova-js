@@ -55,6 +55,8 @@ module.exports = function bundle(platform, debug, commitId) {
     b.transform(require_tr);
 
     b.add(path.join(root, 'src', platform, 'exec.js'));
+    
+    b.add(path.join(root, 'src', platform, 'platform.js'));
 
     b.add(path.join(root, 'src', 'scripts', 'bootstrap.js'));
 

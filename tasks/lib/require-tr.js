@@ -43,11 +43,18 @@ function _updateRequires(code) {
         //fs.appendFileSync('/tmp/foo', JSON.stringify(node.args[0]) + "###\n");
         if(node.args.length === 1 && 
            node.args[0].value !== undefined &&
-           node.args[0].value.indexOf("cordova") === 0){
+           node.args[0].value.indexOf("cordova") === 0) {
+          // cordova.js
           if(node.args[0].value === "cordova") {
             node.args[0].value = path.join(root, "src", "cordova");
+          // android and amazon-fireos
+          } else if(node.args[0].value.match(/cordova\/(android|amazon-fireos)\/(.+)/)) {
+            node.args[0].value = node.args[0].value.replace(/cordova\/(android|amazon-fireos)\/(.+)/,
+                                 path.join(root, "src", "$1", "android", "$2"));
+          // everything else
           } else if(node.args[0].value.match(/cordova\/(.+)/)) {
-            node.args[0].value = node.args[0].value.replace(/cordova\/(.+)/, path.join(root, "src", "common", "$1"));
+            node.args[0].value = node.args[0].value.replace(/cordova\/(.+)/,
+                                 path.join(root, "src", "common", "$1"));
           }
         }
       }
