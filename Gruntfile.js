@@ -34,6 +34,8 @@ module.exports = function(grunt) {
             "browser": {}
         },
         "compile-browserify": {
+            "amazon-fireos": {},
+            "android": {},
             "ios": {}
         },
         clean: ['pkg'],
