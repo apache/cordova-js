@@ -53,18 +53,25 @@ module.exports = function (success, fail, service, action, args) {
             cordova.callbacks[callbackId] = {success: success, fail: fail};
         }
         try {
-            onSuccess = function (result) {
-                cordova.callbackSuccess(callbackId,
-                        {
-                        status: cordova.callbackStatus.OK,
-                        message: result
+            // callbackOptions param represents additional optional parameters command could pass back, like keepCallback or
+            // custom callbackId, for example {callbackId: id, keepCallback: true, status: cordova.callbackStatus.JSON_EXCEPTION }
+            // CB-5806 [Windows8] Add keepCallback support to proxy
+            onSuccess = function (result, callbackOptions) {
+                callbackOptions = callbackOptions || {};
+                cordova.callbackSuccess(callbackOptions.callbackId || callbackId,
+                    {
+                        status: callbackOptions.status || cordova.callbackStatus.OK,
+                        message: result,
+                        keepCallback: callbackOptions.keepCallback || false
                     });
             };
-            onError = function (err) {
-                cordova.callbackError(callbackId,
-                        {
-                        status: cordova.callbackStatus.ERROR,
-                        message: err
+            onError = function (err, callbackOptions) {
+                callbackOptions = callbackOptions || {};
+                cordova.callbackError(callbackOptions.callbackId || callbackId,
+                    {
+                        status: callbackOptions.status || cordova.callbackStatus.ERROR,
+                        message: err,
+                        keepCallback: callbackOptions.keepCallback || false
                     });
             };
             proxy(onSuccess, onError, args);
