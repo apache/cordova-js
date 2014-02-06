@@ -24,7 +24,8 @@ var computeCommitId = require('./compute-commit-id');
 
 module.exports = function generate(platform, useWindowsLineEndings, callback) {
     computeCommitId(function(commitId) {
-        var outFile, outFileStream;
+        var outReleaseFile, outReleaseFileStream,
+            outDebugFile, outDebugFileStream;
         var time = new Date().valueOf();
 
         var libraryRelease = bundle(platform, false, commitId);
@@ -32,28 +33,31 @@ module.exports = function generate(platform, useWindowsLineEndings, callback) {
        // if(useWindowsLineEndings) {
        //     libraryRelease = "\ufeff" + libraryRelease.split(/\r?\n/).join("\r\n");
        // }
-        //var libraryDebug   = bundle(platform, true, commitId);
+        var libraryDebug   = bundle(platform, true, commitId);
 
-        time = new Date().valueOf() - time;
         if (!fs.existsSync('pkg')) {
             fs.mkdirSync('pkg');
         }
-       // if(!fs.existsSync('pkg/debug')) {
-       //     fs.mkdirSync('pkg/debug');
-       // }
-        //libraryRelease.bundle().pipe(process.stdout);
+        if(!fs.existsSync('pkg/debug')) {
+            fs.mkdirSync('pkg/debug');
+        }
 
-        outFile = path.join('pkg', 'cordova.' + platform + '.js');
-        outFileStream = fs.createWriteStream(outFile);
-        libraryRelease.bundle().pipe(outFileStream);
+        outReleaseFile = path.join('pkg', 'cordova.' + platform + '.js');
+        outReleaseFileStream = fs.createWriteStream(outReleaseFile);
+        libraryRelease.bundle().pipe(outReleaseFileStream);
 
         libraryRelease.bundle().on('end', function() {
-          console.log('generated cordova.' + platform + '.js @ ' + commitId + ' in ' + time + 'ms');
+          var newtime = new Date().valueOf() - time;
+          console.log('generated cordova.' + platform + '.js @ ' + commitId + ' in ' + newtime + 'ms');
           callback();
         });
 
-       // outFile = path.join('pkg', 'debug', 'cordova.' + platform + '-debug.js');
-       // outFileStream = fs.createWriteStream(outFile);
-       // libraryDebug.bundle().pipe(outFileStream);
+        outDebugFile = path.join('pkg', 'debug', 'cordova.' + platform + '-debug.js');
+        outDebugFileStream = fs.createWriteStream(outDebugFile);
+        libraryDebug.bundle().on('end', function() {
+          var newtime = new Date().valueOf() - time;
+          console.log('generated cordova.' + platform + '-debug.js @ ' + commitId + ' in ' + newtime + 'ms');
+          callback();
+        });
     });
 }
