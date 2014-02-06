@@ -26,7 +26,7 @@ var root         = path.join(__dirname, '..', '..')
 
 module.exports = function bundle(platform, debug, commitId) {
     // FIXME: need to find a way to void ignore missing
-    var b = browserify();
+    var b = browserify({debug: debug});
     // XXX plugin_list is not present at this stage 
     b.ignore(path.join(root, 'src', 'common', 'plugin_list'));
 
