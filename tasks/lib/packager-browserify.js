@@ -29,9 +29,9 @@ module.exports = function generate(platform, useWindowsLineEndings, callback) {
 
         var libraryRelease = bundle(platform, false, commitId);
         // if we are using windows line endings, we will also add the BOM
-        if(useWindowsLineEndings) {
-            libraryRelease = "\ufeff" + libraryRelease.split(/\r?\n/).join("\r\n");
-        }
+       // if(useWindowsLineEndings) {
+       //     libraryRelease = "\ufeff" + libraryRelease.split(/\r?\n/).join("\r\n");
+       // }
         //var libraryDebug   = bundle(platform, true, commitId);
 
         time = new Date().valueOf() - time;
