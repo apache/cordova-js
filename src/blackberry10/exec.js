@@ -118,9 +118,7 @@ module.exports = function (success, fail, service, action, args, sync) {
             }
         }
 
-        sync = false || arguments[5];
-
-        if (!sync) {
+        if (sync !== undefined && !sync) {
             request.makeAsyncCall();
             return;
         }
