@@ -1,21 +1,21 @@
 /*
- * Licensed to the Apache Software Foundation (ASF
- * or more contributor license agreements.  See th
- * distributed with this work for additional infor
- * regarding copyright ownership.  The ASF license
- * to you under the Apache License, Version 2.0 (t
- * "License"); you may not use this file except in
- * with the License.  You may obtain a copy of the
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
  *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to 
- * software distributed under the License is distr
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS
- * KIND, either express or implied.  See the Licen
- * specific language governing permissions and lim
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
  * under the License.
- */
+*/
 var fs              = require('fs');
 var path            = require('path');
 var bundle          = require('./bundle');
@@ -33,7 +33,7 @@ module.exports = function generate(platform, useWindowsLineEndings, callback) {
             libraryRelease = "\ufeff" + libraryRelease.split(/\r?\n/).join("\r\n");
         }
         var libraryDebug   = bundle(platform, true, commitId);
-        
+
         time = new Date().valueOf() - time;
         if (!fs.existsSync('pkg')) {
             fs.mkdirSync('pkg');
@@ -44,10 +44,10 @@ module.exports = function generate(platform, useWindowsLineEndings, callback) {
 
         outFile = path.join('pkg', 'cordova.' + platform + '.js');
         fs.writeFileSync(outFile, libraryRelease, 'utf8');
-        
+
         outFile = path.join('pkg', 'debug', 'cordova.' + platform + '-debug.js');
         fs.writeFileSync(outFile, libraryDebug, 'utf8');
-        
+
         console.log('generated cordova.' + platform + '.js @ ' + commitId + ' in ' + time + 'ms');
         callback();
     });

@@ -39,7 +39,7 @@ function collectFiles(dir, id) {
     })
 
     entries.forEach(function(entry) {
-        var moduleId = path.join(id, entry)
+        var moduleId = (id ? id + '/' : '') + entry;
         var fileName = path.join(dir, entry)
         
         var stat = fs.statSync(fileName)

@@ -25,7 +25,7 @@ describe('iOS exec', function () {
     var VC_ADDR = '1234';
 
     var cordova = require('cordova');
-    var exec = require('cordova/iosexec');
+    var exec = require('cordova/ios/exec');
     var mockxhr = require('cordova/mockxhr');
     var winSpy = jasmine.createSpy('win');
     var failSpy = jasmine.createSpy('fail');
