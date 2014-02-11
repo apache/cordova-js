@@ -53,11 +53,9 @@
       "email": "shazron@apache.org"
     }
   ],
-  "dependencies": {
-    "jsdom": "0.8.2",
-    "connect": "1.8.5"
-  },
   "devDependencies": {
+    "jsdom": "0.8.2",
+    "connect": "1.8.5",
     "grunt": "~0.4.1",
     "grunt-contrib-clean": "~0.4.1",
     "grunt-contrib-jshint": "~0.6.0"
