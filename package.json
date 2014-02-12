@@ -54,7 +54,7 @@
     }
   ],
   "devDependencies": {
-    "jsdom": "0.8.2",
+    "jsdom-nogyp": "0.8.3",
     "connect": "1.8.5",
     "grunt": "~0.4.1",
     "grunt-contrib-clean": "~0.4.1",

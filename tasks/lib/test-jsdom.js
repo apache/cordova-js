@@ -18,7 +18,6 @@
  * under the License.
  *
 */
-var jsdom, document, window;
 
 var path             = require('path');
 var fs               = require('fs');
@@ -28,16 +27,9 @@ var TerminalReporter = require('./test-reporter').TerminalReporter;
 var testLibName      = path.join(__dirname, '..', '..', 'pkg', 'cordova.test.js')
 var testLib          = fs.readFileSync(testLibName, 'utf8')
 
-try {
-    jsdom    = require("jsdom").jsdom;
-    document = jsdom(null, null, { url: 'http://jsdomtest.info/a?b#c' });
-    window   = document.createWindow();
-} 
-catch (e) {
-    var err = "can't run tests in node: ";
-    err += "run grunt btest instead, or install jsdom via: npm install";
-    throw new Error(err);
-}
+var jsdom    = require("jsdom-nogyp").jsdom;
+var document = jsdom(null, null, { url: 'http://jsdomtest.info/a?b#c' });
+var window   = document.createWindow();
 
 module.exports = function(callback) {
 
