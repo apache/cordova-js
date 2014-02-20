@@ -22,10 +22,11 @@ var bundle          = require('./bundle-browserify');
 var computeCommitId = require('./compute-commit-id');
 
 
-module.exports = function generate(platform, useWindowsLineEndings, callback) {
+module.exports = function generate(platform, useWindowsLineEndings, done) {
     computeCommitId(function(commitId) {
         var outReleaseFile, outReleaseFileStream,
-            outDebugFile, outDebugFileStream;
+            outDebugFile, outDebugFileStream,
+            releaseBundle, debugBundle;
         var time = new Date().valueOf();
 
         var libraryRelease = bundle(platform, false, commitId);
@@ -44,20 +45,23 @@ module.exports = function generate(platform, useWindowsLineEndings, callback) {
 
         outReleaseFile = path.join('pkg', 'cordova.' + platform + '.js');
         outReleaseFileStream = fs.createWriteStream(outReleaseFile);
-        libraryRelease.bundle().pipe(outReleaseFileStream);
+        releaseBundle = libraryRelease.bundle();
+        releaseBundle.pipe(outReleaseFileStream);
 
-        libraryRelease.bundle().on('end', function() {
+        releaseBundle.on('end', function() {
           var newtime = new Date().valueOf() - time;
           console.log('generated cordova.' + platform + '.js @ ' + commitId + ' in ' + newtime + 'ms');
-          callback();
+          done();
         });
 
         outDebugFile = path.join('pkg', 'debug', 'cordova.' + platform + '-debug.js');
         outDebugFileStream = fs.createWriteStream(outDebugFile);
-        libraryDebug.bundle().on('end', function() {
+        debugBundle = libraryDebug.bundle();
+        debugBundle.pipe(outDebugFileStream);
+
+        outDebugFileStream.on('end', function() {
           var newtime = new Date().valueOf() - time;
           console.log('generated cordova.' + platform + '-debug.js @ ' + commitId + ' in ' + newtime + 'ms');
-          callback();
         });
     });
 }
