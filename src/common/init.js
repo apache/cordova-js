@@ -103,9 +103,13 @@ modulemapper.clobbers('cordova/exec', 'Cordova.exec');
 // Call the platform-specific initialization.
 platform.bootstrap && platform.bootstrap();
 
-pluginloader.load(function() {
-    channel.onPluginsReady.fire();
-});
+// Wrap in a setTimeout to support the use-case of having plugin JS appended to cordova.js.
+// The delay allows the attached modules to be defined before the plugin loader looks for them.
+setTimeout(function() {
+    pluginloader.load(function() {
+        channel.onPluginsReady.fire();
+    });
+}, 0);
 
 /**
  * Create all cordova objects once native side is ready.
