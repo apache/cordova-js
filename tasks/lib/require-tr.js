@@ -35,15 +35,16 @@ function _updateRequires(code) {
   var ast = UglifyJS.parse(code);
 
   var walker = new UglifyJS.TreeWalker(function(node) {
+
     // check all function calls
     if(node instanceof UglifyJS.AST_Call) {
       // check if function call is a require('module') call
       if(node.expression.name === "require") {
         // make sure require only has one argument and that it starts with cordova (old style require.js) 
-        //fs.appendFileSync('/tmp/foo', JSON.stringify(node.args[0]) + "###\n");
         if(node.args.length === 1 && 
            node.args[0].value !== undefined &&
            node.args[0].value.indexOf("cordova") === 0) {
+          //fs.appendFileSync('/tmp/foo', JSON.stringify(node.args[0].value) + "\n###\n");
           // cordova.js
           if(node.args[0].value === "cordova") {
             node.args[0].value = path.join(root, "src", "cordova");
@@ -51,6 +52,11 @@ function _updateRequires(code) {
           } else if(node.args[0].value.match(/cordova\/(android|amazon-fireos)\/(.+)/)) {
             node.args[0].value = node.args[0].value.replace(/cordova\/(android|amazon-fireos)\/(.+)/,
                                  path.join(root, "src", "$1", "android", "$2"));
+          // replace common exec/platform with the platform's exec/platform
+          } else if(node.args[0].value.match(/cordova\/(platform|exec)$/)) {
+            //fs.appendFileSync('/tmp/foo', node.args[0].value + "\n" +module.exports.platform + "\n");
+            node.args[0].value = node.args[0].value.replace(/cordova\/(platform|exec)/,
+                                 path.join(root, "src", module.exports.platform, "$1"));
           // everything else
           } else if(node.args[0].value.match(/cordova\/(.+)/)) {
             node.args[0].value = node.args[0].value.replace(/cordova\/(.+)/,
@@ -71,18 +77,22 @@ function _updateRequires(code) {
 }
 
 
-module.exports = function(file) {
-  var data = '';
+module.exports = {
 
-  function write(buf) {
-    data += buf;
-  }
+  transform: function(file) {
+    var data = '';
 
-  function end() {
-    //fs.appendFileSync('/tmp/foo', _updateRequires(data));
-    this.queue(_updateRequires(data));
-    this.queue(null);
-  }
- 
-  return through(write, end);
+    function write(buf) {
+      data += buf;
+    }
+
+    function end() {
+      //fs.appendFileSync('/tmp/foo', _updateRequires(data));
+      this.queue(_updateRequires(data));
+      this.queue(null);
+    }
+   
+    return through(write, end);
+  },
+  platform: ""
 }
