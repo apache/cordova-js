@@ -25,34 +25,13 @@ var root         = path.join(__dirname, '..', '..')
 
 
 module.exports = function bundle(platform, debug, commitId) {
+    require_tr.platform = platform;
     // FIXME: need to find a way to void ignore missing
     var b = browserify({debug: debug});
     // XXX plugin_list is not present at this stage 
     b.ignore(path.join(root, 'src', 'common', 'plugin_list'));
 
-   // if (platform === 'test') {
-   //     // FIXME why does 'test' resolve a bunch of android stuff?! 
-   //     var testFilesPath = path.join('src', 'android', 'android');
-   //     copyProps(modules, collectFiles(testFilesPath, 'android/'));
-   // }
-
-   // var output = [];
-	
-   // output.push("// Platform: " + platform);
-   // output.push("// "  + commitId);
-
-   // // write header
-   // output.push('/*', fs.readFileSync(licensePath, 'utf8'), '*/');
-   // output.push(';(function() {');
-   // output.push("var CORDOVA_JS_BUILD_LABEL = '"  + commitId + "';");
-
-   // // write initial scripts
-   // if (!scripts['require']) {
-   //     throw new Error("didn't find a script for 'require'")
-   // }
-    
-   // writeScript(output, scripts['require'], debug)
-    b.transform(require_tr);
+    b.transform(require_tr.transform);
 
     b.add(path.join(root, 'src', platform, 'exec.js'));
     
