@@ -30,6 +30,37 @@ var through = require('through');
 var UglifyJS = require('uglify-js');
 var root = fs.realpathSync(path.join(__dirname, '..', '..'));
 
+
+var requireTr = {
+
+  transform: function(file) {
+    var data = '';
+
+    function write(buf) {
+      data += buf;
+    }
+
+    function end() {
+      // getting rid of define and require properties of cordova
+     // if(file.match(/cordova.js$/)) {
+     //   data = data.replace(/ *(define:define|require:require),\n/, '');
+     // }
+      this.queue(_updateRequires(data));
+      this.queue(null);
+    }
+   
+    return through(write, end);
+  },
+  getSymbolList: function() {
+    return this.symbolList;
+  },
+  platform: null,
+  symbolList: []
+}
+
+/*
+ * visits AST and modifies all the require('cordova/*')
+ */
 function _updateRequires(code) {
   
   var ast = UglifyJS.parse(code);
@@ -39,28 +70,32 @@ function _updateRequires(code) {
     // check all function calls
     if(node instanceof UglifyJS.AST_Call) {
       // check if function call is a require('module') call
-      if(node.expression.name === "require") {
+      if(node.expression.name === "require" && node.args.length === 1) {
+        var module = node.args[0].value;
         // make sure require only has one argument and that it starts with cordova (old style require.js) 
-        if(node.args.length === 1 && 
-           node.args[0].value !== undefined &&
-           node.args[0].value.indexOf("cordova") === 0) {
-          //fs.appendFileSync('/tmp/foo', JSON.stringify(node.args[0].value) + "\n###\n");
-          // cordova.js
-          if(node.args[0].value === "cordova") {
-            node.args[0].value = path.join(root, "src", "cordova");
-          // android and amazon-fireos
-          } else if(node.args[0].value.match(/cordova\/(android|amazon-fireos)\/(.+)/)) {
-            node.args[0].value = node.args[0].value.replace(/cordova\/(android|amazon-fireos)\/(.+)/,
-                                 path.join(root, "src", "$1", "android", "$2"));
-          // replace common exec/platform with the platform's exec/platform
-          } else if(node.args[0].value.match(/cordova\/(platform|exec)$/)) {
-            //fs.appendFileSync('/tmp/foo', node.args[0].value + "\n" +module.exports.platform + "\n");
-            node.args[0].value = node.args[0].value.replace(/cordova\/(platform|exec)/,
-                                 path.join(root, "src", module.exports.platform, "$1"));
-          // everything else
-          } else if(node.args[0].value.match(/cordova\/(.+)/)) {
-            node.args[0].value = node.args[0].value.replace(/cordova\/(.+)/,
-                                 path.join(root, "src", "common", "$1"));
+        if(module !== undefined &&
+           module.indexOf("cordova") === 0) {
+          
+          // adding symbolList bullcrap
+          if(requireTr.symbolList && requireTr.symbolList.indexOf(module) === -1) {
+            requireTr.symbolList.push(module);
+          }
+
+          // require('cordova') -> cordova.js
+          if(module === "cordova") {
+            node.args[0].value = path.join(root, "src", "cordova_b");
+          // android and amazon-fireos have some special require's
+          } else if(module.match(/cordova\/(android|amazon-fireos)\/(.+)/)) {
+            node.args[0].value = module.replace(/cordova\/(android|amazon-fireos)\/(.+)/,
+                                    path.join(root, "src", "$1", "android", "$2"));
+          // require('cordova/exec') and require('cordova/platform') -> platform's exec/platform
+          } else if(module.match(/cordova\/(platform|exec)$/)) {
+            node.args[0].value = module.replace(/cordova\/(platform|exec)/,
+                                                path.join(root, "src", requireTr.platform, "$1"));
+          // require('cordova/anything') should be under common/
+          } else if(module.match(/cordova\/(.+)/)) {
+            node.args[0].value = module.replace(/cordova\/(.+)/,
+                                    path.join(root, "src", "common", "$1"));
           }
         }
       }
@@ -77,22 +112,4 @@ function _updateRequires(code) {
 }
 
 
-module.exports = {
-
-  transform: function(file) {
-    var data = '';
-
-    function write(buf) {
-      data += buf;
-    }
-
-    function end() {
-      //fs.appendFileSync('/tmp/foo', _updateRequires(data));
-      this.queue(_updateRequires(data));
-      this.queue(null);
-    }
-   
-    return through(write, end);
-  },
-  platform: ""
-}
+module.exports = requireTr; 

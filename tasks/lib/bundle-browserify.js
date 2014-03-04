@@ -20,7 +20,6 @@ var fs           = require('fs');
 var path         = require('path');
 var browserify   = require('browserify');
 var require_tr   = require('./require-tr');
-var licensePath  = path.join(__dirname, '..', 'templates', 'LICENSE-for-js-file.txt');
 var root         = path.join(__dirname, '..', '..')
 
 
