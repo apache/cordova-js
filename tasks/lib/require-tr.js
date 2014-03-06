@@ -85,6 +85,10 @@ function _updateRequires(code) {
           if(module === "cordova") {
             node.args[0].value = path.join(root, "src", "cordova_b");
           // android and amazon-fireos have some special require's
+          }  else if(module.match(/cordova\/init/)) {
+            node.args[0].value = module.replace(/cordova\/init/,
+                                    path.join(root, "src", "common", "init_b"));
+          // require('cordova/exec') and require('cordova/platform') -> platform's exec/platform
           } else if(module.match(/cordova\/(android|amazon-fireos)\/(.+)/)) {
             node.args[0].value = module.replace(/cordova\/(android|amazon-fireos)\/(.+)/,
                                     path.join(root, "src", "$1", "android", "$2"));
