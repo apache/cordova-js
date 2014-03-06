@@ -89,7 +89,21 @@ describe('exec.processMessages', function () {
 
             exec(win1, null, 'Service', 'action', []);
             exec(win2, null, 'Service', 'action', []);
-            expect(winSpy3).toHaveBeenCalledWith('three');
+            waitsFor(function() { return winSpy3.wasCalled }, 200);
+            runs(function() {
+                expect(winSpy3).toHaveBeenCalledWith('three');
+            });
+        });
+        it('should process messages asynchronously', function() {
+            nativeApi.exec.andCallFake(function(service, action, callbackId, argsJson) {
+                return createCallbackMessage(true, false, 1, callbackId, 'stwo');
+            });
+
+            var winSpy = jasmine.createSpy('win');
+
+            exec(winSpy, null, 'Service', 'action', []);
+            expect(winSpy).not.toHaveBeenCalled();
+            waitsFor(function() { return winSpy.wasCalled }, 200);
         });
     });
 
