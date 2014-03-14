@@ -16,13 +16,12 @@
  * specific language governing permissions and lim
  * under the License.
  */
-var fs              = require('fs');
-var path            = require('path');
-var util            = require('util');
-var bundle          = require('./bundle-browserify');
-var computeCommitId = require('./compute-commit-id');
-var licensePath     = path.join(__dirname, '..', 'templates', 'LICENSE-for-js-file.txt');
-var require_tr   = require('./require-tr');
+var fs                 = require('fs');
+var path               = require('path');
+var util               = require('util');
+var bundle             = require('./bundle-browserify');
+var computeCommitId    = require('./compute-commit-id');
+var writeLicenseHeader = require('./write-license-header');
 
 
 module.exports = function generate(platform, useWindowsLineEndings, done) {
@@ -49,17 +48,10 @@ module.exports = function generate(platform, useWindowsLineEndings, done) {
         outReleaseFile = path.join('pkg', 'cordova.' + platform + '.js');
         outReleaseFileStream = fs.createWriteStream(outReleaseFile);
         
-        // some poppycock 
-        var licenseText = util.format("/*\n *%s\n */\n", fs.readFileSync(licensePath, 'utf8').replace(/\n/g, "\n *"));
+        // write license header
+        writeLicenseHeader(outReleaseFileStream, platform, commitId);
 
-        outReleaseFileStream.write("// Platform: " + platform + "\n", 'utf8');
-        outReleaseFileStream.write("// "  + commitId + "\n", 'utf8');
-        outReleaseFileStream.write(licenseText, 'utf8');
-        outReleaseFileStream.write("var CORDOVA_JS_BUILD_LABEL = '"  + commitId + "';\n", 'utf8');
-        outReleaseFileStream.write("var define = {moduleMap: []};\n", 'utf8');
-        
         releaseBundle = libraryRelease.bundle();
-        //console.log(libraryRelease.deps());
 
         releaseBundle.pipe(outReleaseFileStream);
 
