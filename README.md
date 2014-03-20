@@ -55,6 +55,8 @@ All of the build tasks can be run via the `grunt` node module. Install it global
 Then from the repository root run:
 
     grunt
+	
+For integration, see the 'Integration' section below.
 
 ## Known Issues
 
@@ -92,11 +94,11 @@ Final testing should always be done with the [Mobile Spec test application](http
 
 ## Cordova
 
-Build the js files by running jake as described above. Update each platform independently. For a given platform:
+Build the js files by running grunt as described above. Update each platform independently. For a given platform:
 
-Replace the cordova.js file in the cordova-<platform> directory with the newly generated cordova.<platform>.js file. If necessary, change the name of the new file to match that of the overwritten one.
+Replace the cordova.js file in the cordova-PLATFORM directory with the newly generated cordova.PLATFORM.js file. If necessary, change the name of the new file to match that of the overwritten one.
 
-Once the new js file has been added, any new projects created will use the updated js. To update an already existing project, directly replace the cordova-2.3.0.js file within the project's wwww/ folder with the generated cordova.<platform>.js. Make sure to change the file name to match the original.
+Once the new js file has been added, any new projects created will use the updated js. To update an already existing project, directly replace the cordova.js file within the project's www/ folder with the generated cordova.PLATFORM.js. Make sure to change the file name to match the original.
 
 # Adding a New Platform
 
