@@ -226,6 +226,4 @@ var cordova = {
         });
     }
 };
-window.cordova = cordova; 
-window.cordova.exec = require('cordova/exec');
-module.exports = cordova;
+window.cordova = module.exports = cordova;
