@@ -32,18 +32,18 @@ module.exports = function generate(platform, useWindowsLineEndings, done) {
         var time = new Date().valueOf();
 
         var libraryRelease = bundle(platform, false, commitId);
-        // if we are using windows line endings, we will also add the BOM
+       // if we are using windows line endings, we will also add the BOM
        // if(useWindowsLineEndings) {
        //     libraryRelease = "\ufeff" + libraryRelease.split(/\r?\n/).join("\r\n");
        // }
-        var libraryDebug   = bundle(platform, true, commitId);
+       // var libraryDebug   = bundle(platform, true, commitId);
 
         if (!fs.existsSync('pkg')) {
             fs.mkdirSync('pkg');
         }
-        if(!fs.existsSync('pkg/debug')) {
-            fs.mkdirSync('pkg/debug');
-        }
+       // if(!fs.existsSync('pkg/debug')) {
+       //     fs.mkdirSync('pkg/debug');
+       // }
 
         outReleaseFile = path.join('pkg', 'cordova.' + platform + '.js');
         outReleaseFileStream = fs.createWriteStream(outReleaseFile);
@@ -55,20 +55,20 @@ module.exports = function generate(platform, useWindowsLineEndings, done) {
 
         releaseBundle.pipe(outReleaseFileStream);
 
-        releaseBundle.on('end', function() {
+        outReleaseFileStream.on('finish', function() {
           var newtime = new Date().valueOf() - time;
           console.log('generated cordova.' + platform + '.js @ ' + commitId + ' in ' + newtime + 'ms');
           done();
         });
 
-        outDebugFile = path.join('pkg', 'debug', 'cordova.' + platform + '-debug.js');
-        outDebugFileStream = fs.createWriteStream(outDebugFile);
-        debugBundle = libraryDebug.bundle();
-        debugBundle.pipe(outDebugFileStream);
+       // outDebugFile = path.join('pkg', 'debug', 'cordova.' + platform + '-debug.js');
+       // outDebugFileStream = fs.createWriteStream(outDebugFile);
+       // debugBundle = libraryDebug.bundle();
+       // debugBundle.pipe(outDebugFileStream);
 
-        outDebugFileStream.on('end', function() {
-          var newtime = new Date().valueOf() - time;
-          console.log('generated cordova.' + platform + '-debug.js @ ' + commitId + ' in ' + newtime + 'ms');
-        });
+       // outDebugFileStream.on('end', function() {
+       //   var newtime = new Date().valueOf() - time;
+       //   console.log('generated cordova.' + platform + '-debug.js @ ' + commitId + ' in ' + newtime + 'ms');
+       // });
     });
 }
