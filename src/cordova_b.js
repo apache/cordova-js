@@ -226,4 +226,14 @@ var cordova = {
         });
     }
 };
+
+// FIXME hack: cordova iOS calls cordova.require()
+cordova.require = function(module) {
+  if(module === "cordova/exec") {
+    return cordova.exec;
+  }
+
+  return undefined;
+}
+
 window.cordova = module.exports = cordova;
