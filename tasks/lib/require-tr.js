@@ -51,15 +51,22 @@ var requireTr = {
    
     return through(write, end);
   },
-  getSymbolList: function() {
-    return this.symbolList;
+  getModules: function() {
+    return this.modules;
+  },
+  addModule: function(module) {
+    if(!module || !module.symbol || !module.path) {
+      throw new Error("Can't add module without a symbol and a path");
+    }
+    this.modules.push(module);
   },
   platform: null,
-  symbolList: []
+  modules: []
+    
 }
 
 /*
- * visits AST and modifies all the require('cordova/*')
+ * visits AST and modifies all the require('cordova/*') and require('org.apache.cordova.*')
  */
 function _updateRequires(code) {
   
@@ -84,11 +91,11 @@ function _updateRequires(code) {
           // require('cordova') -> cordova.js
           if(module === "cordova") {
             node.args[0].value = path.join(root, "src", "cordova_b");
-          // android and amazon-fireos have some special require's
+          // require('cordova/init') -> common/init
           }  else if(module.match(/cordova\/init/)) {
             node.args[0].value = module.replace(/cordova\/init/,
                                     path.join(root, "src", "common", "init_b"));
-          // require('cordova/exec') and require('cordova/platform') -> platform's exec/platform
+          // android and amazon-fireos have some special require's
           } else if(module.match(/cordova\/(android|amazon-fireos)\/(.+)/)) {
             node.args[0].value = module.replace(/cordova\/(android|amazon-fireos)\/(.+)/,
                                     path.join(root, "src", "$1", "android", "$2"));
@@ -100,6 +107,14 @@ function _updateRequires(code) {
           } else if(module.match(/cordova\/(.+)/)) {
             node.args[0].value = module.replace(/cordova\/(.+)/,
                                     path.join(root, "src", "common", "$1"));
+          }
+        } else if(module !== undefined && module.indexOf("org.apache.cordova") !== -1 ) {
+          var modules = requireTr.getModules();
+          for(var i = 0, j = modules.length ; i < j ; i++) {
+            if(module.match(modules[i].symbol)) {
+              node.args[0].value = modules[i].path;
+              break;
+            }
           }
         }
       }
