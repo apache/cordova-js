@@ -60,4 +60,18 @@ describe("base64", function () {
 
         expect(base64.fromArrayBuffer(arrayBuffer)).toBe(base64string);
     });
+
+    it("can decode a base64-encoded text string into an ArrayBuffer", function () {
+        var orig = 'Some Awesome Test This Is!',
+            base64string = typeof btoa != 'undefined' ? btoa(orig) : new Buffer(orig, 'binary').toString('base64');
+
+        var arrayBuffer = base64.toArrayBuffer(base64string);
+
+        var testString = "";
+        var view = new Uint8Array(arrayBuffer);
+        for (var i = 0; i < view.byteLength; i++) {
+            testString += String.fromCharCode(view[i]);
+        }
+        expect(testString).toEqual(orig);
+    });
 });
