@@ -33,11 +33,11 @@ module.exports = {
         var onWinJSReady = function () {
             var app = WinJS.Application;
             var checkpointHandler = function checkpointHandler() {
-                cordova.fireDocumentEvent('pause');
+                cordova.fireDocumentEvent('pause',null,true);
             };
 
             var resumingHandler = function resumingHandler() {
-                cordova.fireDocumentEvent('resume');
+                cordova.fireDocumentEvent('resume',null,true);
             };
 
             app.addEventListener("checkpoint", checkpointHandler);
@@ -52,8 +52,6 @@ module.exports = {
             scriptElem.src = "//Microsoft.WinJS.1.0/js/base.js";
             scriptElem.addEventListener("load", onWinJSReady);
             document.head.appendChild(scriptElem);
-
-            console.log("added WinJS ... ");
         }
         else {
             onWinJSReady();
