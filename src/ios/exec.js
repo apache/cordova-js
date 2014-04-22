@@ -166,7 +166,7 @@ function iOSExec() {
             return;
         } catch (e) {}
     }
-    
+
     // If actionArgs is not provided, default to an empty array
     actionArgs = actionArgs || [];
 
@@ -196,50 +196,63 @@ function iOSExec() {
         case jsToNativeModes.XHR_NO_PAYLOAD:
         case jsToNativeModes.XHR_WITH_PAYLOAD:
         case jsToNativeModes.XHR_OPTIONAL_PAYLOAD:
-            // This prevents sending an XHR when there is already one being sent.
-            // This should happen only in rare circumstances (refer to unit tests).
-            if (execXhr && execXhr.readyState != 4) {
-                execXhr = null;
-            }
-            // Re-using the XHR improves exec() performance by about 10%.
-            execXhr = execXhr || new XMLHttpRequest();
-            // Changing this to a GET will make the XHR reach the URIProtocol on 4.2.
-            // For some reason it still doesn't work though...
-            // Add a timestamp to the query param to prevent caching.
-            execXhr.open('HEAD', "/!gap_exec?" + (+new Date()), true);
-            if (!vcHeaderValue) {
-                vcHeaderValue = /.*\((.*)\)/.exec(navigator.userAgent)[1];
-            }
-            execXhr.setRequestHeader('vc', vcHeaderValue);
-            execXhr.setRequestHeader('rc', ++requestCount);
-            if (shouldBundleCommandJson()) {
-                execXhr.setRequestHeader('cmds', iOSExec.nativeFetchMessages());
-            }
-            execXhr.send(null);
+            pokeNativeViaXhr();
             break;
-        case jsToNativeModes.IFRAME_HASH_NO_PAYLOAD:
-        case jsToNativeModes.IFRAME_HASH_WITH_PAYLOAD:
-            execHashIframe = execHashIframe || createHashIframe();
-            // Check if they've removed it from the DOM, and put it back if so.
-            if (!execHashIframe.contentWindow) {
-                execHashIframe = createHashIframe();
-            }
-            // The delegate method is called only when the hash changes, so toggle it back and forth.
-            hashToggle = hashToggle ^ 3;
-            var hashValue = '%0' + hashToggle;
-            if (bridgeMode === jsToNativeModes.IFRAME_HASH_WITH_PAYLOAD) {
-                hashValue += iOSExec.nativeFetchMessages();
-            }
-            execHashIframe.contentWindow.location.hash = hashValue;
-            break;
-        default:
-            execIframe = execIframe || createExecIframe();
-            // Check if they've removed it from the DOM, and put it back if so.
-            if (!execIframe.contentWindow) {
-                execIframe = createExecIframe();
-            }
-            execIframe.src = "gap://ready";
+        default: // iframe-based.
+            pokeNativeViaIframe();
         }
+    }
+}
+
+function pokeNativeViaXhr() {
+    // This prevents sending an XHR when there is already one being sent.
+    // This should happen only in rare circumstances (refer to unit tests).
+    if (execXhr && execXhr.readyState != 4) {
+        execXhr = null;
+    }
+    // Re-using the XHR improves exec() performance by about 10%.
+    execXhr = execXhr || new XMLHttpRequest();
+    // Changing this to a GET will make the XHR reach the URIProtocol on 4.2.
+    // For some reason it still doesn't work though...
+    // Add a timestamp to the query param to prevent caching.
+    execXhr.open('HEAD', "/!gap_exec?" + (+new Date()), true);
+    if (!vcHeaderValue) {
+        vcHeaderValue = /.*\((.*)\)/.exec(navigator.userAgent)[1];
+    }
+    execXhr.setRequestHeader('vc', vcHeaderValue);
+    execXhr.setRequestHeader('rc', ++requestCount);
+    if (shouldBundleCommandJson()) {
+        execXhr.setRequestHeader('cmds', iOSExec.nativeFetchMessages());
+    }
+    execXhr.send(null);
+}
+
+function pokeNativeViaIframe() {
+    // CB-5488 - Don't attempt to create iframe before document.body is available.
+    if (!document.body) {
+        setTimeout(pokeNativeViaIframe);
+        return;
+    }
+    if (bridgeMode === jsToNativeModes.IFRAME_HASH_NO_PAYLOAD || bridgeMode === jsToNativeModes.IFRAME_HASH_WITH_PAYLOAD) {
+        execHashIframe = execHashIframe || createHashIframe();
+        // Check if they've removed it from the DOM, and put it back if so.
+        if (!execHashIframe.contentWindow) {
+            execHashIframe = createHashIframe();
+        }
+        // The delegate method is called only when the hash changes, so toggle it back and forth.
+        hashToggle = hashToggle ^ 3;
+        var hashValue = '%0' + hashToggle;
+        if (bridgeMode === jsToNativeModes.IFRAME_HASH_WITH_PAYLOAD) {
+            hashValue += iOSExec.nativeFetchMessages();
+        }
+        execHashIframe.contentWindow.location.hash = hashValue;
+    } else {
+        execIframe = execIframe || createExecIframe();
+        // Check if they've removed it from the DOM, and put it back if so.
+        if (!execIframe.contentWindow) {
+            execIframe = createExecIframe();
+        }
+        execIframe.src = "gap://ready";
     }
 }
 
