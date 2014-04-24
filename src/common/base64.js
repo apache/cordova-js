@@ -26,6 +26,16 @@ base64.fromArrayBuffer = function(arrayBuffer) {
     return uint8ToBase64(array);
 };
 
+base64.toArrayBuffer = function(str) {
+    var decodedStr = typeof atob != 'undefined' ? atob(str) : new Buffer(str,'base64').toString('binary');
+    var arrayBuffer = new ArrayBuffer(decodedStr.length);
+    var array = new Uint8Array(arrayBuffer);
+    for (var i=0, len=decodedStr.length; i < len; i++) {
+        array[i] = decodedStr.charCodeAt(i);
+    }
+    return arrayBuffer;
+};
+
 //------------------------------------------------------------------------------
 
 /* This code is based on the performance tests at http://jsperf.com/b64tests

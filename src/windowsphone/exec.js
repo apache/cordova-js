@@ -48,7 +48,7 @@ module.exports = function(success, fail, service, action, args) {
     for(var n = 0; n < args.length; n++)
     {
         // special case for ArrayBuffer which could not be stringified out of the box
-        if(args[n] instanceof ArrayBuffer)
+        if(typeof ArrayBuffer !== "undefined" && args[n] instanceof ArrayBuffer)
         {
             args[n] = base64.fromArrayBuffer(args[n]);
         }
