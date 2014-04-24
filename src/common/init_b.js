@@ -23,7 +23,7 @@ var channel = require('cordova/channel');
 var cordova = require('cordova');
 var platform = require('cordova/platform');
 
-var platformInitChannelsArray = [channel.onNativeReady];
+var platformInitChannelsArray = [channel.onDOMContentLoaded, channel.onNativeReady];
 
 // setting exec
 cordova.exec = require('cordova/exec');
