@@ -235,7 +235,6 @@ channel.createSticky('onNativeReady');
 channel.createSticky('onCordovaReady');
 
 // Event to indicate that all automatically loaded JS plugins are loaded and ready.
-// FIXME remove this
 channel.createSticky('onPluginsReady');
 
 // Event to indicate that Cordova is ready
