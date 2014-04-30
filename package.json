@@ -42,7 +42,7 @@
     },
     {
       "name": "Anis Kadri",
-      "email": ""
+      "email": "anis@apache.org"
     },
     {
       "name": "Dan Silivestru",
@@ -60,5 +60,10 @@
     "grunt": "~0.4.1",
     "grunt-contrib-clean": "~0.4.1",
     "grunt-contrib-jshint": "~0.6.0"
+  },
+  "dependencies": {
+    "uglify-js": "2.4.x",
+    "browserify": "3.2.0",
+    "through": "2.3.4"
   }
 }

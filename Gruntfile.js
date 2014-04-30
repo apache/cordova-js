@@ -33,6 +33,19 @@ module.exports = function(grunt) {
             "ubuntu": {},
             "browser": {}
         },
+        "compile-browserify": {
+            "amazon-fireos": {},
+            "android": {},
+            "blackberry10": {},
+            "ios": {},
+            "osx": {},
+            //"test": {},
+            "windows8": { useWindowsLineEndings: true },
+            "windowsphone": { useWindowsLineEndings: true },
+            "firefoxos": {},
+            "ubuntu": {},
+            "browser": {}
+        },
         clean: ['pkg'],
         jshint: {
             options: {
