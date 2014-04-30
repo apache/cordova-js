@@ -29,6 +29,7 @@ var collect  = require('./collect');
 
 var pathToTemplate = path.join(__dirname, '..', 'templates', 'suite.html');
 var pathToVendor   = path.join(__dirname, '..', 'vendor');
+var pathToJasmine  = path.join(__dirname, '..', '..', 'node_modules', 'jasmine-node', 'lib', 'jasmine-node');
 var pathToTests    = path.join(__dirname, '..', '..', 'test');
 
 var template = fs.readFileSync(pathToTemplate, "utf-8");
@@ -73,10 +74,11 @@ module.exports = function() {
     console.log('starting browser-based tests')
 
     var vendor = connect.static(pathToVendor);
+    var jasmine = connect.static(pathToJasmine);
     var tests  = connect.static(pathToTests);
     var router = connect.router(routes);
 
-    connect(vendor, tests, router).listen(3000);
+    connect(vendor, jasmine, tests, router).listen(3000);
     
     console.log("Test Server running on:\n");
     console.log("http://127.0.0.1:3000\n");

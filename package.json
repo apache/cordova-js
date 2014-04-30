@@ -54,6 +54,7 @@
     }
   ],
   "devDependencies": {
+    "jasmine-node": "1.14.x",
     "jsdom-nogyp": "0.8.3",
     "connect": "1.8.5",
     "grunt": "~0.4.1",

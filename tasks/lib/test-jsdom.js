@@ -22,8 +22,7 @@
 var path             = require('path');
 var fs               = require('fs');
 var collect          = require('./collect');
-var jas              = require("./../vendor/jasmine/jasmine");
-var TerminalReporter = require('./test-reporter').TerminalReporter;
+var jas              = require('jasmine-node');
 var testLibName      = path.join(__dirname, '..', '..', 'pkg', 'cordova.test.js')
 var testLib          = fs.readFileSync(testLibName, 'utf8')
 
@@ -61,7 +60,7 @@ module.exports = function(callback) {
     }
 
     var env = jasmine.getEnv();
-    env.addReporter(new TerminalReporter({
+    env.addReporter(new jas.TerminalReporter({
         color: true,
         onComplete: function(runner) { callback(runner.results().passed()); }
     }));
