@@ -2,14 +2,14 @@
   "author": "Gord Tanner <gtanner@gmail.com> (http://github.com/gtanner)",
   "name": "cordova-js",
   "description": "Cordova JavaScript: a unified JavaScript layer for the Cordova suite of projects enabling cross-platform native mobile development of applications using HTML, CSS and JavaScript.",
-  "version": "3.1.0",
+  "version": "3.6.0",
   "homepage": "http://cordova.apache.org",
   "repository": {
     "type": "git",
     "url": "http://git-wip-us.apache.org/repos/asf/cordova-js.git"
   },
   "engines": {
-    "node": "~0.6.15"
+    "node": "~0.10.x"
   },
   "contributors": [
     {
@@ -42,7 +42,7 @@
     },
     {
       "name": "Anis Kadri",
-      "email": ""
+      "email": "anis@apache.org"
     },
     {
       "name": "Dan Silivestru",
@@ -54,10 +54,16 @@
     }
   ],
   "devDependencies": {
+    "jasmine-node": "1.14.x",
     "jsdom-nogyp": "0.8.3",
     "connect": "1.8.5",
     "grunt": "~0.4.1",
     "grunt-contrib-clean": "~0.4.1",
     "grunt-contrib-jshint": "~0.6.0"
+  },
+  "dependencies": {
+    "uglify-js": "2.4.x",
+    "browserify": "3.2.0",
+    "through": "2.3.4"
   }
 }
