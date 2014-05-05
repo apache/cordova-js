@@ -20,7 +20,7 @@
 */
 
 module.exports = {
-    id: 'amazon-fireos',
+    id: 'android',
     bootstrap: function() {
         var channel = require('cordova/channel'),
             cordova = require('cordova'),

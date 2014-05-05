@@ -98,7 +98,7 @@ function androidExec(success, fail, service, action, args) {
             androidExec.setJsToNativeBridgeMode(jsToNativeModes.JS_OBJECT);
             return;
         } else {
-            androidExec.processMessages(messages);
+            androidExec.processMessages(messages, true);
         }
     }
 }
@@ -206,12 +206,12 @@ function processMessage(message) {
             }
             cordova.callbackFromNative(callbackId, success, status, [payload], keepCallback);
         } else {
-            console.log("processMessage failed: invalid message:" + message);
+            console.log("processMessage failed: invalid message: " + JSON.stringify(message));
         }
     } catch (e) {
-        console.log("processMessage failed: Message: " + message);
         console.log("processMessage failed: Error: " + e);
         console.log("processMessage failed: Stack: " + e.stack);
+        console.log("processMessage failed: Message: " + message);
     }
 }
 
