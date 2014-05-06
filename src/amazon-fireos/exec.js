@@ -142,7 +142,6 @@ androidExec.nativeToJsModes = nativeToJsModes;
 
 androidExec.setJsToNativeBridgeMode = function(mode) {
     if (mode == jsToNativeModes.JS_OBJECT && !window._cordovaNative) {
-        console.log('Falling back on PROMPT mode since _cordovaNative is missing. Expected for Android 3.2 and lower only.');
         mode = jsToNativeModes.PROMPT;
     }
     nativeApiProvider.setPreferPrompt(mode == jsToNativeModes.PROMPT);
@@ -216,37 +215,53 @@ function processMessage(message) {
     }
 }
 
+var isProcessing = false;
+
 // This is called from the NativeToJsMessageQueue.java.
-androidExec.processMessages = function(messages) {
+androidExec.processMessages = function(messages, opt_useTimeout) {
     if (messages) {
         messagesFromNative.push(messages);
-        // Check for the reentrant case, and enqueue the message if that's the case.
-        if (messagesFromNative.length > 1) {
-            return;
-        }
+    }
+    // Check for the reentrant case.
+    if (isProcessing) {
+        return;
+    }
+    if (opt_useTimeout) {
+        window.setTimeout(androidExec.processMessages, 0);
+        return;
+    }
+    isProcessing = true;
+    try {
+        // TODO: add setImmediate polyfill and process only one message at a time.
         while (messagesFromNative.length) {
-            // Don't unshift until the end so that reentrancy can be detected.
-            messages = messagesFromNative[0];
+            var msg = popMessageFromQueue();
             // The Java side can send a * message to indicate that it
             // still has messages waiting to be retrieved.
-            if (messages == '*') {
-                messagesFromNative.shift();
-                window.setTimeout(pollOnce, 0);
+            if (msg == '*' && messagesFromNative.length === 0) {
+                setTimeout(pollOnce, 0);
                 return;
             }
-
-            var spaceIdx = messages.indexOf(' ');
-            var msgLen = +messages.slice(0, spaceIdx);
-            var message = messages.substr(spaceIdx + 1, msgLen);
-            messages = messages.slice(spaceIdx + msgLen + 1);
-            processMessage(message);
-            if (messages) {
-                messagesFromNative[0] = messages;
-            } else {
-                messagesFromNative.shift();
-            }
+            processMessage(msg);
         }
+    } finally {
+        isProcessing = false;
     }
 };
+
+function popMessageFromQueue() {
+    var messageBatch = messagesFromNative.shift();
+    if (messageBatch == '*') {
+        return '*';
+    }
+
+    var spaceIdx = messageBatch.indexOf(' ');
+    var msgLen = +messageBatch.slice(0, spaceIdx);
+    var message = messageBatch.substr(spaceIdx + 1, msgLen);
+    messageBatch = messageBatch.slice(spaceIdx + msgLen + 1);
+    if (messageBatch) {
+        messagesFromNative.unshift(messageBatch);
+    }
+    return message;
+}
 
 module.exports = androidExec;
