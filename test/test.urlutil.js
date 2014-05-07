@@ -21,6 +21,10 @@
 
 describe('urlutil', function () {
     var urlutil = require('cordova/urlutil');
+    if (typeof process != 'undefined') {
+        // Tests don't work under jsdom.
+        return;
+    }
 
     it('can handle absolute URLs', function () {
         expect(urlutil.makeAbsolute('http://www.foo.com')).toBe('http://www.foo.com/');

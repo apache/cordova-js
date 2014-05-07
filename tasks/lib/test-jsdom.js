@@ -27,7 +27,7 @@ var testLibName      = path.join(__dirname, '..', '..', 'pkg', 'cordova.test.js'
 var testLib          = fs.readFileSync(testLibName, 'utf8')
 
 var jsdom    = require("jsdom-nogyp").jsdom;
-var document = jsdom(null, null, { url: 'http://jsdomtest.info/a?b#c' });
+var document = jsdom(null, null, { url: 'file:///jsdomtest.info/a?b#c' });
 var window   = document.createWindow();
 
 module.exports = function(callback) {
