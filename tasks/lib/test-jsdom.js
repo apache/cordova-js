@@ -39,6 +39,9 @@ module.exports = function(callback) {
         this[key] = window[key] = global[key] = jas[key];
     });
 
+    // Hack to fix jsdom with node v0.11.13+
+    delete String.prototype.normalize;
+
     try {
         eval(testLib);
     }
