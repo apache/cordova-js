@@ -28,7 +28,7 @@ A unified JavaScript layer for [Apache Cordova](http://cordova.apache.org/) proj
      |  |-common/ ........... base modules shared across platfoms
      |  |  |-builder.js ..... injects in our classes onto window and navigator
      |  |  |-channel.js ..... pub/sub impl for custom framework events 
-     |  |  |-common.js ...... common locations to add Cordova objects to browser globals
+     |  |  |-init.js ........ common locations to add Cordova objects to browser globals
      |  |  |-exec.js ........ interace stub for each platform specific version of exec.js
      |  |  |-platform.js .... stub for platform's specific version of platform.js
      |  |  '-utils.js ....... closures, uuids, object, cloning, extending prototypes
@@ -68,7 +68,7 @@ For integration, see the 'Integration' section below.
 
 # How It Works
 
-The `build/packager.js` tool is a node.js script that concatenates all of the core Cordova plugins in this repository into a `cordova.<platform>.js` file under the `pkg/` folder. It also wraps the plugins with a RequireJS-compatible module syntax that works in both browser and node environments. We end up with a cordova.js file that wraps each Cordova plugin into its own module.
+The `tasks/lib/packager.js` tool is a node.js script that concatenates all of the core Cordova plugins in this repository into a `cordova.<platform>.js` file under the `pkg/` folder. It also wraps the plugins with a RequireJS-compatible module syntax that works in both browser and node environments. We end up with a cordova.js file that wraps each Cordova plugin into its own module.
 
 Cordova defines a `channel` module under `src/common/channel.js`, which is a publish/subscribe implementation that the project uses for event management.
 
@@ -162,7 +162,7 @@ Once the new js file has been added, any new projects created will use the updat
     }
     </pre>
 
-3. You should probably add a `packager.bundle('<platform>')` call to the `Jakefile` under the `build` task.
+3. You should probably add a `<platform>:{}` entry to the `Gruntfile` compile arrays.
 4. Make sure your native implementation executes the following JavaScript once all of the native side is initialized and ready: `require('cordova/channel').onNativeReady.fire()`.
 5. The deviceready event is important. To make sure that the stock
    common JavaScript fires this event off, the device and network
