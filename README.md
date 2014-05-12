@@ -96,7 +96,7 @@ Final testing should always be done with the [Mobile Spec test application](http
 
 Build the js files by running grunt as described above. Update each platform independently. For a given platform:
 
-Replace the cordova.js file in the cordova-PLATFORM directory with the newly generated cordova.PLATFORM.js file. If necessary, change the name of the new file to match that of the overwritten one.
+Replace the cordova.js file in the cordova <platform>platform_www/cordova.js directory with the newly generated cordova.js file. If necessary, change the name of the new file to match that of the overwritten one.
 
 Once the new js file has been added, any new projects created will use the updated js. To update an already existing project, directly replace the cordova.js file within the project's www/ folder with the generated cordova.PLATFORM.js. Make sure to change the file name to match the original.
 
