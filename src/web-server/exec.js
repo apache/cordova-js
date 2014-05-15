@@ -26,7 +26,10 @@ var execProxy = require('cordova/exec/proxy');
 
 /* Pretty much every plugin, under the hood will make a call
  * to this method passing the service/action/args to specify
- * what they want to do.
+ * what they want to do. This would act as part of the bridge
+ * to the native code, but in our case we'll just format urls
+ * probably in the form of "root.com/api/service/action?params=args"
+ * 
  * Check out ios, their exec uses xhr for some communications
  * which is what we are likely to use.
 */
