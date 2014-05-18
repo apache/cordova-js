@@ -26,6 +26,7 @@
 
 var fs = require('fs');
 var path = require('path');
+var util = require('util');
 var through = require('through');
 var UglifyJS = require('uglify-js');
 var root = fs.realpathSync(path.join(__dirname, '..', '..'));
@@ -42,9 +43,10 @@ var requireTr = {
 
     function end() {
       // getting rid of define and require properties of cordova
-     // if(file.match(/cordova.js$/)) {
-     //   data = data.replace(/ *(define:define|require:require),\n/, '');
-     // }
+      if(file.match(/android\/platform.js$/)) {
+        data = data.replace(/modulemapper\.clobbers.*\n/,
+                            util.format('navigator.app = require("%s/src/android/plugin/android/app")', root));
+      }
       this.queue(_updateRequires(data));
       this.queue(null);
     }
@@ -72,7 +74,7 @@ function _updateRequires(code) {
   
   var ast = UglifyJS.parse(code);
 
-  var walker = new UglifyJS.TreeWalker(function(node) {
+  var before = new UglifyJS.TreeTransformer(function(node, descend) {
 
     // check all function calls
     if(node instanceof UglifyJS.AST_Call) {
@@ -117,11 +119,13 @@ function _updateRequires(code) {
             }
           }
         }
+        descend(node, this);
+        return node;
       }
     }
   });
 
-  ast.walk(walker);
+  ast.transform(before, null);
 
   var stream = UglifyJS.OutputStream({beautify:true});
 
