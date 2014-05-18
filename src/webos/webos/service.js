@@ -108,13 +108,11 @@ LS2Request.prototype.toString = function() {
 
 LS2Request.resubscribeDelay = 10000;
 
-module.exports = navigator.service = {
+module.exports = {
     request: function (uri, params) {
         var req = new LS2Request(uri, params);
         return req;
     },
-    systemPrefix: ((isLegacy) ? "com.palm" : "com.webos"),
+    systemPrefix: ((isLegacy) ? "com.palm." : "com.webos."),
     protocol: "luna://"
 };
-//temporary fallback for previous syntax
-module.exports.Request = module.exports.request;
