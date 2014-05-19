@@ -19,7 +19,6 @@
  *
 */
 
-var cordova = require('cordova');
 var execProxy = require('cordova/exec/proxy');
 
 module.exports = function(success, fail, service, action, args) {

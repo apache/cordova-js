@@ -29,17 +29,15 @@ module.exports = {
             window.PalmSystem.stageReady();
         }
         
-        // create global Mojo object if it does not exist
+        // create global legacy Mojo object if it does not exist
         window.Mojo = window.Mojo || {};
 
         // Check for support for page visibility api
         if(typeof document.webkitHidden !== "undefined") {
             document.addEventListener("webkitvisibilitychange", function(e) {
                 if(document.webkitHidden) {
-                    //cordova.fireDocumentEvent("pause");
                     channel.onPause.fire();
                 } else {
-                    //cordova.fireDocumentEvent("resume");
                     channel.onResume.fire();
                 }
             });
