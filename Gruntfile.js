@@ -31,7 +31,7 @@ module.exports = function(grunt) {
             "windowsphone": { useWindowsLineEndings: true },
             "firefoxos": {},
             "ubuntu": {},
-            "web-server": {},
+            "web_server": {},
             "browser": {}
         },
         "compile-browserify": {
@@ -45,7 +45,7 @@ module.exports = function(grunt) {
             "windowsphone": { useWindowsLineEndings: true },
             "firefoxos": {},
             "ubuntu": {},
-            "web-server": {},
+            "web_server": {},
             "browser": {}
         },
         clean: ['pkg'],
