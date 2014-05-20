@@ -20,7 +20,7 @@
 */
 
 module.exports = {
-    id: 'web-server',
+    id: 'web_server',
     initialize: function() {
 		console.log('Starting up web server');
 		// beep boop bap. Start the server!!
