@@ -22,6 +22,7 @@
 /*
  * This probably should live in plugman/cli world
  * Transoforms old require calls to new node-style require calls
+ * the whole thing is fucking bullshit and needs to disappear ASAP
  */
 
 var fs = require('fs');
@@ -42,10 +43,13 @@ var requireTr = {
     }
 
     function end() {
-      // getting rid of define and require properties of cordova
+        // SOME BS pre-transforms
       if(file.match(/android\/platform.js$/)) {
         data = data.replace(/modulemapper\.clobbers.*\n/,
                             util.format('navigator.app = require("%s/src/android/plugin/android/app")', root));
+      }
+      if(file.match(/ios\/Contact.js$/)) {
+        data = data.replace(/'\.\/ContactError'/, "'../ContactError'");
       }
       this.queue(_updateRequires(data));
       this.queue(null);
@@ -110,7 +114,8 @@ function _updateRequires(code) {
             node.args[0].value = module.replace(/cordova\/(.+)/,
                                     path.join(root, "src", "common", "$1"));
           }
-        } else if(module !== undefined && module.indexOf("org.apache.cordova") !== -1 ) {
+        }
+        else if(module !== undefined && module.indexOf("org.apache.cordova") !== -1 ) {
           var modules = requireTr.getModules();
           for(var i = 0, j = modules.length ; i < j ; i++) {
             if(module.match(modules[i].symbol)) {
