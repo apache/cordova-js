@@ -19,13 +19,15 @@
  *
 */
 
+/**
+ *	Need to investigate other platforms to see if more should be
+ *	be in here.
+*/
 module.exports = {
     id: 'web_server',
     initialize: function() {
-		console.log('Starting up web server');
-		// beep boop bap. Start the server!!
+        console.log('Initializing web_server cordova-js file.');
     },
-    // Not sure if I really need this.
     bootstrap: function() {
         require('cordova/channel').onNativeReady.fire();
     }
