@@ -19,25 +19,41 @@
  *
 */
 
-// Why would this be needed if all we did was http calls?
-var cordova = require('cordova');
-// what does this do?
-var execProxy = require('cordova/exec/proxy');
+// FIXME: Needs to be converted into a config parameter.
+var host = 'http://localhost:3000';
 
-/* Pretty much every plugin, under the hood will make a call
+/**
+ * Pretty much every plugin, under the hood will make a call
  * to this method passing the service/action/args to specify
  * what they want to do. This would act as part of the bridge
  * to the native code, but in our case we'll just format urls
- * probably in the form of "root.com/api/service/action?params=args"
- * 
- * Check out ios, their exec uses xhr for some communications
- * which is what we are likely to use.
+ * in the form of "http://host/api/service/action". The args
+ * will be past in the body of the request as a json object.
+ *
+ * @param sucess the success callback if all goes well.
+ * @param sucess the success callback if all goes well.
+ * @param service the service to call ex. 'Contacts'.
+ * @param action the method to call within the service.
+ * @param args the arguments for the action.
 */
 module.exports = function(success, fail, service, action, args) {
-    console.log("Calling " + service + " :: " + action + " args:: " + args);
+    console.log("Calling " + service + " :: " + action + " args:: \n" + JSON.stringify(args[0]));
 
-    
+    var apiUrl = host + '/api/' + service.toLowerCase() + '/' + action.toLowerCase();
 
-    var obj = {};
+    var xhr = new XMLHttpRequest();
+
+    // How do I know when it will be get or post? Could just always do post but some
+    // urls won't need any data to accomplish some task. How can we know when it should be
+    // asychronous?
+    xhr.open('POST', apiUrl, true);
+
+    // Need to tell the request what kind of request we are making.
+    xhr.setRequestHeader("Content-type", "application/json");
+
+    // Make sure to stringify so that we can send the correct data.
+    xhr.send(JSON.stringify(args[0]));
+    var obj = xhr.responseText;
+    console.log(obj);
     return obj;
 };
