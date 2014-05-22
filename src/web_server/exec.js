@@ -34,15 +34,16 @@ var host = 'http://localhost:3000';
  * @param sucess the success callback if all goes well.
  * @param service the service to call ex. 'Contacts'.
  * @param action the method to call within the service.
- * @param args the arguments for the action.
+ * @param args an array of the arguments for the action.
 */
 module.exports = function(success, fail, service, action, args) {
-    console.log("Calling " + service + " :: " + action + " args:: \n" + JSON.stringify(args[0]));
+    console.log("Calling " + service + " :: " + action + " args:: \n" + JSON.stringify(args));
 
     var apiUrl = host + '/api/' + service.toLowerCase() + '/' + action.toLowerCase();
 
     var xhr = new XMLHttpRequest();
-
+    xhr.onreadystatechange = respLog;
+    
     // How do I know when it will be get or post? Could just always do post but some
     // urls won't need any data to accomplish some task. How can we know when it should be
     // asychronous?
@@ -52,8 +53,10 @@ module.exports = function(success, fail, service, action, args) {
     xhr.setRequestHeader("Content-type", "application/json");
 
     // Make sure to stringify so that we can send the correct data.
-    xhr.send(JSON.stringify(args[0]));
-    var obj = xhr.responseText;
-    console.log(obj);
-    return obj;
+    xhr.send(JSON.stringify(args));
+
+    // Log verification that we got what we expected.
+    function respLog() {
+        if (xhr.readyState==4 && xhr.status==200) console.log(xhr.responseText);
+    }
 };
