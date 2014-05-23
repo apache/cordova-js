@@ -115,10 +115,14 @@ function _updateRequires(code) {
                                     path.join(root, "src", "common", "$1"));
           }
         }
-        else if(module !== undefined && module.indexOf("org.apache.cordova") !== -1 ) {
+        else if(module !== undefined && ( module.indexOf("org.apache.cordova") !== -1 ||
+                                          module.indexOf("./") === 0 ) ) {
           var modules = requireTr.getModules();
+          if(module.indexOf("./") === 0) {
+            module = module.replace('/', '');
+          }
           for(var i = 0, j = modules.length ; i < j ; i++) {
-            if(module.match(modules[i].symbol)) {
+            if(module === modules[i].symbol || modules[i].symbol.indexOf(module) != -1) {
               node.args[0].value = modules[i].path;
               break;
             }
