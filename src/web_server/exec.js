@@ -17,10 +17,11 @@
  * specific language governing permissions and limitations
  * under the License.
  *
-*/
+ */
 
 // FIXME: Needs to be converted into a config parameter.
-var host = 'http://localhost:3000';
+var host = 'http://localhost:3000/api/';
+var Q = require('cordova/q');
 
 /**
  * Pretty much every plugin, under the hood will make a call
@@ -35,28 +36,51 @@ var host = 'http://localhost:3000';
  * @param service the service to call ex. 'Contacts'.
  * @param action the method to call within the service.
  * @param args an array of the arguments for the action.
-*/
-module.exports = function(success, fail, service, action, args) {
+ * @param isAsync
+ *
+ * @returns a promise
+ */
+module.exports = function(success, fail, service, action, args, isAsync) {
+    // We need to follow the old api of success/fail but perhaps we should check for valid ones?
+    // if (!success || !fail) {
+        // throw new Error("Success or fail callback are NOT null, be sure your expecting a promise returned.")
+    // }
+
+    if (isAsync === undefined) isAsync = true;
+
     console.log("Calling " + service + " :: " + action + " args:: \n" + JSON.stringify(args));
 
-    var apiUrl = host + '/api/' + service.toLowerCase() + '/' + action.toLowerCase();
+    var apiUrl = host + service.toLowerCase() + '/' + action.toLowerCase();
 
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = respLog;
-    
-    // How do I know when it will be get or post? Could just always do post but some
-    // urls won't need any data to accomplish some task. How can we know when it should be
-    // asychronous?
-    xhr.open('POST', apiUrl, true);
+    if (isAsync) {
+        return Q.Promise(function (resolve, reject, notify) {
+            var xhr = new XMLHttpRequest();
+            xhr.onload = onLoad;
+            xhr.onerror = onError;
+            // xhr.onprogress = onProgress;
 
-    // Need to tell the request what kind of request we are making.
-    xhr.setRequestHeader("Content-type", "application/json");
+            xhr.open('POST', apiUrl, true);
+            // Need to tell the request what kind of request we are making.
+            xhr.setRequestHeader("Content-type", "application/json");
+            // Make sure to stringify so that we can send the correct data.
+            xhr.send(JSON.stringify(args));
 
-    // Make sure to stringify so that we can send the correct data.
-    xhr.send(JSON.stringify(args));
 
-    // Log verification that we got what we expected.
-    function respLog() {
-        if (xhr.readyState==4 && xhr.status==200) console.log(xhr.responseText);
+            function onLoad() {
+                if (xhr.readyState==4 && xhr.status==200) {
+                    console.log(JSON.stringify(xhr.responseText));
+                    resolve(JSON.stringify(xhr.responseText));
+                } else {
+                    reject(new Error(xhr.statusText));
+                }
+            }
+            function onError() {
+                reject(new Error("Can't XHR " + JSON.stringify(apiUrl)));
+            }
+
+            function onProgress(event) {
+                notify(event.loaded / event.total);
+            }
+        });
     }
 };
