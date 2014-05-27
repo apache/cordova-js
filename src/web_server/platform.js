@@ -28,7 +28,8 @@
     id: 'web_server',
     initialize: function() {
         console.log('Initializing web_server cordova-js file.');
-
+    },
+    bootstrap: function() {
         // This can afford to be asynchronous.
         window.localStorage.setItem = function(key, value) {
             exec(null, null, 'localStorage', 'setItem', [key, value], true).promise
@@ -48,8 +49,6 @@
             }
             return inspector;
         };
-    },
-    bootstrap: function() {
         require('cordova/channel').onNativeReady.fire();
     }
 };
