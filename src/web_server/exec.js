@@ -38,13 +38,10 @@ var Q = require('cordova/q');
  * @param args an array of the arguments for the action.
  * @param isAsync
  *
- * @returns a promise
+ * @returns a hash with {promise: Promise, response: String}
  */
-module.exports = function(success, fail, service, action, args, isAsync) {
+ module.exports = function(success, fail, service, action, args, isAsync) {
     // We need to follow the old api of success/fail but perhaps we should check for valid ones?
-    // if (!success || !fail) {
-        // throw new Error("Success or fail callback are NOT null, be sure your expecting a promise returned.")
-    // }
 
     if (isAsync === undefined) isAsync = true;
 
@@ -53,11 +50,11 @@ module.exports = function(success, fail, service, action, args, isAsync) {
     var apiUrl = host + service.toLowerCase() + '/' + action.toLowerCase();
 
     if (isAsync) {
-        return Q.Promise(function (resolve, reject, notify) {
+        var response = '';
+        return {'promise': Q.Promise(function (resolve, reject, notify) {
             var xhr = new XMLHttpRequest();
             xhr.onload = onLoad;
             xhr.onerror = onError;
-            // xhr.onprogress = onProgress;
 
             xhr.open('POST', apiUrl, true);
             // Need to tell the request what kind of request we are making.
@@ -65,11 +62,12 @@ module.exports = function(success, fail, service, action, args, isAsync) {
             // Make sure to stringify so that we can send the correct data.
             xhr.send(JSON.stringify(args));
 
-
+            // Callback functions
             function onLoad() {
                 if (xhr.readyState==4 && xhr.status==200) {
                     console.log(JSON.stringify(xhr.responseText));
-                    resolve(JSON.stringify(xhr.responseText));
+                    response = JSON.stringify(xhr.responseText);
+                    resolve(response);
                 } else {
                     reject(new Error(xhr.statusText));
                 }
@@ -78,9 +76,39 @@ module.exports = function(success, fail, service, action, args, isAsync) {
                 reject(new Error("Can't XHR " + JSON.stringify(apiUrl)));
             }
 
+            // Unused, but remains for reference.
             function onProgress(event) {
                 notify(event.loaded / event.total);
             }
-        });
+        }),
+        'response': response};
+    } else if (!isAsync) {
+        var xhr = new XMLHttpRequest();
+
+        xhr.open('POST', apiUrl, false);
+        xhr.setRequestHeader("Content-type", "application/json");
+        xhr.onreadystatechange = stateChange;
+        xhr.onerror = onError;
+        xhr.send(JSON.stringify(args));
+
+        function stateChange() {
+            if (xhr.readyState == 4) {
+                if (xhr.status == 200) {
+                    if (success) success(xhr.responseText);
+                } else {
+                    if (error) error(xhr, xhr.status);
+                }
+            }
+        };
+        function onError() {
+            if (error) {
+                error(xhr, xhr.status);
+            } else {
+                console.log(Error(xhr, xhr.status));
+            }
+        };
+
+        return {'promise': Q(xhr.responseText),
+            'response': xhr.responseText};
     }
 };
