@@ -26,28 +26,38 @@
  */
  module.exports = {
     id: 'web_server',
+    /*
+     *  After the app has been set up and ready to use, this gets invoked
+     *  to accomplish any other desired functions.
+    */
     initialize: function() {
-        console.log('Initializing web_server cordova-js file.');
     },
+    /*
+     *  Gets run before any of the client side code is allowed, thus any
+     *  method overrides or special data handling shoudl go here.
+    */
     bootstrap: function() {
         // This can afford to be asynchronous.
-        window.localStorage.setItem = function(key, value) {
-            exec(null, null, 'localStorage', 'setItem', [key, value], true).promise
+        window.localStorage.setItem = function(key, value, success, fail) {
+            exec(success, fail, 'localStorage', 'setItem', [key, value], true).promise
             .fail(function (error) {
                 console.log(Error(error));
                 console.log("Could not set the local storage.");
             })
             .done();
         };
-        // FIXME: Should eventually augment the api to allow for a callback and then
-        // make it async. Ex. getItem = function(key, callback);
-        window.localStorage.getItem = function(key) {
-            var inspector = exec(null, null, 'localStorage', 'getItem', [key], false).response;
-            if (!inspector) {
+        window.localStorage.getItem = function(key, success, fail) {
+            var isasync = typeof success == 'function';
+            var ret = exec(success, fail, 'localStorage', 'getItem', [key], isasync).response;
+
+            // If we are running async the success call back will handle the eventual response.
+            if (isasync) {
+                return '{}';
+            } else if (!ret) {
                 console.log('Could not find the data you were looking for. Make sure it was properly set.');
-                inspector = "{}";
+                ret = "{}";
             }
-            return inspector;
+            return ret;
         };
         require('cordova/channel').onNativeReady.fire();
     }
