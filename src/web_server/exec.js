@@ -45,7 +45,7 @@ var Q = require('cordova/q');
 
     if (isAsync === undefined) isAsync = true;
 
-    console.log("Calling " + service + " :: " + action + " args:: \n" + JSON.stringify(args));
+    // console.log("Calling " + service + " :: " + action + " args:: \n" + JSON.stringify(args));
 
     var apiUrl = host + service.toLowerCase() + '/' + action.toLowerCase();
 
@@ -65,8 +65,7 @@ var Q = require('cordova/q');
             // Callback functions
             function onLoad() {
                 if (xhr.readyState==4 && xhr.status==200) {
-                    console.log(JSON.stringify(xhr.responseText));
-                    response = JSON.stringify(xhr.responseText);
+                    response = xhr.responseText;
                     resolve(response);
                 } else {
                     reject(new Error(xhr.statusText));
@@ -80,6 +79,10 @@ var Q = require('cordova/q');
             function onProgress(event) {
                 notify(event.loaded / event.total);
             }
+        }).then(function (value) {
+            if (success) success(JSON.parse(value));
+        }).fail(function(value){
+            if (fail) fail(xhr.responseText);
         }),
         'response': response};
     } else if (!isAsync) {
@@ -94,7 +97,7 @@ var Q = require('cordova/q');
         function stateChange() {
             if (xhr.readyState == 4) {
                 if (xhr.status == 200) {
-                    if (success) success(xhr.responseText);
+                    if (success) success(JSON.parse(xhr.responseText));
                 } else {
                     if (error) error(xhr, xhr.status);
                 }
@@ -108,7 +111,7 @@ var Q = require('cordova/q');
             }
         };
 
-        return {'promise': Q(xhr.responseText),
+        return {'promise': Q(JSON.parse(xhr.responseText)),
             'response': xhr.responseText};
     }
 };
