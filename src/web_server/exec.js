@@ -41,11 +41,7 @@ var Q = require('cordova/q');
  * @returns a hash with {promise: Promise, response: String}
  */
  module.exports = function(success, fail, service, action, args, isAsync) {
-    // We need to follow the old api of success/fail but perhaps we should check for valid ones?
-
     if (isAsync === undefined) isAsync = true;
-
-    // console.log("Calling " + service + " :: " + action + " args:: \n" + JSON.stringify(args));
 
     var apiUrl = host + service.toLowerCase() + '/' + action.toLowerCase();
 
@@ -68,10 +64,12 @@ var Q = require('cordova/q');
                     response = xhr.responseText;
                     resolve(response);
                 } else {
-                    reject(new Error(xhr.statusText));
+                    if (fail) fail(xhr.responseText);
+                    reject(new Error(xhr.responseText));
                 }
             }
             function onError() {
+                if (fail) fail(xhr.responseText);
                 reject(new Error("Can't XHR " + JSON.stringify(apiUrl)));
             }
 
@@ -81,7 +79,7 @@ var Q = require('cordova/q');
             }
         }).then(function (value) {
             if (success) success(JSON.parse(value));
-        }).fail(function(value){
+        }).fail(function (value){
             if (fail) fail(xhr.responseText);
         }),
         'response': response};
@@ -99,13 +97,13 @@ var Q = require('cordova/q');
                 if (xhr.status == 200) {
                     if (success) success(JSON.parse(xhr.responseText));
                 } else {
-                    if (error) error(xhr, xhr.status);
+                    if (fail) fail(xhr.responseText);
                 }
             }
         };
         function onError() {
-            if (error) {
-                error(xhr, xhr.status);
+            if (fail) {
+                fail(xhr.responseText);
             } else {
                 console.log(Error(xhr, xhr.status));
             }
