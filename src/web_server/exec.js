@@ -31,8 +31,8 @@ var Q = require('cordova/q');
  * in the form of "http://host/api/service/action". The args
  * will be past in the body of the request as a json object.
  *
- * @param sucess the success callback if all goes well.
- * @param sucess the success callback if all goes well.
+ * @param success the success callback if all goes well.
+ * @param success the success callback if all goes well.
  * @param service the service to call ex. 'Contacts'.
  * @param action the method to call within the service.
  * @param args an array of the arguments for the action.
