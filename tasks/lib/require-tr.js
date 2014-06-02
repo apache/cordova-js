@@ -22,10 +22,12 @@
 /*
  * This probably should live in plugman/cli world
  * Transoforms old require calls to new node-style require calls
+ * the whole thing is fucking bullshit and needs to disappear ASAP
  */
 
 var fs = require('fs');
 var path = require('path');
+var util = require('util');
 var through = require('through');
 var UglifyJS = require('uglify-js');
 var root = fs.realpathSync(path.join(__dirname, '..', '..'));
@@ -41,10 +43,14 @@ var requireTr = {
     }
 
     function end() {
-      // getting rid of define and require properties of cordova
-     // if(file.match(/cordova.js$/)) {
-     //   data = data.replace(/ *(define:define|require:require),\n/, '');
-     // }
+        // SOME BS pre-transforms
+      if(file.match(/android\/platform.js$/)) {
+        data = data.replace(/modulemapper\.clobbers.*\n/,
+                            util.format('navigator.app = require("%s/src/android/plugin/android/app")', root));
+      }
+      if(file.match(/ios\/Contact.js$/)) {
+        data = data.replace(/'\.\/ContactError'/, "'../ContactError'");
+      }
       this.queue(_updateRequires(data));
       this.queue(null);
     }
@@ -72,7 +78,7 @@ function _updateRequires(code) {
   
   var ast = UglifyJS.parse(code);
 
-  var walker = new UglifyJS.TreeWalker(function(node) {
+  var before = new UglifyJS.TreeTransformer(function(node, descend) {
 
     // check all function calls
     if(node instanceof UglifyJS.AST_Call) {
@@ -108,20 +114,27 @@ function _updateRequires(code) {
             node.args[0].value = module.replace(/cordova\/(.+)/,
                                     path.join(root, "src", "common", "$1"));
           }
-        } else if(module !== undefined && module.indexOf("org.apache.cordova") !== -1 ) {
+        }
+        else if(module !== undefined && ( module.indexOf("org.apache.cordova") !== -1 ||
+                                          module.indexOf("./") === 0 ) ) {
           var modules = requireTr.getModules();
+          if(module.indexOf("./") === 0) {
+            module = module.replace('/', '');
+          }
           for(var i = 0, j = modules.length ; i < j ; i++) {
-            if(module.match(modules[i].symbol)) {
+            if(module === modules[i].symbol || modules[i].symbol.indexOf(module) != -1) {
               node.args[0].value = modules[i].path;
               break;
             }
           }
         }
+        descend(node, this);
+        return node;
       }
     }
   });
 
-  ast.walk(walker);
+  ast.transform(before, null);
 
   var stream = UglifyJS.OutputStream({beautify:true});
 
