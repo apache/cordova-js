@@ -48,6 +48,10 @@ var requireTr = {
         data = data.replace(/modulemapper\.clobbers.*\n/,
                             util.format('navigator.app = require("%s/src/android/plugin/android/app")', root));
       }
+      if(file.match(/FileReader.js$/)) {
+        data = data.replace(/getOriginalSymbol\(this/,
+                            'getOriginalSymbol(window');
+      }
      
       this.queue(_updateRequires(data));
       this.queue(null);
