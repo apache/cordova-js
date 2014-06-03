@@ -48,9 +48,7 @@ var requireTr = {
         data = data.replace(/modulemapper\.clobbers.*\n/,
                             util.format('navigator.app = require("%s/src/android/plugin/android/app")', root));
       }
-      if(file.match(/ios\/Contact.js$/)) {
-        data = data.replace(/'\.\/ContactError'/, "'../ContactError'");
-      }
+     
       this.queue(_updateRequires(data));
       this.queue(null);
     }
@@ -85,7 +83,7 @@ function _updateRequires(code) {
       // check if function call is a require('module') call
       if(node.expression.name === "require" && node.args.length === 1) {
         var module = node.args[0].value;
-        // make sure require only has one argument and that it starts with cordova (old style require.js) 
+        // make sure require only has one argument and that it starts with cordova (old style require.js)
         if(module !== undefined &&
            module.indexOf("cordova") === 0) {
           
@@ -116,15 +114,21 @@ function _updateRequires(code) {
           }
         }
         else if(module !== undefined && ( module.indexOf("org.apache.cordova") !== -1 ||
-                                          module.indexOf("./") === 0 ) ) {
+                                          module.indexOf("./") === 0 || module.indexOf("../") === 0 ) ) {
           var modules = requireTr.getModules();
-          if(module.indexOf("./") === 0) {
-            module = module.replace('/', '');
+
+          if(module.indexOf("../") === 0){
+            module = module.replace('../', '');
           }
+          if(module.indexOf("./") === 0 ) {
+            module = module.replace('./', '');
+          }
+
           for(var i = 0, j = modules.length ; i < j ; i++) {
-            if(module === modules[i].symbol || modules[i].symbol.indexOf(module) != -1) {
-              node.args[0].value = modules[i].path;
-              break;
+            var regx = new RegExp ("\\."+ module + "$");
+            if(module === modules[i].symbol || modules[i].symbol.search(regx) != -1) {
+                node.args[0].value = modules[i].path;
+                break;
             }
           }
         }
