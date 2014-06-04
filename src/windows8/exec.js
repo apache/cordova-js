@@ -46,6 +46,8 @@ module.exports = function (success, fail, service, action, args) {
         onSuccess,
         onError;
 
+    args = args || [];
+
     if (proxy) {
         callbackId = service + cordova.callbackId++;
         // console.log("EXEC:" + service + " : " + action);
