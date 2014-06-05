@@ -44,6 +44,7 @@ module.exports = function(success, fail, service, action, args) {
     if (typeof success == "function" || typeof fail == "function") {
         cordova.callbacks[callbackId] = {success:success, fail:fail};
     }
+    args = args || [];
     // generate a new command string, ex. DebugConsole/log/DebugConsole23/["wtf dude?"]
     for(var n = 0; n < args.length; n++)
     {
