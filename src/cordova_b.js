@@ -97,7 +97,7 @@ var cordova = {
             return cordova.exec;
         }
         if(module === "org.apache.cordova.media.Media") {
-            return window['Media'];
+            return window.Media;
         }
         
         return require(module);
