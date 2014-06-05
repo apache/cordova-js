@@ -134,9 +134,13 @@ function iOSExec() {
     // Use IFRAME_NAV elsewhere since it's faster and XHR bridge
     // seems to have bugs in newer OS's (CB-3900, CB-3359, CB-5457, CB-4970, CB-4998, CB-5134)
     if (bridgeMode === undefined) {
-        bridgeMode = navigator.userAgent.indexOf(' 5_') == -1 ? jsToNativeModes.IFRAME_NAV: jsToNativeModes.XHR_NO_PAYLOAD;
+        if (navigator.userAgent) {
+            bridgeMode = navigator.userAgent.indexOf(' 5_') == -1 ? jsToNativeModes.IFRAME_NAV: jsToNativeModes.XHR_NO_PAYLOAD;
+		} else {
+            bridgeMode = jsToNativeModes.IFRAME_NAV;
+        }
     }
-
+    
     var successCallback, failCallback, service, action, actionArgs, splitCommand;
     var callbackId = null;
     if (typeof arguments[0] !== "string") {
