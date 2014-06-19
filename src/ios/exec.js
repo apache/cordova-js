@@ -39,7 +39,8 @@ var cordova = require('cordova'),
         XHR_OPTIONAL_PAYLOAD: 3,
         IFRAME_HASH_NO_PAYLOAD: 4,
         // Bundling the payload turns out to be slower. Probably since it has to be URI encoded / decoded.
-        IFRAME_HASH_WITH_PAYLOAD: 5
+        IFRAME_HASH_WITH_PAYLOAD: 5,
+        WK_WEBVIEW_BINDING: 6
     },
     bridgeMode,
     execIframe,
@@ -140,6 +141,10 @@ function iOSExec() {
             bridgeMode = jsToNativeModes.IFRAME_NAV;
         }
     }
+	
+    if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.cordova && window.webkit.messageHandlers.cordova.postMessage) {
+        bridgeMode = jsToNativeModes.WK_WEBVIEW_BINDING;
+    }
     
     var successCallback, failCallback, service, action, actionArgs, splitCommand;
     var callbackId = null;
@@ -201,6 +206,9 @@ function iOSExec() {
         case jsToNativeModes.XHR_WITH_PAYLOAD:
         case jsToNativeModes.XHR_OPTIONAL_PAYLOAD:
             pokeNativeViaXhr();
+            break;
+        case jsToNativeModes.WK_WEBVIEW_BINDING:
+            window.webkit.messageHandlers.cordova.postMessage(command);
             break;
         default: // iframe-based.
             pokeNativeViaIframe();
