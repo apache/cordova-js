@@ -195,23 +195,24 @@ function iOSExec() {
     // effectively clone the command arguments in case they are mutated before
     // the command is executed.
     commandQueue.push(JSON.stringify(command));
-
-    // If we're in the context of a stringByEvaluatingJavaScriptFromString call,
-    // then the queue will be flushed when it returns; no need for a poke.
-    // Also, if there is already a command in the queue, then we've already
-    // poked the native side, so there is no reason to do so again.
-    if (!isInContextOfEvalJs && commandQueue.length == 1) {
-        switch (bridgeMode) {
-        case jsToNativeModes.XHR_NO_PAYLOAD:
-        case jsToNativeModes.XHR_WITH_PAYLOAD:
-        case jsToNativeModes.XHR_OPTIONAL_PAYLOAD:
-            pokeNativeViaXhr();
-            break;
-        case jsToNativeModes.WK_WEBVIEW_BINDING:
-            window.webkit.messageHandlers.cordova.postMessage(command);
-            break;
-        default: // iframe-based.
-            pokeNativeViaIframe();
+    
+    if (bridgeMode === jsToNativeModes.WK_WEBVIEW_BINDING) {
+        window.webkit.messageHandlers.cordova.postMessage(command);
+    } else {
+        // If we're in the context of a stringByEvaluatingJavaScriptFromString call,
+        // then the queue will be flushed when it returns; no need for a poke.
+        // Also, if there is already a command in the queue, then we've already
+        // poked the native side, so there is no reason to do so again.
+        if (!isInContextOfEvalJs && commandQueue.length == 1) {
+            switch (bridgeMode) {
+            case jsToNativeModes.XHR_NO_PAYLOAD:
+            case jsToNativeModes.XHR_WITH_PAYLOAD:
+            case jsToNativeModes.XHR_OPTIONAL_PAYLOAD:
+                pokeNativeViaXhr();
+                break;
+            default: // iframe-based.
+                pokeNativeViaIframe();
+            }
         }
     }
 }
