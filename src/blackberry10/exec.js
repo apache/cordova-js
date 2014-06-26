@@ -81,8 +81,13 @@ function RemoteFunctionCall(functionUri) {
         var requestUri = composeUri(),
         request = createXhrRequest(requestUri, false),
         response;
-        request.send(JSON.stringify(params));
-        response = JSON.parse(decodeURIComponent(request.responseText) || "null");
+        try {
+            request.send(JSON.stringify(params));
+            response = JSON.parse(decodeURIComponent(request.responseText) || "null");
+        } catch (e) {
+            console.error('makeSyncCall failed', e);
+            response = { code: 500, msg: 'exec bridge failure' };
+        }
         return response;
     };
 
