@@ -37,6 +37,10 @@ describe('exec.processMessages', function () {
         // Avoid a log message warning about the lack of _nativeApi.
         exec.setJsToNativeBridgeMode(exec.jsToNativeModes.PROMPT);
         nativeApiProvider.set(nativeApi);
+        var origPrompt = typeof prompt == 'undefined' ? undefined : prompt;
+        prompt = function() { return 1234; };
+        exec.init();
+        prompt = origPrompt;
     });
 
     afterEach(function() {
@@ -59,7 +63,8 @@ describe('exec.processMessages', function () {
         it('should process messages in order even when called recursively', function() {
             var firstCallbackId = null;
             var callCount = 0;
-            nativeApi.exec.andCallFake(function(service, action, callbackId, argsJson) {
+            nativeApi.exec.andCallFake(function(secret, service, action, callbackId, argsJson) {
+                expect(secret).toBe(1234);
                 ++callCount;
                 if (callCount == 1) {
                     firstCallbackId = callbackId;
@@ -95,7 +100,8 @@ describe('exec.processMessages', function () {
             });
         });
         it('should process messages asynchronously', function() {
-            nativeApi.exec.andCallFake(function(service, action, callbackId, argsJson) {
+            nativeApi.exec.andCallFake(function(secret, service, action, callbackId, argsJson) {
+                expect(secret).toBe(1234);
                 return createCallbackMessage(true, false, 1, callbackId, 'stwo');
             });
 

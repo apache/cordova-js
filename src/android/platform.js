@@ -27,10 +27,8 @@ module.exports = {
             exec = require('cordova/exec'),
             modulemapper = require('cordova/modulemapper');
 
-        // Tell the native code that a page change has occurred.
-        exec(null, null, 'PluginManager', 'startup', []);
-        // Tell the JS that the native side is ready.
-        channel.onNativeReady.fire();
+        // Get the shared secret needed to use the bridge.
+        exec.init();
 
         // TODO: Extract this as a proper plugin.
         modulemapper.clobbers('cordova/plugin/android/app', 'navigator.app');
