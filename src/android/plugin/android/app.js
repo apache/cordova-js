@@ -84,6 +84,21 @@ module.exports = {
     },
 
     /**
+    * Override the default behavior of the Android volume button.
+    * If overridden, when the volume button is pressed, the "volume[up|down]button"
+    * JavaScript event will be fired.
+    *
+    * Note: The user should not have to call this method.  Instead, when the user
+    *       registers for the "volume[up|down]button" event, this is automatically done.
+    *
+    * @param button          volumeup, volumedown
+    * @param override        T=override, F=cancel override
+    */
+    overrideButton:function(button, override) {
+        exec(null, null, "App", "overrideButton", [button, override]);
+    },
+
+    /**
     * Exit and terminate the application.
     */
     exitApp:function() {
