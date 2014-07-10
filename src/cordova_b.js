@@ -99,7 +99,7 @@ var cordova = {
         if(module === "org.apache.cordova.media.Media") {
             return window.Media;
         }
-        
+
         return require(module);
     },
     platformId:platform.id,
