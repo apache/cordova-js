@@ -204,10 +204,10 @@ var cordova = {
                 cbFunk.apply(null,args);
             }
             else {
-                console.log("Callback function does not exist for "
-                            + resultText
-                            + " result from callbackId:"
-                            + callbackId);
+                console.log("Callback function does not exist for " +
+                            resultText +
+                            " result from callbackId:" +
+                            callbackId);
                 cordova.fireDocumentEvent("CDVCallbackError");
             }
 
