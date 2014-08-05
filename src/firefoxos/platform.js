@@ -21,7 +21,6 @@
 
 module.exports = {
     id: 'firefoxos',
-    cordovaVersion: '3.0.0',
 
     bootstrap: function() {
         require('cordova/modulemapper').clobbers('cordova/exec/proxy', 'cordova.commandProxy');
