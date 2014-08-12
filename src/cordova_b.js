@@ -91,7 +91,8 @@ function createEvent(type, data) {
 
 
 var cordova = {
-    version:CORDOVA_JS_BUILD_LABEL,
+    platformVersion:PLATFORM_VERSION_BUILD_LABEL,
+    //version:CORDOVA_JS_BUILD_LABEL,
     require: function(module) {
         if(module === "cordova/exec") {
             return cordova.exec;

@@ -22,17 +22,17 @@ var bundle          = require('./bundle');
 var computeCommitId = require('./compute-commit-id');
 
 
-module.exports = function generate(platform, useWindowsLineEndings, callback) {
+module.exports = function generate(platform, useWindowsLineEndings, platformVersion, callback) {
     computeCommitId(function(commitId) {
         var outFile;
         var time = new Date().valueOf();
 
-        var libraryRelease = bundle(platform, false, commitId);
+        var libraryRelease = bundle(platform, false, commitId, platformVersion);
         // if we are using windows line endings, we will also add the BOM
         if(useWindowsLineEndings) {
             libraryRelease = "\ufeff" + libraryRelease.split(/\r?\n/).join("\r\n");
         }
-        var libraryDebug   = bundle(platform, true, commitId);
+        var libraryDebug   = bundle(platform, true, commitId, platformVersion);
 
         time = new Date().valueOf() - time;
         if (!fs.existsSync('pkg')) {

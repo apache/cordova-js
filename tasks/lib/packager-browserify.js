@@ -23,15 +23,14 @@ var bundle             = require('./bundle-browserify');
 var computeCommitId    = require('./compute-commit-id');
 var writeLicenseHeader = require('./write-license-header');
 
-
-module.exports = function generate(platform, useWindowsLineEndings, done) {
+module.exports = function generate(platform, useWindowsLineEndings, platformVersion, done) {
     computeCommitId(function(commitId) {
         var outReleaseFile, outReleaseFileStream,
             outDebugFile, outDebugFileStream,
             releaseBundle, debugBundle;
         var time = new Date().valueOf();
 
-        var libraryRelease = bundle(platform, false, commitId);
+        var libraryRelease = bundle(platform, false, commitId, platformVersion);
        // if we are using windows line endings, we will also add the BOM
        // if(useWindowsLineEndings) {
        //     libraryRelease = "\ufeff" + libraryRelease.split(/\r?\n/).join("\r\n");
@@ -49,7 +48,7 @@ module.exports = function generate(platform, useWindowsLineEndings, done) {
         outReleaseFileStream = fs.createWriteStream(outReleaseFile);
         
         // write license header
-        writeLicenseHeader(outReleaseFileStream, platform, commitId);
+        writeLicenseHeader(outReleaseFileStream, platform, commitId, platformVersion);
 
         releaseBundle = libraryRelease.bundle();
 

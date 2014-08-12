@@ -23,13 +23,14 @@ var require_tr   = require('./require-tr');
 var root         = path.join(__dirname, '..', '..')
 
 
-module.exports = function bundle(platform, debug, commitId) {
+module.exports = function bundle(platform, debug, commitId, platformVersion) {
     require_tr.platform = platform;
     // FIXME: need to find a way to void ignore missing
     var b = browserify({debug: debug});
     // XXX plugin_list is not present at this stage 
     b.ignore(path.join(root, 'src', 'common', 'plugin_list'));
-
+    console.log('commitID: '+ commitId);
+    console.log('platformVersion: ' + platformVersion);
     b.transform(require_tr.transform);
 
     b.add(path.join(root, 'src', platform, 'exec.js'));

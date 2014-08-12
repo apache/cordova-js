@@ -54,7 +54,15 @@ All of the build tasks can be run via the `grunt` node module. Install it global
 
 Then from the repository root run:
 
-    grunt
+    grunt --platformVersion=3.6.0
+
+To do just one platform, run:
+
+    grunt compile:android --platformVersion=3.6.0
+
+To create the browserify version, run:
+
+    grunt compile-browserify --platformVersion=3.6.0
 	
 For integration, see the 'Integration' section below.
 
@@ -82,7 +90,7 @@ The `boot` method does all the work.  First, it grabs the common platform defini
 
 Tests run in node or the browser. To run the tests in node:
     
-    grunt test
+    grunt test --platformVersion=3.6.0
 
 To run them in the browser:
 

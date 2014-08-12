@@ -30,9 +30,9 @@ module.exports = function computeCommitId(callback, cachedGitVersion) {
 
     var versionFileId = fs.readFileSync('VERSION', { encoding: 'utf8' }).trim();
 
-    if (/-dev$/.test(versionFileId) && fs.existsSync('.git')) {
+    if (fs.existsSync('.git')) {
         var gitPath = 'git';
-        var args = 'rev-list HEAD --max-count=1 --abbrev-commit';
+        var args = 'rev-list HEAD --max-count=1';
         childProcess.exec(gitPath + ' ' + args, function(err, stdout, stderr) {
             var isWindows = process.platform.slice(0, 3) == 'win';
             if (err && isWindows) {
@@ -40,21 +40,19 @@ module.exports = function computeCommitId(callback, cachedGitVersion) {
                 childProcess.exec(gitPath + ' ' + args, function(err, stdout, stderr) {
                     if (err) {
                         console.warn('Error during git describe: ' + err);
-                        done(versionFileId + '-??');
+                        done('???');
                     } else {
-                        done(versionFileId + '-' + stdout);
+                        done(stdout);
                     }
                 });
             } else if (err) {
                 console.warn('Error during git describe: ' + err);
-                done(versionFileId + '-??');
+                done('???');
             } else {
-                done(versionFileId + '-' + stdout);
+                done(stdout);
             }
         });
-    } else {
-        done(fs.readFileSync('VERSION', { encoding: 'utf8' }));
-    }
+    } 
 
     function done(stdout) {
         var version = stdout.trim();

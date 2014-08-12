@@ -24,12 +24,13 @@ var writeModule  = require('./write-module');
 var writeScript  = require('./write-script');
 var licensePath = path.join(__dirname, '..', 'templates', 'LICENSE-for-js-file.txt');
 
-module.exports = function bundle(platform, debug, commitId) {
+module.exports = function bundle(platform, debug, commitId, platformVersion) {
     var modules = collectFiles(path.join('src', 'common'));
     var scripts = collectFiles(path.join('src', 'scripts'));
     modules[''] = path.join('src', 'cordova.js');
     copyProps(modules, collectFiles(path.join('src', platform)));
-
+    console.log('commitID: '+ commitId);
+    console.log('platformVersion: ' + platformVersion);
     if (platform === 'test') {
         // Add any platform-specific modules that have tests to the test bundle.
         var testFilesPath = path.join('src', 'android', 'android');
@@ -46,7 +47,8 @@ module.exports = function bundle(platform, debug, commitId) {
     // write header
     output.push('/*', fs.readFileSync(licensePath, 'utf8'), '*/');
     output.push(';(function() {');
-    output.push("var CORDOVA_JS_BUILD_LABEL = '"  + commitId + "';");
+    //output.push("var CORDOVA_JS_BUILD_LABEL = '"  + commitId + "';");
+    output.push("var PLATFORM_VERSION_BUILD_LABEL = '"  + platformVersion + "';");
 
     // write initial scripts
     if (!scripts['require']) {

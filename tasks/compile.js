@@ -20,11 +20,26 @@ var generate = require('./lib/packager');
 
 module.exports = function(grunt) {
     grunt.registerMultiTask('compile', 'Packages cordova.js', function() {
-
         var done = this.async();
         var platformName = this.target;
         var useWindowsLineEndings = this.data.useWindowsLineEndings;
+        var platformVersion;
+       
+        //grabs --platformVersion flag
+        var flags = grunt.option.flags();
+        var platformVersion;
+        flags.forEach(function(flag) {
+            if (flag.indexOf('platformVersion') > -1) {
+                var equalIndex = flag.indexOf('=');
+                platformVersion = flag.slice(equalIndex + 1);
+            }
+        });
+        if(!platformVersion){
+            console.log('please add a platform version flag and value');
+            console.log('ex: grunt compile-browserify --platformVersion=3.6.0');
+            throw new Error("platformVersion is required!");
+        }
 
-        generate(platformName, useWindowsLineEndings, done);
+        generate(platformName, useWindowsLineEndings, platformVersion, done);
     });
 }
