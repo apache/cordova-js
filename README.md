@@ -68,7 +68,6 @@ To compile the browserify version of the js for just one platform, run:
 
     grunt compile-browserify:android --platformVersion=3.6.0
 
-	
 For integration, see the 'Integration' section below.
 
 ## Known Issues
