@@ -47,7 +47,6 @@ module.exports = function bundle(platform, debug, commitId, platformVersion) {
     // write header
     output.push('/*', fs.readFileSync(licensePath, 'utf8'), '*/');
     output.push(';(function() {');
-    //output.push("var CORDOVA_JS_BUILD_LABEL = '"  + commitId + "';");
     output.push("var PLATFORM_VERSION_BUILD_LABEL = '"  + platformVersion + "';");
 
     // write initial scripts

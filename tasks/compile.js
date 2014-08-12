@@ -36,7 +36,7 @@ module.exports = function(grunt) {
         });
         if(!platformVersion){
             console.log('please add a platform version flag and value');
-            console.log('ex: grunt compile-browserify --platformVersion=3.6.0');
+            console.log('ex: grunt compile --platformVersion=3.6.0');
             throw new Error("platformVersion is required!");
         }
 

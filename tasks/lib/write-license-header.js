@@ -9,8 +9,8 @@ module.exports = function(outStream, platform, commitId, platformVersion) {
 
   outStream.write("// Platform: " + platform + "\n", 'utf8');
   outStream.write("// "  + commitId + "\n", 'utf8');
+  outStream.write("// browserify" + "\n", 'utf8');
   outStream.write(licenseText, 'utf8');
-  //outStream.write("var CORDOVA_JS_BUILD_LABEL = '"  + commitId + "';\n", 'utf8');
   outStream.write("var PLATFORM_VERSION_BUILD_LABEL = '"  + platformVersion + "';\n", 'utf8');
   outStream.write("var define = {moduleMap: []};\n", 'utf8');
 

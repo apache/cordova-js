@@ -56,13 +56,18 @@ Then from the repository root run:
 
     grunt --platformVersion=3.6.0
 
-To do just one platform, run:
+To compile the js for just one platform, run:
 
     grunt compile:android --platformVersion=3.6.0
 
-To create the browserify version, run:
+To create the browserify version of the js, run:
 
     grunt compile-browserify --platformVersion=3.6.0
+
+To compile the browserify version of the js for just one platform, run:
+
+    grunt compile-browserify:android --platformVersion=3.6.0
+
 	
 For integration, see the 'Integration' section below.
 

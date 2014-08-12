@@ -28,8 +28,6 @@ module.exports = function computeCommitId(callback, cachedGitVersion) {
         return;
     }
 
-    var versionFileId = fs.readFileSync('VERSION', { encoding: 'utf8' }).trim();
-
     if (fs.existsSync('.git')) {
         var gitPath = 'git';
         var args = 'rev-list HEAD --max-count=1';

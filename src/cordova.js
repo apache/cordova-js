@@ -93,7 +93,7 @@ function createEvent(type, data) {
 var cordova = {
     define:define,
     require:require,
-    //version:CORDOVA_JS_BUILD_LABEL,
+    version:PLATFORM_VERSION_BUILD_LABEL,
     platformVersion:PLATFORM_VERSION_BUILD_LABEL,
     platformId:platform.id,
     /**
