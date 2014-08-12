@@ -29,8 +29,7 @@ module.exports = function bundle(platform, debug, commitId, platformVersion) {
     var scripts = collectFiles(path.join('src', 'scripts'));
     modules[''] = path.join('src', 'cordova.js');
     copyProps(modules, collectFiles(path.join('src', platform)));
-    console.log('commitID: '+ commitId);
-    console.log('platformVersion: ' + platformVersion);
+    
     if (platform === 'test') {
         // Add any platform-specific modules that have tests to the test bundle.
         var testFilesPath = path.join('src', 'android', 'android');

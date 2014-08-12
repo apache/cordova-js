@@ -50,6 +50,8 @@ module.exports = function computeCommitId(callback, cachedGitVersion) {
                 done(stdout);
             }
         });
+    } else {
+        done('???');
     } 
 
     function done(stdout) {
