@@ -35,7 +35,6 @@ module.exports = function computeCommitId(callback, cachedGitVersion) {
         var gitPath = 'git';
         var args = 'rev-list HEAD --max-count=1';
         childProcess.exec(gitPath + ' ' + args, {cwd:cordovaJSDir}, function(err, stdout, stderr) {
-
             var isWindows = process.platform.slice(0, 3) == 'win';
             if (err && isWindows) {
                 gitPath = '"' + path.join(process.env['ProgramFiles'], 'Git', 'bin', 'git.exe') + '"';
@@ -55,6 +54,7 @@ module.exports = function computeCommitId(callback, cachedGitVersion) {
             }
         });
     } else {
+        console.log('no git');
         done('???');
     } 
 
