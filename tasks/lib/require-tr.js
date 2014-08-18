@@ -44,7 +44,10 @@ var requireTr = {
 
     function end() {
         // SOME BS pre-transforms
-      if(file.match(/android\/platform.js$/)) {
+      if(file.match(/android\/platform.js$/) || file.match(/android\\platform.js$/)) {
+
+        // Checking for '\' from the windows path
+        root = root.replace(/\\/g, "/");
         data = data.replace(/modulemapper\.clobbers.*\n/,
                             util.format('navigator.app = require("%s/src/android/plugin/android/app")', root));
       }
@@ -77,7 +80,6 @@ var requireTr = {
  * visits AST and modifies all the require('cordova/*') and require('org.apache.cordova.*')
  */
 function _updateRequires(code) {
-  
   var ast = UglifyJS.parse(code);
 
   var before = new UglifyJS.TreeTransformer(function(node, descend) {
@@ -86,7 +88,15 @@ function _updateRequires(code) {
     if(node instanceof UglifyJS.AST_Call) {
       // check if function call is a require('module') call
       if(node.expression.name === "require" && node.args.length === 1) {
+
+        // Uglify is not able to recognize Windows style paths using '\' instead of '/'
+        // So replacing all of the '/' back to Windows '\'
+        if (node.args[0].value != undefined && node.args[0].value.indexOf('c:') != -1) {
+            node.args[0].value = node.args[0].value.replace(/\//g, '\\');
+        }
+
         var module = node.args[0].value;
+
         // make sure require only has one argument and that it starts with cordova (old style require.js)
         if(module !== undefined &&
            module.indexOf("cordova") === 0) {
