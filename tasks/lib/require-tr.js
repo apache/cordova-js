@@ -91,7 +91,7 @@ function _updateRequires(code) {
 
         // Uglify is not able to recognize Windows style paths using '\' instead of '/'
         // So replacing all of the '/' back to Windows '\'
-        if (node.args[0].value != undefined && node.args[0].value.indexOf('c:') != -1) {
+        if (node.args[0].value !== undefined && node.args[0].value.indexOf('/android/app') !== -1 && process.platform === 'win32') {
             node.args[0].value = node.args[0].value.replace(/\//g, '\\');
         }
 
