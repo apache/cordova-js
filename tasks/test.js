@@ -16,6 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
 */
+try {
+    require('jasmine-node');
+} catch (e) {
+    console.error("\njasmine-node is not installed, you need to:\n\trun `npm install` from " + require('path').dirname(__dirname)+"\n");
+    process.exit(1);
+}
+
 module.exports = function(grunt) {
     grunt.registerTask('_test', 'Runs test in node', function() {
         var done = this.async();

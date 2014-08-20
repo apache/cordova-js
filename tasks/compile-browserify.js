@@ -16,6 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
 */
+try {
+    require('browserify');
+} catch (e) {
+    console.error("\nbrowserify is not installed, you need to:\n\trun `npm install` from " + require('path').dirname(__dirname)+"\n");
+    process.exit(1);
+}
+
 var generate = require('./lib/packager-browserify');
 
 module.exports = function(grunt) {
