@@ -43,18 +43,28 @@ var requireTr = {
     }
 
     function end() {
-      if(file.match(/browser\/platform.js$/) || file.match(/browser\\platform.js$/)) {
-        data = data.replace(/moduleMapper\.clobbers.*\n/,
-                            util.format('cordova.commandProxy = require("%s/src/common/exec/proxy")', root));
-      }
         // SOME BS pre-transforms
-      if(file.match(/android\/platform.js$/) || file.match(/android\\platform.js$/)) {
-
+      if(data.match(/clobbers\('cordova\/plugin\/android\/app/)) {
         // Checking for '\' from the windows path
-        root = root.replace(/\\/g, "/");
-        data = data.replace(/modulemapper\.clobbers.*\n/,
-                            util.format('navigator.app = require("%s/src/android/plugin/android/app")', root));
+        root = root.replace(/\\/g, '/');
+
+        if(file.match(/android\/platform.js$/)) {
+          data = data.replace(/modulemapper\.clobbers.*\n/,
+                              util.format('navigator.app = require("%s/src/android/plugin/android/app")', root));
+        } else if (file.match(/amazon-fireos\/platform.js$/)) {
+          data = data.replace(/modulemapper\.clobbers.*\n/,
+                              util.format('navigator.app = require("%s/src/amazon-fireos/plugin/android/app")', root));
+        }
       }
+
+      if(data.match(/clobbers\('cordova\/exec\/proxy/)) {
+        // Checking for '\' from the windows path
+        root = root.replace(/\\/g, '/');
+
+        data = data.replace(/modulemapper\.clobbers.*\n/,
+                            util.format('cordova.commandProxy = require("%s/src/common/exec/proxy");', root));
+      }
+
       if(file.match(/FileReader.js$/)) {
         data = data.replace(/getOriginalSymbol\(this/,
                             'getOriginalSymbol(window');
@@ -97,7 +107,7 @@ function _updateRequires(code) {
         // So replacing all of the '/' back to Windows '\'
 
         // FIXME: need to better handle cases of modulemapper replace
-        if (node.args[0].value !== undefined && node.args[0].value.indexOf('/android/app') !== -1 && process.platform === 'win32') {
+        if (node.args[0].value !== undefined && node.args[0].value.indexOf(root) !== -1 && process.platform === 'win32') {
             node.args[0].value = node.args[0].value.replace(/\//g, '\\');
         }
 

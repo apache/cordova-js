@@ -25,10 +25,10 @@ module.exports = {
 
     bootstrap: function() {
 
-        var moduleMapper = require('cordova/modulemapper');
+        var modulemapper = require('cordova/modulemapper');
         var channel = require('cordova/channel');
 
-        moduleMapper.clobbers('cordova/exec/proxy', 'cordova.commandProxy');
+        modulemapper.clobbers('cordova/exec/proxy', 'cordova.commandProxy');
 
         channel.onNativeReady.fire();
 
