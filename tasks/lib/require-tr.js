@@ -48,10 +48,10 @@ var requireTr = {
         // Checking for '\' from the windows path
         root = root.replace(/\\/g, '/');
 
-        if(file.match(/android\/platform.js$/)) {
+        if(file.match(/android\/platform.js$/) || file.match(/android\\platform.js$/)) {
           data = data.replace(/modulemapper\.clobbers.*\n/,
                               util.format('navigator.app = require("%s/src/android/plugin/android/app")', root));
-        } else if (file.match(/amazon-fireos\/platform.js$/)) {
+        } else if (file.match(/amazon-fireos\/platform.js$/) || file.match(/amazon-fireos\\platform.js$/)) {
           data = data.replace(/modulemapper\.clobbers.*\n/,
                               util.format('navigator.app = require("%s/src/amazon-fireos/plugin/android/app")', root));
         }
