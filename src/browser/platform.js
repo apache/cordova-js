@@ -30,9 +30,7 @@ module.exports = {
 
         moduleMapper.clobbers('cordova/exec/proxy', 'cordova.commandProxy');
 
-        channel.onPluginsReady.subscribe(function () {
-            channel.onNativeReady.fire();
-        });
+        channel.onNativeReady.fire();
 
         // FIXME is this the right place to clobber pause/resume? I am guessing not
         // FIXME pause/resume should be deprecated IN CORDOVA for pagevisiblity api

@@ -43,6 +43,10 @@ var requireTr = {
     }
 
     function end() {
+      if(file.match(/browser\/platform.js$/) || file.match(/browser\\platform.js$/)) {
+        data = data.replace(/moduleMapper\.clobbers.*\n/,
+                            util.format('cordova.commandProxy = require("%s/src/common/exec/proxy")', root));
+      }
         // SOME BS pre-transforms
       if(file.match(/android\/platform.js$/) || file.match(/android\\platform.js$/)) {
 
@@ -91,6 +95,8 @@ function _updateRequires(code) {
 
         // Uglify is not able to recognize Windows style paths using '\' instead of '/'
         // So replacing all of the '/' back to Windows '\'
+
+        // FIXME: need to better handle cases of modulemapper replace
         if (node.args[0].value !== undefined && node.args[0].value.indexOf('/android/app') !== -1 && process.platform === 'win32') {
             node.args[0].value = node.args[0].value.replace(/\//g, '\\');
         }
