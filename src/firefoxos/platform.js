@@ -23,7 +23,9 @@ module.exports = {
     id: 'firefoxos',
 
     bootstrap: function() {
-        require('cordova/modulemapper').clobbers('cordova/exec/proxy', 'cordova.commandProxy');
+        var modulemapper = require('cordova/modulemapper');
+
+        modulemapper.clobbers('cordova/exec/proxy', 'cordova.commandProxy');
         require('cordova/channel').onNativeReady.fire();
     }
 };
