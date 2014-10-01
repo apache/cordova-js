@@ -219,8 +219,9 @@ var cordova = {
         }
         catch(err) {
             var msg = "Error in " + (isSuccess ? "Success" : "Error") + " callbackId: " + callbackId + " : " + err;
-            console.log(msg);
-            this.fireWindowEvent("callbackerror",{'message':msg});
+            console && console.log && console.log(msg);
+            this.fireWindowEvent("cordovacallbackerror", { 'message': msg });
+            throw err;
         }
     },
     addConstructor: function(func) {
