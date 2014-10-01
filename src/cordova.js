@@ -181,11 +181,7 @@ var cordova = {
      * Called by native code when returning successful result from an action.
      */
     callbackSuccess: function(callbackId, args) {
-        try {
-            cordova.callbackFromNative(callbackId, true, args.status, [args.message], args.keepCallback);
-        } catch (e) {
-            console.log("Error in success callback: " + callbackId + " = "+e);
-        }
+        cordova.callbackFromNative(callbackId, true, args.status, [args.message], args.keepCallback);
     },
 
     /**
@@ -194,29 +190,36 @@ var cordova = {
     callbackError: function(callbackId, args) {
         // TODO: Deprecate callbackSuccess and callbackError in favour of callbackFromNative.
         // Derive success from status.
-        try {
-            cordova.callbackFromNative(callbackId, false, args.status, [args.message], args.keepCallback);
-        } catch (e) {
-            console.log("Error in error callback: " + callbackId + " = "+e);
-        }
+        cordova.callbackFromNative(callbackId, false, args.status, [args.message], args.keepCallback);
     },
 
     /**
      * Called by native code when returning the result from an action.
      */
-    callbackFromNative: function(callbackId, success, status, args, keepCallback) {
-        var callback = cordova.callbacks[callbackId];
-        if (callback) {
-            if (success && status == cordova.callbackStatus.OK) {
-                callback.success && callback.success.apply(null, args);
-            } else if (!success) {
-                callback.fail && callback.fail.apply(null, args);
+    callbackFromNative: function(callbackId, bSuccess, status, args, keepCallback) {
+        try {
+            var callback = cordova.callbacks[callbackId] || {}; // default empty obj
+            var cbFunk = ( bSuccess && status == cordova.callbackStatus.OK ) ? callback.success : callback.fail;
+            var resultText = ( bSuccess ? "Success" : "Error" );
+            if(cbFunk) {
+                cbFunk.apply(null,args);
+            }
+            else {
+                console.log("Callback function does not exist for " +
+                            resultText +
+                            " result from callbackId:" +
+                            callbackId);
+                cordova.fireDocumentEvent("CDVCallbackError");
             }
 
             // Clear callback if not expecting any more results
             if (!keepCallback) {
                 delete cordova.callbacks[callbackId];
             }
+        }
+        catch(e) {
+            console.log("Error in " + resultText + " handler for callbackId:" + callbackId + " = " + e);
+            cordova.fireDocumentEvent("CDVCallbackError");
         }
     },
     addConstructor: function(func) {
