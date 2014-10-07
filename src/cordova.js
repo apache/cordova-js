@@ -181,7 +181,7 @@ var cordova = {
      * Called by native code when returning successful result from an action.
      */
     callbackSuccess: function(callbackId, args) {
-        this.callbackFromNative(callbackId, true, args.status, [args.message], args.keepCallback);
+        cordova.callbackFromNative(callbackId, true, args.status, [args.message], args.keepCallback);
     },
 
     /**
@@ -190,7 +190,7 @@ var cordova = {
     callbackError: function(callbackId, args) {
         // TODO: Deprecate callbackSuccess and callbackError in favour of callbackFromNative.
         // Derive success from status.
-        this.callbackFromNative(callbackId, false, args.status, [args.message], args.keepCallback);
+        cordova.callbackFromNative(callbackId, false, args.status, [args.message], args.keepCallback);
     },
 
     /**
@@ -215,7 +215,7 @@ var cordova = {
         catch (err) {
             var msg = "Error in " + (isSuccess ? "Success" : "Error") + " callbackId: " + callbackId + " : " + err;
             console && console.log && console.log(msg);
-            this.fireWindowEvent("cordovacallbackerror", { 'message': msg });
+            cordova.fireWindowEvent("cordovacallbackerror", { 'message': msg });
             throw err;
         }
     },
