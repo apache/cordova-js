@@ -20,8 +20,9 @@
 -->
 ## Release Notes for Cordova JS ##
 
-### 3.7.0 (Oct 01, 2014)
+### 3.7.1 (Oct 10, 2014)
 * added missing AL header
+* removed console.log
 
 ### 3.6.3 ###
 

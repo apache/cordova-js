@@ -54,7 +54,8 @@ module.exports = function computeCommitId(callback, cachedGitVersion) {
             }
         });
     } else {
-        console.log('no git');
+        //console.log('no git');
+        //Can't compute commit ID
         done('???');
     } 
 
