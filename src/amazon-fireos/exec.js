@@ -180,6 +180,42 @@ androidExec.setNativeToJsBridgeMode = function(mode) {
     }
 };
 
+function buildPayload(payload, message) {
+    var payloadKind = message.charAt(0);
+    if (payloadKind == 's') {
+        payload.push(message.slice(1));
+    } else if (payloadKind == 't') {
+        payload.push(true);
+    } else if (payloadKind == 'f') {
+        payload.push(false);
+    } else if (payloadKind == 'N') {
+        payload.push(null);
+    } else if (payloadKind == 'n') {
+        payload.push(+message.slice(1));
+    } else if (payloadKind == 'A') {
+        var data = message.slice(1);
+        var bytes = window.atob(data);
+        var arraybuffer = new Uint8Array(bytes.length);
+        for (var i = 0; i < bytes.length; i++) {
+            arraybuffer[i] = bytes.charCodeAt(i);
+        }
+        payload.push(arraybuffer.buffer);
+    } else if (payloadKind == 'S') {
+        payload.push(window.atob(message.slice(1)));
+    } else if (payloadKind == 'M') {
+        var multipartMessages = message.slice(1);
+        while (multipartMessages !== "") {
+            var spaceIdx = multipartMessages.indexOf(' ');
+            var msgLen = +multipartMessages.slice(0, spaceIdx);
+            var multipartMessage = multipartMessages.substr(spaceIdx + 1, msgLen);
+            multipartMessages = multipartMessages.slice(spaceIdx + msgLen + 1);
+            buildPayload(payload, multipartMessage);
+        }
+    } else {
+        payload.push(JSON.parse(message));
+    }
+}
+
 // Processes a single message, as encoded by NativeToJsMessageQueue.java.
 function processMessage(message) {
     try {
@@ -193,32 +229,10 @@ function processMessage(message) {
             var status = +message.slice(2, spaceIdx);
             var nextSpaceIdx = message.indexOf(' ', spaceIdx + 1);
             var callbackId = message.slice(spaceIdx + 1, nextSpaceIdx);
-            var payloadKind = message.charAt(nextSpaceIdx + 1);
-            var payload;
-            if (payloadKind == 's') {
-                payload = message.slice(nextSpaceIdx + 2);
-            } else if (payloadKind == 't') {
-                payload = true;
-            } else if (payloadKind == 'f') {
-                payload = false;
-            } else if (payloadKind == 'N') {
-                payload = null;
-            } else if (payloadKind == 'n') {
-                payload = +message.slice(nextSpaceIdx + 2);
-            } else if (payloadKind == 'A') {
-                var data = message.slice(nextSpaceIdx + 2);
-                var bytes = window.atob(data);
-                var arraybuffer = new Uint8Array(bytes.length);
-                for (var i = 0; i < bytes.length; i++) {
-                    arraybuffer[i] = bytes.charCodeAt(i);
-                }
-                payload = arraybuffer.buffer;
-            } else if (payloadKind == 'S') {
-                payload = window.atob(message.slice(nextSpaceIdx + 2));
-            } else {
-                payload = JSON.parse(message.slice(nextSpaceIdx + 1));
-            }
-            cordova.callbackFromNative(callbackId, success, status, [payload], keepCallback);
+            var payloadMessage = message.slice(nextSpaceIdx + 1);
+            var payload = [];
+            buildPayload(payload, payloadMessage);
+            cordova.callbackFromNative(callbackId, success, status, payload, keepCallback);
         } else {
             console.log("processMessage failed: invalid message: " + JSON.stringify(message));
         }
