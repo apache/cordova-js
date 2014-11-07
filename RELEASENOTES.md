@@ -20,6 +20,13 @@
 -->
 ## Release Notes for Cordova JS ##
 
+### 3.7.2 (Nov 7, 2014)
+* CB-7868 Make <clobbers> on navigator not break on some versions of Android
+* CB-7868 Use utils.defineGetterSetter instead of Object.defineProperty
+* Upleveled amazon-fireos bridge.
+* CB-7735 Fix iOS bridge race condition when using innerHTML on <body>
+* CB-2520 - User agent-related changes for custom user agents in iOS
+
 ### 3.7.1 (Oct 10, 2014)
 * added missing AL header
 * removed console.log
