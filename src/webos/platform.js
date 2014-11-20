@@ -23,7 +23,7 @@ module.exports = {
     id: 'webos',
     bootstrap: function() {
         var channel = require('cordova/channel');
-        var isLegacy = ((navigator.userAgent.indexOf("webOS")>-1) || (navigator.userAgent.indexOf("hpwOS")>-1));
+        var isLegacy = /(?:web|hpw)OS\/(\d+)/.test(navigator.userAgent);
         var webOSjsLib = (window.webOS!==undefined);
         if(!webOSjsLib && window.PalmSystem && window.PalmSystem.stageReady && isLegacy) {
             window.PalmSystem.stageReady();

@@ -19,7 +19,7 @@
  *
 */
 
-var isLegacy = ((navigator.userAgent.indexOf("webOS")>-1) || (navigator.userAgent.indexOf("hpwOS")>-1));
+var isLegacy = /(?:web|hpw)OS\/(\d+)/.test(navigator.userAgent);
 
 function LS2Request(uri, params) {
     this.uri = uri;
