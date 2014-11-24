@@ -40,7 +40,9 @@ A unified JavaScript layer for [Apache Cordova](http://cordova.apache.org/) proj
      |  '-<platform>/ ....... contains the platform-specific base modules
      |
      |-tasks/ ............... custom grunt tasks
-     '-tests/ ............... unit tests
+     |-tests/ ............... unit tests
+     |
+     '-pkg/ ................. generated platform cordova.js files
 
 # Building
 
@@ -74,17 +76,17 @@ For integration, see the 'Integration' section below.
 
 - On Windows, when you run `npm install`, you may get errors regarding
   contextify. This is necessary for running the tests. Make sure you
-  are running node v0.6.15 at the least (and npm v1.1.16 which should
-  come bundled with node 0.6.15). Also, install [Python 2.7.x](http://python.org/download/releases/2.7.3) and [Visual C++ 2010 Express](http://www.microsoft.com/visualstudio/en-us/products/2010-editions/visual-cpp-express). When that is done, run `npm install` again and it should build
+  are running `node` **0.10.1** at the least (and `npm` **1.2.15** which should
+  come bundled with `node` **0.10.1**). Also, install [Python 2.7.x](http://python.org/download/releases/2.7.3) and [Visual C++ 2010 Express](http://www.microsoft.com/visualstudio/en-us/products/2010-editions/visual-cpp-express). When that is done, run `npm install` again and it should build
   contextify natively on Windows.
 
 # How It Works
 
-The `tasks/lib/packager.js` tool is a node.js script that concatenates all of the core Cordova plugins in this repository into a `cordova.<platform>.js` file under the `pkg/` folder. It also wraps the plugins with a RequireJS-compatible module syntax that works in both browser and node environments. We end up with a cordova.js file that wraps each Cordova plugin into its own module.
+The `tasks/lib/packager.js` tool is a node.js script that concatenates all of the core Cordova plugins in this repository into a `cordova.<platform>.js` file under the `pkg/` folder. It also wraps the plugins with a RequireJS-compatible module syntax that works in both browser and node environments. We end up with a `cordova.js` file that wraps each **Cordova** *plugin* into its own module.
 
-Cordova defines a `channel` module under `src/common/channel.js`, which is a publish/subscribe implementation that the project uses for event management.
+**Cordova** defines a `channel` module under `src/common/channel.js`, which is a *publish/subscribe* implementation that the project uses for event management.
 
-The Cordova native-to-webview bridge is initialized in `src/scripts/bootstrap.js`. This file attaches the `boot` function to the `channel.onNativeReady` event - fired by native with a call to:
+The **Cordova** *native-to-webview* bridge is initialized in `src/scripts/bootstrap.js`. This file attaches the `boot` function to the `channel.onNativeReady` event - fired by native with a call to:
 
     cordova.require('cordova/channel).onNativeReady.fire()
 
@@ -106,17 +108,17 @@ Final testing should always be done with the [Mobile Spec test application](http
 
 ## Cordova
 
-Build the js files by running grunt as described above. Update each platform independently. For a given platform:
+Build the js files by running **grunt** as described above. Update each platform independently. For a given platform:
 
-Replace the cordova.js file in the cordova <platform>platform_www/cordova.js directory with the newly generated cordova.js file. If necessary, change the name of the new file to match that of the overwritten one.
+Replace the `cordova.js` file in the cordova <platform>platform_www/cordova.js directory with the newly generated `cordova.js` file. If necessary, change the name of the new file to match that of the overwritten one.
 
-Once the new js file has been added, any new projects created will use the updated js. To update an already existing project, directly replace the cordova.js file within the project's www/ folder with the generated cordova.PLATFORM.js. Make sure to change the file name to match the original.
+Once the new js file has been added, any new projects created will use the updated js. To update an already existing project, directly replace the cordova.js file within the project's `www/` folder with the generated `cordova.PLATFORM.js`. Make sure to change the file name to match the original.
 
 # Adding a New Platform
 
 1. Add your platform as a directory under the `src` folder.
 2. Write a module that encapsulates your platform's `exec` method and
-   call it exec.js. The `exec` method is a JavaScript function
+   call it `exec.js`. The `exec` method is a JavaScript function
    that enables communication from the platform's JavaScript environment
    into the platform's native environment. Each platform uses a different
    mechanism to enable this bridge. We recommend you check out the other
@@ -134,7 +136,7 @@ Once the new js file has been added, any new projects created will use the updat
     by the `exec` call
    It is required that new platform additions be as consistent as
    possible with the existing `service` and `action` labels.
-2. Define your platform definition object and name it platform.js. Drop this into the `src/<platform>` folder. This file should contain a JSON object with the following properties:
+2. Define your platform definition object and name it `platform.js`. Drop this into the `src/<platform>` folder. This file should contain a **JSON** object with the following properties:
     - `id`: a string representing the platform. This should be the same
       name the .js file has
     - `objects`: the property names defined as children of this property
@@ -176,7 +178,7 @@ Once the new js file has been added, any new projects created will use the updat
 
 3. You should probably add a `<platform>:{}` entry to the `Gruntfile` compile arrays.
 4. Make sure your native implementation executes the following JavaScript once all of the native side is initialized and ready: `require('cordova/channel').onNativeReady.fire()`.
-5. The deviceready event is important. To make sure that the stock
+5. The `deviceready` event is important. To make sure that the stock
    common JavaScript fires this event off, the device and network
    connection plugins must successfully be instantiated and return
    information about the connectivity and device information. The
