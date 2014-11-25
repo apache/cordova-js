@@ -56,7 +56,7 @@ function replaceNavigator(origNavigator) {
         for (var key in origNavigator) {
             if (typeof origNavigator[key] == 'function') {
                 newNavigator[key] = origNavigator[key].bind(origNavigator);
-            } 
+            }
             else {
                 (function(k) {
                     utils.defineGetterSetter(newNavigator,key,function() {

@@ -57,7 +57,7 @@ function replaceNavigator(origNavigator) {
         for (var key in origNavigator) {
             if (typeof origNavigator[key] == 'function') {
                 newNavigator[key] = origNavigator[key].bind(origNavigator);
-            } 
+            }
             else {
                 (function(k) {
                     utils.defineGetterSetter(newNavigator,key,function() {
@@ -112,7 +112,7 @@ platform.bootstrap && platform.bootstrap();
  * Create all cordova objects once native side is ready.
  */
 channel.join(function() {
-    
+
     platform.initialize && platform.initialize();
 
     // Fire event to notify that all objects are created
