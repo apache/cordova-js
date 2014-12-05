@@ -16,21 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.
 */
+
 try {
     require('jasmine-node');
+    require('istanbul');
 } catch (e) {
-    console.error("\njasmine-node is not installed, you need to:\n\trun `npm install` from " + require('path').dirname(__dirname)+"\n");
+    console.error("\none of jasmine-node or istanbul packages is not installed, you need to:\n" +
+        "\trun `npm install` from " + require('path').dirname(__dirname)+"\n");
     process.exit(1);
 }
 
 module.exports = function(grunt) {
-    grunt.registerTask('_test', 'Runs test in node', function() {
+    grunt.registerTask('_cover', 'measures test coverage using istanbul', function() {
         var done = this.async();
-        require('./lib/test-jsdom')(done);
-    });
-
-    grunt.registerTask('_btest', 'Runs tests in the browser', function() {
-        require('./lib/test-browser')();
-        this.async(); // never finish.
+        require('./lib/test-jsdom-coverage')(done);
     });
 };
