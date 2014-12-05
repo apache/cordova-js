@@ -104,6 +104,10 @@ To run them in the browser:
 
 Final testing should always be done with the [Mobile Spec test application](https://github.com/apache/cordova-mobile-spec).
 
+To get current tests coverage:
+
+    grunt cover --platformVersion=3.6.0
+
 # Integration
 
 ## Cordova

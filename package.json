@@ -1,69 +1,71 @@
 {
-    "author": "Gord Tanner <gtanner@gmail.com> (http://github.com/gtanner)",
-    "name": "cordova-js",
-    "description": "Cordova JavaScript: a unified JavaScript layer for the Cordova suite of projects enabling cross-platform native mobile development of applications using HTML, CSS and JavaScript.",
-    "version": "3.7.3-dev",
-    "homepage": "http://cordova.apache.org",
-    "repository": {
-        "type": "git",
-        "url": "http://git-wip-us.apache.org/repos/asf/cordova-js.git"
+  "author": "Gord Tanner <gtanner@gmail.com> (http://github.com/gtanner)",
+  "name": "cordova-js",
+  "description": "Cordova JavaScript: a unified JavaScript layer for the Cordova suite of projects enabling cross-platform native mobile development of applications using HTML, CSS and JavaScript.",
+  "version": "3.7.3-dev",
+  "homepage": "http://cordova.apache.org",
+  "repository": {
+    "type": "git",
+    "url": "http://git-wip-us.apache.org/repos/asf/cordova-js.git"
+  },
+  "engines": {
+    "node": "~0.10.x"
+  },
+  "contributors": [
+    {
+      "name": "Fil Maj",
+      "email": "filmaj@apache.org"
     },
-    "engines": {
-        "node": "~0.10.x"
+    {
+      "name": "Jesse MacFadyen",
+      "email": "purplecabbage@apache.org"
     },
-    "contributors": [
-        {
-            "name": "Fil Maj",
-            "email": "filmaj@apache.org"
-        },
-        {
-            "name": "Jesse MacFadyen",
-            "email": "purplecabbage@apache.org"
-        },
-        {
-            "name": "Bryce Curtis",
-            "email": ""
-        },
-        {
-            "name": "Drew Walters",
-            "email": ""
-        },
-        {
-            "name": "Patrick Mueller",
-            "email": ""
-        },
-        {
-            "name": "Simon MacDonald",
-            "email": ""
-        },
-        {
-            "name": "Becky Gibson",
-            "email": ""
-        },
-        {
-            "name": "Anis Kadri",
-            "email": "anis@apache.org"
-        },
-        {
-            "name": "Dan Silivestru",
-            "email": "dansilivestru@apache.org"
-        },
-        {
-            "name": "Shazron Abdullah",
-            "email": "shazron@apache.org"
-        }
-    ],
-    "devDependencies": {
-        "jasmine-node": "1.14.5",
-        "jsdom-nogyp": "0.8.3",
-        "connect": "1.8.5",
-        "grunt": "0.4.1",
-        "grunt-contrib-clean": "0.6.0",
-        "grunt-contrib-jshint": "0.10.0"
+    {
+      "name": "Bryce Curtis",
+      "email": ""
     },
-    "dependencies": {
-        "uglify-js": "2.4.15",
-        "browserify": "7.x.x",
-        "through": "2.3.4"
+    {
+      "name": "Drew Walters",
+      "email": ""
+    },
+    {
+      "name": "Patrick Mueller",
+      "email": ""
+    },
+    {
+      "name": "Simon MacDonald",
+      "email": ""
+    },
+    {
+      "name": "Becky Gibson",
+      "email": ""
+    },
+    {
+      "name": "Anis Kadri",
+      "email": "anis@apache.org"
+    },
+    {
+      "name": "Dan Silivestru",
+      "email": "dansilivestru@apache.org"
+    },
+    {
+      "name": "Shazron Abdullah",
+      "email": "shazron@apache.org"
     }
+  ],
+  "devDependencies": {
+    "connect": "1.8.5",
+    "grunt": "0.4.1",
+    "grunt-contrib-clean": "0.6.0",
+    "grunt-contrib-jshint": "0.10.0",
+    "istanbul": "^0.3.4",
+    "jasmine-node": "1.14.5",
+    "jsdom-nogyp": "0.8.3",
+    "mkdirp": "^0.5.0"
+  },
+  "dependencies": {
+    "browserify": "3.46.0",
+    "through": "2.3.4",
+    "uglify-js": "^2.4.15"
+  }
 }
