@@ -94,14 +94,14 @@ var cordova = {
     platformVersion:PLATFORM_VERSION_BUILD_LABEL,
     version:PLATFORM_VERSION_BUILD_LABEL,
     require: function(module) {
-        if(module === "cordova/exec") {
-            return cordova.exec;
-        }
-        if(module === "org.apache.cordova.media.Media") {
-            return window.Media;
-        }
+       // if(module === "cordova/exec") {
+       //     return cordova.exec;
+       // }
+       // if(module === "org.apache.cordova.media.Media") {
+       //     return window.Media;
+       // }
 
-        return require(module);
+        return require(symbolList[module].path);
     },
     platformId:platform.id,
     /**
