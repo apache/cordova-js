@@ -194,12 +194,7 @@ function buildPayload(payload, message) {
         payload.push(+message.slice(1));
     } else if (payloadKind == 'A') {
         var data = message.slice(1);
-        var bytes = window.atob(data);
-        var arraybuffer = new Uint8Array(bytes.length);
-        for (var i = 0; i < bytes.length; i++) {
-            arraybuffer[i] = bytes.charCodeAt(i);
-        }
-        payload.push(arraybuffer.buffer);
+        payload.push(base64.toArrayBuffer(data));
     } else if (payloadKind == 'S') {
         payload.push(window.atob(message.slice(1)));
     } else if (payloadKind == 'M') {
