@@ -19,6 +19,7 @@
  *
 */
 
+/*global symbolList*/
 
 var channel = require('cordova/channel');
 var platform = require('cordova/platform');
@@ -100,7 +101,6 @@ var cordova = {
        // if(module === "org.apache.cordova.media.Media") {
        //     return window.Media;
        // }
-
         return require(symbolList[module].path);
     },
     platformId:platform.id,
