@@ -100,7 +100,9 @@ var requireTr = {
       throw new Error("Can't add module without a symbol and a path");
     }
     this.modules.push(module);
-  }
+  },
+  modules:[],
+  platform: null
 }
 
 /*
