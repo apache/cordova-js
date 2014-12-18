@@ -33,7 +33,5 @@ module.exports = function(outStream, platform, commitId, platformVersion, symbol
   outStream.write("// browserify" + "\n", 'utf8');
   outStream.write(licenseText, 'utf8');
   outStream.write("var PLATFORM_VERSION_BUILD_LABEL = '"  + platformVersion + "';\n", 'utf8');
-  outStream.write("var define = {moduleMap: []};\n", 'utf8');
-  outStream.write(util.format("var symbolList = %s", JSON.stringify(symbolList)), 'utf8');
-
+  outStream.write(util.format("var symbolList = %s;\n\n", JSON.stringify(symbolList)), 'utf8');
 }
