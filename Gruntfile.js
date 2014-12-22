@@ -23,7 +23,7 @@ module.exports = function(grunt) {
         compile: {
             "amazon-fireos": {},
             "android": {},
-            "blackberry": {},
+            "blackberry10": {},
             "ios": {},
             "osx": {},
             "test": {},
@@ -37,7 +37,7 @@ module.exports = function(grunt) {
         "compile-browserify": {
             "amazon-fireos": {},
             "android": {},
-            "blackberry": {},
+            "blackberry10": {},
             "ios": {},
             "osx": {},
             //"test": {},
