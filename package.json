@@ -63,7 +63,7 @@
     },
     "dependencies": {
         "uglify-js": "2.4.15",
-        "browserify": "3.46.0",
+        "browserify": "7.x.x",
         "through": "2.3.4"
     }
 }

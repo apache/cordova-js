@@ -30,10 +30,15 @@ var path = require('path');
 var util = require('util');
 var through = require('through');
 var UglifyJS = require('uglify-js');
+var os = require('os');
 var root = fs.realpathSync(path.join(__dirname, '..', '..'));
 
-
 var requireTr = {
+
+  init: function(platform) {
+    this.platform = platform;
+    this.modules = [];
+  },
 
   transform: function(file) {
     var data = '';
@@ -76,8 +81,19 @@ var requireTr = {
    
     return through(write, end);
   },
+  hasModule: function(module) {
+    for(var i = 0, j = this.modules.length ; i < j ; i++) {
+      if(this.modules[i].symbol === module) {
+        return true;
+      }
+    }
+    return false;
+  },
   getModules: function() {
     return this.modules;
+  },
+  getPlatform: function() {
+    return this.platform;
   },
   addModule: function(module) {
     if(!module || !module.symbol || !module.path) {
@@ -85,9 +101,8 @@ var requireTr = {
     }
     this.modules.push(module);
   },
-  platform: null,
-  modules: []
-    
+  modules:[],
+  platform: null
 }
 
 /*
@@ -114,31 +129,31 @@ function _updateRequires(code) {
         // make sure require only has one argument and that it starts with cordova (old style require.js)
         if(module !== undefined &&
            module.indexOf("cordova") === 0) {
-          
-          // adding symbolList bullcrap
-          if(requireTr.symbolList && requireTr.symbolList.indexOf(module) === -1) {
-            requireTr.symbolList.push(module);
-          }
+
+          var scriptpath;
 
           // require('cordova') -> cordova.js
           if(module === "cordova") {
-            node.args[0].value = path.join(root, "src", "cordova_b");
+            scriptPath = node.args[0].value = path.join(root, "src", "cordova_b");
           // require('cordova/init') -> common/init
           }  else if(module.match(/cordova\/init/)) {
-            node.args[0].value = module.replace(/cordova\/init/,
+            scriptPath = node.args[0].value = module.replace(/cordova\/init/,
                                     path.join(root, "src", "common", "init_b"));
           // android and amazon-fireos have some special require's
           } else if(module.match(/cordova\/(android|amazon-fireos)\/(.+)/)) {
-            node.args[0].value = module.replace(/cordova\/(android|amazon-fireos)\/(.+)/,
+            scriptPath = node.args[0].value = module.replace(/cordova\/(android|amazon-fireos)\/(.+)/,
                                     path.join(root, "src", "$1", "android", "$2"));
           // require('cordova/exec') and require('cordova/platform') -> platform's exec/platform
           } else if(module.match(/cordova\/(platform|exec)$/)) {
-            node.args[0].value = module.replace(/cordova\/(platform|exec)/,
-                                                path.join(root, "src", requireTr.platform, "$1"));
+            scriptPath = node.args[0].value = module.replace(/cordova\/(platform|exec)/,
+                                                path.join(root, "src", requireTr.getPlatform(), "$1"));
           // require('cordova/anything') should be under common/
           } else if(module.match(/cordova\/(.+)/)) {
-            node.args[0].value = module.replace(/cordova\/(.+)/,
+            scriptPath = node.args[0].value = module.replace(/cordova\/(.+)/,
                                     path.join(root, "src", "common", "$1"));
+          }
+          if(requireTr.hasModule(module) === false) {
+            requireTr.addModule({symbol: module, path: scriptPath});
           }
         }
         else if(module !== undefined && ( module.indexOf("org.apache.cordova") !== -1 ||
