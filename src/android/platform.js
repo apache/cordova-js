@@ -59,7 +59,23 @@ module.exports = {
         // Let native code know we are all done on the JS side.
         // Native code will then un-hide the WebView.
         channel.onCordovaReady.subscribe(function() {
+            exec(onMessageFromNative, null, 'App', 'messageChannel', []);
             exec(null, null, "App", "show", []);
         });
     }
 };
+
+function onMessageFromNative(msg) {
+    var cordova = require('cordova');
+    var action = msg.action;
+
+    switch (action)
+    {
+        case 'hidekeyboard':
+        case 'showkeyboard':
+            cordova.fireDocumentEvent(action);
+            break;
+        default:
+            throw new Error('Unknown event action ' + msg.action);
+    }
+}
