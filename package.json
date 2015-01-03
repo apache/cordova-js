@@ -64,7 +64,7 @@
     "mkdirp": "^0.5.0"
   },
   "dependencies": {
-    "browserify": "3.46.0",
+    "browserify": "7.1.0",
     "through": "2.3.4",
     "uglify-js": "^2.4.15"
   }
