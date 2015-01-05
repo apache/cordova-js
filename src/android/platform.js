@@ -1,4 +1,4 @@
-/*
+/
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -71,8 +71,19 @@ function onMessageFromNative(msg) {
 
     switch (action)
     {
+        // Button events
+        case 'backbutton':
+        case 'menubutton':
+        case 'searchbutton':
+        // App life cycle events
+        case 'pause':
+        case 'resume':
+        // Keyboard events
         case 'hidekeyboard':
         case 'showkeyboard':
+        // Volume events
+        case 'volumedownbutton':
+        case 'volumeupbutton':
             cordova.fireDocumentEvent(action);
             break;
         default:
