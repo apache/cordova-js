@@ -71,9 +71,24 @@ function onMessageFromNative(msg) {
 
     switch (action)
     {
+        // Button events
+        case 'backbutton':
+        case 'menubutton':
+        case 'searchbutton':
+        // App life cycle events
+        case 'pause':
+        case 'resume':
+        // Keyboard events
         case 'hidekeyboard':
         case 'showkeyboard':
-            cordova.fireDocumentEvent(action);
+        // Volume events
+        case 'volumedownbutton':
+        case 'volumeupbutton':
+            try {
+                cordova.fireDocumentEvent(action);
+            } catch(e) {
+                console.log('exception firing ' + action + ' event from native:' + e);
+            }
             break;
         default:
             throw new Error('Unknown event action ' + action);
