@@ -1,4 +1,4 @@
-/
+/*
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -33,12 +33,14 @@ module.exports = {
         // TODO: Extract this as a proper plugin.
         modulemapper.clobbers('cordova/plugin/android/app', 'navigator.app');
 
+        var APP_PLUGIN_NAME = Number(cordova.platformVersion.split('.')[0]) >= 4 ? 'CoreAndroid' : 'App';
+
         // Inject a listener for the backbutton on the document.
         var backButtonChannel = cordova.addDocumentEventHandler('backbutton');
         backButtonChannel.onHasSubscribersChange = function() {
             // If we just attached the first handler or detached the last handler,
             // let native know we need to override the back button.
-            exec(null, null, "App", "overrideBackbutton", [this.numHandlers == 1]);
+            exec(null, null, APP_PLUGIN_NAME, "overrideBackbutton", [this.numHandlers == 1]);
         };
 
         // Add hardware MENU and SEARCH button handlers
@@ -49,7 +51,7 @@ module.exports = {
             // generic button bind used for volumeup/volumedown buttons
             var volumeButtonChannel = cordova.addDocumentEventHandler(buttonName + 'button');
             volumeButtonChannel.onHasSubscribersChange = function() {
-                exec(null, null, "App", "overrideButton", [buttonName, this.numHandlers == 1]);
+                exec(null, null, APP_PLUGIN_NAME, "overrideButton", [buttonName, this.numHandlers == 1]);
             };
         }
         // Inject a listener for the volume buttons on the document.
@@ -59,8 +61,8 @@ module.exports = {
         // Let native code know we are all done on the JS side.
         // Native code will then un-hide the WebView.
         channel.onCordovaReady.subscribe(function() {
-            exec(onMessageFromNative, null, 'App', 'messageChannel', []);
-            exec(null, null, "App", "show", []);
+            exec(onMessageFromNative, null, APP_PLUGIN_NAME, 'messageChannel', []);
+            exec(null, null, APP_PLUGIN_NAME, "show", []);
         });
     }
 };
