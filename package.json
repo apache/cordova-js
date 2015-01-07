@@ -2,7 +2,7 @@
   "author": "Gord Tanner <gtanner@gmail.com> (http://github.com/gtanner)",
   "name": "cordova-js",
   "description": "Cordova JavaScript: a unified JavaScript layer for the Cordova suite of projects enabling cross-platform native mobile development of applications using HTML, CSS and JavaScript.",
-  "version": "3.7.3-dev",
+  "version": "3.7.3",
   "homepage": "http://cordova.apache.org",
   "repository": {
     "type": "git",
@@ -51,6 +51,10 @@
     {
       "name": "Shazron Abdullah",
       "email": "shazron@apache.org"
+    },
+    {
+      "name": "Steve Gill",
+      "email": "stevengill97@gmail.com" 
     }
   ],
   "devDependencies": {
