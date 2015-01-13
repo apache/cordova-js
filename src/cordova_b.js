@@ -95,13 +95,15 @@ var cordova = {
     platformVersion:PLATFORM_VERSION_BUILD_LABEL,
     version:PLATFORM_VERSION_BUILD_LABEL,
     require: function(module) {
+        console.log(module);
         if(symbolList) {
           for(var i = 0 ; i < symbolList.length ; i++) {
-            if(module === symbolList[module].symbolList) {
-              return require(symbolList[module].path);
+            if(module === symbolList[i].symbol) {
+              return require(symbolList[i].path);
             }
           }
         } else {
+          console.log("else");
           return require(module);
         }
     },
