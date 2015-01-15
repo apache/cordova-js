@@ -65,7 +65,7 @@ var cordova = require('cordova'),
 var messagesFromNative = [];
 var isProcessing = false;
 var resolvedPromise = typeof Promise == 'undefined' ? null : Promise.resolve();
-var nextTick = resolvedPromise ? function(fn) { resolvedPromise.then(fn); } : function(fn) { setTimeout(fn) };
+var nextTick = resolvedPromise ? function(fn) { resolvedPromise.then(fn); } : function(fn) { setTimeout(fn); };
 
 function androidExec(success, fail, service, action, args) {
     if (bridgeSecret < 0) {
