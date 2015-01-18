@@ -20,13 +20,14 @@
 */
 
 var exec = require('cordova/exec');
+var APP_PLUGIN_NAME = Number(require('cordova').platformVersion.split('.')[0]) >= 4 ? 'CoreAndroid' : 'App';
 
 module.exports = {
     /**
     * Clear the resource cache.
     */
     clearCache:function() {
-        exec(null, null, "App", "clearCache", []);
+        exec(null, null, APP_PLUGIN_NAME, "clearCache", []);
     },
 
     /**
@@ -44,14 +45,14 @@ module.exports = {
     *      navigator.app.loadUrl("http://server/myapp/index.html", {wait:2000, loadingDialog:"Wait,Loading App", loadUrlTimeoutValue: 60000});
     */
     loadUrl:function(url, props) {
-        exec(null, null, "App", "loadUrl", [url, props]);
+        exec(null, null, APP_PLUGIN_NAME, "loadUrl", [url, props]);
     },
 
     /**
     * Cancel loadUrl that is waiting to be loaded.
     */
     cancelLoadUrl:function() {
-        exec(null, null, "App", "cancelLoadUrl", []);
+        exec(null, null, APP_PLUGIN_NAME, "cancelLoadUrl", []);
     },
 
     /**
@@ -59,7 +60,7 @@ module.exports = {
     * Instead of BACK button loading the previous web page, it will exit the app.
     */
     clearHistory:function() {
-        exec(null, null, "App", "clearHistory", []);
+        exec(null, null, APP_PLUGIN_NAME, "clearHistory", []);
     },
 
     /**
@@ -67,7 +68,7 @@ module.exports = {
     * This is the same as pressing the backbutton on Android device.
     */
     backHistory:function() {
-        exec(null, null, "App", "backHistory", []);
+        exec(null, null, APP_PLUGIN_NAME, "backHistory", []);
     },
 
     /**
@@ -80,7 +81,7 @@ module.exports = {
     * @param override        T=override, F=cancel override
     */
     overrideBackbutton:function(override) {
-        exec(null, null, "App", "overrideBackbutton", [override]);
+        exec(null, null, APP_PLUGIN_NAME, "overrideBackbutton", [override]);
     },
 
     /**
@@ -95,13 +96,13 @@ module.exports = {
     * @param override        T=override, F=cancel override
     */
     overrideButton:function(button, override) {
-        exec(null, null, "App", "overrideButton", [button, override]);
+        exec(null, null, APP_PLUGIN_NAME, "overrideButton", [button, override]);
     },
 
     /**
     * Exit and terminate the application.
     */
     exitApp:function() {
-        return exec(null, null, "App", "exitApp", []);
+        return exec(null, null, APP_PLUGIN_NAME, "exitApp", []);
     }
 };
