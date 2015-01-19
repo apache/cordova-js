@@ -34,6 +34,7 @@ var cordova = require('cordova'),
     // IFRAME_HASH could be made to enable synchronous bridge calls if we wanted this feature.
     jsToNativeModes = {
         IFRAME_NAV: 0, // Default. Uses a new iframe for each poke.
+        // XHR bridge appears to be flaky sometimes: CB-3900, CB-3359, CB-5457, CB-4970, CB-4998, CB-5134
         XHR_NO_PAYLOAD: 1, // About the same speed as IFRAME_NAV. Performance not about the same as IFRAME_NAV, but more variable.
         XHR_WITH_PAYLOAD: 2, // Flakey, and not as performant
         XHR_OPTIONAL_PAYLOAD: 3, // Flakey, and not as performant

@@ -20,6 +20,19 @@
 -->
 ## Release Notes for Cordova JS ##
 
+### 3.7.3 (Jan 06, 2015)
+* CB-8210 Use the correct plugin for App/CoreAndroid plugin based on platformVersion
+* CB-8210 android: Fire events from native via message channel (close #97)
+* CB-8158 updated browserify dependency
+* CB-8210 android: Add message channel for events (closes #96)
+* CB-8129 Adds 'cover' grunt task to generate tests coverage report (close #95)
+* BlackBerry: revert 4176a7d48b5d236613062fe2c8ba8655fd7b7c12
+* BlackBerry: update grunt config to match coho platform name
+* [Amazon related change] base64.toArrayBuffer to convert base64 strings according to https://git-wip-us.apache.org/repos/asf?p=cordova-js.git;a=commit;h=6fde14b81988b1eb118c42f47cbdfbb08d756256
+* CB-8158 removed extra symbolList declartion
+* reverting license header
+* CB-8158 populating symbolList
+
 ### 3.7.2 (Nov 7, 2014)
 * CB-7868 Make <clobbers> on navigator not break on some versions of Android
 * CB-7868 Use utils.defineGetterSetter instead of Object.defineProperty
@@ -75,3 +88,5 @@
 * updating version
 * Upleveled changes from android.
 * CB-6587:Set Vesion to 3.6.0-dev
+
+

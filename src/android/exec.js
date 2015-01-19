@@ -60,8 +60,12 @@ var cordova = require('cordova'),
     jsToNativeBridgeMode,  // Set lazily.
     nativeToJsBridgeMode = nativeToJsModes.ONLINE_EVENT,
     pollEnabled = false,
-    messagesFromNative = [],
     bridgeSecret = -1;
+
+var messagesFromNative = [];
+var isProcessing = false;
+var resolvedPromise = typeof Promise == 'undefined' ? null : Promise.resolve();
+var nextTick = resolvedPromise ? function(fn) { resolvedPromise.then(fn); } : function(fn) { setTimeout(fn); };
 
 function androidExec(success, fail, service, action, args) {
     if (bridgeSecret < 0) {
@@ -91,16 +95,17 @@ function androidExec(success, fail, service, action, args) {
         cordova.callbacks[callbackId] = {success:success, fail:fail};
     }
 
-    var messages = nativeApiProvider.get().exec(bridgeSecret, service, action, callbackId, argsJson);
+    var msgs = nativeApiProvider.get().exec(bridgeSecret, service, action, callbackId, argsJson);
     // If argsJson was received by Java as null, try again with the PROMPT bridge mode.
     // This happens in rare circumstances, such as when certain Unicode characters are passed over the bridge on a Galaxy S2.  See CB-2666.
-    if (jsToNativeBridgeMode == jsToNativeModes.JS_OBJECT && messages === "@Null arguments.") {
+    if (jsToNativeBridgeMode == jsToNativeModes.JS_OBJECT && msgs === "@Null arguments.") {
         androidExec.setJsToNativeBridgeMode(jsToNativeModes.PROMPT);
         androidExec(success, fail, service, action, args);
         androidExec.setJsToNativeBridgeMode(jsToNativeModes.JS_OBJECT);
-        return;
-    } else {
-        androidExec.processMessages(messages, true);
+    } else if (msgs) {
+        messagesFromNative.push(msgs);
+        // Always process async to avoid exceptions messing up stack.
+        nextTick(processMessages);
     }
 }
 
@@ -119,8 +124,12 @@ function pollOnce(opt_fromOnlineEvent) {
         // We know there's nothing to retrieve, so no need to poll.
         return;
     }
-    var msg = nativeApiProvider.get().retrieveJsMessages(bridgeSecret, !!opt_fromOnlineEvent);
-    androidExec.processMessages(msg);
+    var msgs = nativeApiProvider.get().retrieveJsMessages(bridgeSecret, !!opt_fromOnlineEvent);
+    if (msgs) {
+        messagesFromNative.push(msgs);
+        // Process sync since we know we're already top-of-stack.
+        processMessages();
+    }
 }
 
 function pollingTimerFunc() {
@@ -213,63 +222,51 @@ function buildPayload(payload, message) {
 
 // Processes a single message, as encoded by NativeToJsMessageQueue.java.
 function processMessage(message) {
-    try {
-        var firstChar = message.charAt(0);
-        if (firstChar == 'J') {
-            eval(message.slice(1));
-        } else if (firstChar == 'S' || firstChar == 'F') {
-            var success = firstChar == 'S';
-            var keepCallback = message.charAt(1) == '1';
-            var spaceIdx = message.indexOf(' ', 2);
-            var status = +message.slice(2, spaceIdx);
-            var nextSpaceIdx = message.indexOf(' ', spaceIdx + 1);
-            var callbackId = message.slice(spaceIdx + 1, nextSpaceIdx);
-            var payloadMessage = message.slice(nextSpaceIdx + 1);
-            var payload = [];
-            buildPayload(payload, payloadMessage);
-            cordova.callbackFromNative(callbackId, success, status, payload, keepCallback);
-        } else {
-            console.log("processMessage failed: invalid message: " + JSON.stringify(message));
-        }
-    } catch (e) {
-        console.log("processMessage failed: Error: " + e);
-        console.log("processMessage failed: Stack: " + e.stack);
-        console.log("processMessage failed: Message: " + message);
+    var firstChar = message.charAt(0);
+    if (firstChar == 'J') {
+        // This is deprecated on the .java side. It doesn't work with CSP enabled.
+        eval(message.slice(1));
+    } else if (firstChar == 'S' || firstChar == 'F') {
+        var success = firstChar == 'S';
+        var keepCallback = message.charAt(1) == '1';
+        var spaceIdx = message.indexOf(' ', 2);
+        var status = +message.slice(2, spaceIdx);
+        var nextSpaceIdx = message.indexOf(' ', spaceIdx + 1);
+        var callbackId = message.slice(spaceIdx + 1, nextSpaceIdx);
+        var payloadMessage = message.slice(nextSpaceIdx + 1);
+        var payload = [];
+        buildPayload(payload, payloadMessage);
+        cordova.callbackFromNative(callbackId, success, status, payload, keepCallback);
+    } else {
+        console.log("processMessage failed: invalid message: " + JSON.stringify(message));
     }
 }
 
-var isProcessing = false;
-
-// This is called from the NativeToJsMessageQueue.java.
-androidExec.processMessages = function(messages, opt_useTimeout) {
-    if (messages) {
-        messagesFromNative.push(messages);
-    }
+function processMessages() {
     // Check for the reentrant case.
     if (isProcessing) {
         return;
     }
-    if (opt_useTimeout) {
-        window.setTimeout(androidExec.processMessages, 0);
+    if (messagesFromNative.length === 0) {
         return;
     }
     isProcessing = true;
     try {
-        // TODO: add setImmediate polyfill and process only one message at a time.
-        while (messagesFromNative.length) {
-            var msg = popMessageFromQueue();
-            // The Java side can send a * message to indicate that it
-            // still has messages waiting to be retrieved.
-            if (msg == '*' && messagesFromNative.length === 0) {
-                setTimeout(pollOnce, 0);
-                return;
-            }
-            processMessage(msg);
+        var msg = popMessageFromQueue();
+        // The Java side can send a * message to indicate that it
+        // still has messages waiting to be retrieved.
+        if (msg == '*' && messagesFromNative.length === 0) {
+            nextTick(pollOnce);
+            return;
         }
+        processMessage(msg);
     } finally {
         isProcessing = false;
+        if (messagesFromNative.length > 0) {
+            nextTick(processMessages);
+        }
     }
-};
+}
 
 function popMessageFromQueue() {
     var messageBatch = messagesFromNative.shift();

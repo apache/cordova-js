@@ -202,10 +202,16 @@ var cordova = {
             if (callback) {
                 if (isSuccess && status == cordova.callbackStatus.OK) {
                     callback.success && callback.success.apply(null, args);
-                } else {
+                } else if (!isSuccess) {
                     callback.fail && callback.fail.apply(null, args);
                 }
-
+                /*
+                else
+                    Note, this case is intentionally not caught.
+                    this can happen if isSuccess is true, but callbackStatus is NO_RESULT
+                    which is used to remove a callback from the list without calling the callbacks
+                    typically keepCallback is false in this case
+                */
                 // Clear callback if not expecting any more results
                 if (!keepCallback) {
                     delete cordova.callbacks[callbackId];

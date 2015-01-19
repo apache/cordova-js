@@ -95,13 +95,15 @@ var cordova = {
     platformVersion:PLATFORM_VERSION_BUILD_LABEL,
     version:PLATFORM_VERSION_BUILD_LABEL,
     require: function(module) {
+        console.log(module);
         if(symbolList) {
           for(var i = 0 ; i < symbolList.length ; i++) {
-            if(module === symbolList[module].symbolList) {
-              return require(symbolList[module].path);
+            if(module === symbolList[i].symbol) {
+              return require(symbolList[i].path);
             }
           }
         } else {
+          console.log("else");
           return require(module);
         }
     },
@@ -209,9 +211,16 @@ var cordova = {
             if (callback) {
                 if (isSuccess && status == cordova.callbackStatus.OK) {
                     callback.success && callback.success.apply(null, args);
-                } else {
+                } else if (!isSuccess) {
                     callback.fail && callback.fail.apply(null, args);
                 }
+                /*
+                else
+                    Note, this case is intentionally not caught.
+                    this can happen if isSuccess is true, but callbackStatus is NO_RESULT
+                    which is used to remove a callback from the list without calling the callbacks
+                    typically keepCallback is false in this case
+                */
 
                 // Clear callback if not expecting any more results
                 if (!keepCallback) {
