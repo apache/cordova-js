@@ -80,9 +80,6 @@ function onMessageFromNative(msg) {
         // App life cycle events
         case 'pause':
         case 'resume':
-        // Keyboard events
-        case 'hidekeyboard':
-        case 'showkeyboard':
         // Volume events
         case 'volumedownbutton':
         case 'volumeupbutton':
