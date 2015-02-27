@@ -20,6 +20,17 @@
 -->
 ## Release Notes for Cordova JS ##
 
+### 3.8.0 (February 27, 2015)
+* CB-8378 android: Deleted hidekeyboard & showkeyboard events
+* android: Use correct plugin name for navigator.app exec() calls
+* CB-8314 Speed up Travis CI (close #102)
+* CB-8302 Added `npm test` script
+* CB-8158 fixed symbolList require
+* CB-8300 Added CI configuration files
+* CB-8298 android: Execute exec callbacks within their own stack frames
+* CB-8210 Remove unused onDestroy channel (close #99)
+* Fixed callbackFromNative method
+
 ### 3.7.3 (Jan 06, 2015)
 * CB-8210 Use the correct plugin for App/CoreAndroid plugin based on platformVersion
 * CB-8210 android: Fire events from native via message channel (close #97)
@@ -88,5 +99,3 @@
 * updating version
 * Upleveled changes from android.
 * CB-6587:Set Vesion to 3.6.0-dev
-
-
