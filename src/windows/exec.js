@@ -60,18 +60,32 @@ module.exports = function (success, fail, service, action, args) {
             // CB-5806 [Windows8] Add keepCallback support to proxy
             onSuccess = function (result, callbackOptions) {
                 callbackOptions = callbackOptions || {};
+                var callbackStatus;
+                if (callbackOptions.status != null) {
+                    callbackStatus = callbackOptions.status;
+                }
+                else {
+                    callbackStatus = cordova.callbackStatus.OK;
+                }
                 cordova.callbackSuccess(callbackOptions.callbackId || callbackId,
                     {
-                        status: callbackOptions.status || cordova.callbackStatus.OK,
+                        status: callbackStatus,
                         message: result,
                         keepCallback: callbackOptions.keepCallback || false
                     });
             };
             onError = function (err, callbackOptions) {
                 callbackOptions = callbackOptions || {};
+                var callbackStatus;
+                if (callbackOptions.status != null) {
+                    callbackStatus = callbackOptions.status;
+                }
+                else {
+                    callbackStatus = cordova.callbackStatus.OK;
+                }
                 cordova.callbackError(callbackOptions.callbackId || callbackId,
                     {
-                        status: callbackOptions.status || cordova.callbackStatus.ERROR,
+                        status: callbackStatus,
                         message: err,
                         keepCallback: callbackOptions.keepCallback || false
                     });
