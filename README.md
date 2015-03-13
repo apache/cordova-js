@@ -18,6 +18,9 @@
 # under the License.
 #
 -->
+
+[![Build Status](https://travis-ci.org/apache/cordova-js.svg?branch=master)](https://travis-ci.org/apache/cordova-js)
+
 A unified JavaScript layer for [Apache Cordova](http://cordova.apache.org/) projects.
 
 # Project Structure
