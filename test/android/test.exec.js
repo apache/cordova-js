@@ -19,7 +19,7 @@
  *
 */
 
-describe('exec.processMessages', function () {
+describe('android exec.processMessages', function () {
     var cordova = require('cordova'),
         exec = require('cordova/android/exec'),
         nativeApiProvider = require('cordova/android/nativeapiprovider'),
@@ -127,13 +127,14 @@ describe('exec.processMessages', function () {
         });
 
         function performExecAndReturn(messages) {
+
             nativeApi.exec.andCallFake(function(secret, service, action, callbackId, argsJson) {
                 return messages;
             });
 
-            var winSpy = jasmine.createSpy('win');
-
             exec(null, null, 'Service', 'action', []);
+            // note: sometimes we need to wait for multiple callbacks, this returns after one
+            // see 'should handle multiple messages' below
             waitsFor(function() { return callbackSpy.wasCalled }, 200);
         }
 
@@ -198,6 +199,12 @@ describe('exec.processMessages', function () {
             var message2 = createCallbackMessage(true, true, 1, 'id', 'f');
             var messages = message1 + message2;
             performExecAndReturn(messages);
+
+            // need to wait for ALL the callbacks before we check our expects
+            waitsFor(function(){
+                return callbackSpy.calls.length > 1;
+            },200);
+
             runs(function() {
                 expect(callbackSpy).toHaveBeenCalledWith('id', false, 3, ['foo'], false);
                 expect(callbackSpy).toHaveBeenCalledWith('id', true, 1, [false], true);
@@ -228,6 +235,11 @@ describe('exec.processMessages', function () {
                 }
             });
             performExecAndReturn(message1 + message2);
+            // need to wait for ALL the callbacks before we check our expects
+            waitsFor(function(){
+                return callbackSpy.calls.length > 2;
+            },200);
+
             runs(function() {
                 expect(callbackSpy.argsForCall.length).toEqual(3);
                 expect(callbackSpy.argsForCall[0]).toEqual(['id', false, 3, ['call1'], false]);
