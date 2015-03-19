@@ -19,6 +19,8 @@
  *
 */
 
+if ("cordova" in window) { throw new Error("cordova already defined"); };
+
 /*global symbolList*/
 
 var channel = require('cordova/channel');

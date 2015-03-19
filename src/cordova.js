@@ -19,6 +19,8 @@
  *
 */
 
+if ("cordova" in window) { throw new Error("cordova already defined"); };
+
 
 var channel = require('cordova/channel');
 var platform = require('cordova/platform');
