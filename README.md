@@ -21,6 +21,9 @@
 
 [![Build Status](https://travis-ci.org/apache/cordova-js.svg?branch=master)](https://travis-ci.org/apache/cordova-js)
 
+[![Build status](https://ci.appveyor.com/api/projects/status/github/apache/cordova-js?branch=master&svg=true)](https://ci.appveyor.com/project/Humbedooh/cordova-js/branch/master)
+
+
 A unified JavaScript layer for [Apache Cordova](http://cordova.apache.org/) projects.
 
 # Project Structure
