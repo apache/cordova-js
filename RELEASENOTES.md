@@ -20,6 +20,14 @@
 -->
 ## Release Notes for Cordova JS ##
 
+### 3.9.0 (Apr 16, 2015)
+* Verify that window.cordova does not already exist and throw error if it does
+* Added appveyor badge
+* CB-8711 wait for all callbacks before evaluating expectations
+* CB-8223 Adds configparser module for exposing config.xml in the Browser platform
+* [CB-8667][Windows]Handle case where checking for NORESULT returns falsy because NORESUL
+* add TravisCI link and banner
+
 ### 3.8.0 (February 27, 2015)
 * CB-8378 android: Deleted hidekeyboard & showkeyboard events
 * android: Use correct plugin name for navigator.app exec() calls
