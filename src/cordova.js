@@ -19,15 +19,14 @@
  *
 */
 
-
+if(window.cordova){
+    throw new Error("cordova already defined");
+};
 
 
 var channel = require('cordova/channel');
 var platform = require('cordova/platform');
 
-if (window.cordova && window.cordova.platformId && window.cordova.platformId == platform.id){ 
-    throw new Error("cordova already defined"); 
-};
 
 /**
  * Intercept calls to addEventListener + removeEventListener and handle deviceready,

@@ -19,7 +19,9 @@
  *
 */
 
-if ("cordova" in window) { throw new Error("cordova already defined"); };
+if(window.cordova){
+    throw new Error("cordova already defined");
+};
 
 /*global symbolList*/
 
