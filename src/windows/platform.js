@@ -42,15 +42,9 @@ module.exports = {
                 cordova.fireDocumentEvent('resume',null,true);
             };
             
-            // NOTE: this is NOT documented, and subject to change in
-            // the VERY near future
             var activationHandler = function activationHandler(e) {
-                channel.onCordovaReady.subscribe(function() {
-                    // force async
-                    setTimeout(function(){
-                        cordova.fireDocumentEvent('activate',e.detail,true);
-                    },0);
-                });
+                cordova.env = (cordova.env || { });
+                cordova.env.args = e.detail;
             };
 
             app.addEventListener("checkpoint", checkpointHandler);
