@@ -101,7 +101,6 @@ var cordova = {
     version:PLATFORM_VERSION_BUILD_LABEL,
     platformVersion:PLATFORM_VERSION_BUILD_LABEL,
     platformId:platform.id,
-    env:{},
     /**
      * Methods to add/remove your own addEventListener hijacking on document + window.
      */

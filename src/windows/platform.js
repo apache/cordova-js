@@ -41,15 +41,9 @@ module.exports = {
             var resumingHandler = function resumingHandler() {
                 cordova.fireDocumentEvent('resume',null,true);
             };
-            
-            var activationHandler = function activationHandler(e) {
-                cordova.env = (cordova.env || { });
-                cordova.env.args = e.detail;
-            };
 
             app.addEventListener("checkpoint", checkpointHandler);
             Windows.UI.WebUI.WebUIApplication.addEventListener("resuming", resumingHandler, false);
-            app.addEventListener('activated', activationHandler);
             app.start();
         };
 
