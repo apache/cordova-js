@@ -72,7 +72,7 @@
     "grunt-cli": "0.1.13"
   },
   "dependencies": {
-    "browserify": "7.1.0",
+    "browserify": "10.1.2",
     "through": "2.3.4",
     "uglify-js": "^2.4.15"
   }
