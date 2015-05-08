@@ -61,7 +61,7 @@ module.exports = function (success, fail, service, action, args) {
             onSuccess = function (result, callbackOptions) {
                 callbackOptions = callbackOptions || {};
                 var callbackStatus;
-                if (callbackOptions.status != null) {
+                if (callbackOptions.status !== null) {
                     callbackStatus = callbackOptions.status;
                 }
                 else {
@@ -77,7 +77,7 @@ module.exports = function (success, fail, service, action, args) {
             onError = function (err, callbackOptions) {
                 callbackOptions = callbackOptions || {};
                 var callbackStatus;
-                if (callbackOptions.status != null) {
+                if (callbackOptions.status !== null) {
                     callbackStatus = callbackOptions.status;
                 }
                 else {

@@ -21,7 +21,7 @@
 
 if(window.cordova){
     throw new Error("cordova already defined");
-};
+}
 
 /*global symbolList*/
 

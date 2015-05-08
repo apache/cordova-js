@@ -66,7 +66,7 @@ module.exports = function(grunt) {
     // defaults
     grunt.registerTask('default', ['build', 'test']);
     grunt.registerTask('build', ['compile', 'jshint', 'whitespace-check']);
-    grunt.registerTask('test', ['compile', '_test']);
+    grunt.registerTask('test', ['compile', 'jshint', '_test']);
     grunt.registerTask('btest', ['compile', '_btest']);
     grunt.registerTask('cover', ['compile', '_cover']);
 };
