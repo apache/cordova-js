@@ -28,14 +28,30 @@ module.exports = function bundle(platform, debug, commitId, platformVersion) {
     var modules = collectFiles(path.join('src', 'common'));
     var scripts = collectFiles(path.join('src', 'scripts'));
     modules[''] = path.join('src', 'cordova.js');
-    copyProps(modules, collectFiles(path.join('src', platform)));
+
+    var platformDep = path.join('node_modules', 'cordova-'+platform);
+    //check to see if platform dependency has cordova-js-src directory
+    if(fs.existsSync(platformDep) && fs.existsSync(path.join(platformDep, 'cordova-js-src'))) {
+        console.log('using node module platform dependency');
+        copyProps(modules, collectFiles(path.join('node_modules', 'cordova-'+platform, 'cordova-js-src')));
+    } else {
+        if(platform !== 'test') {
+            //for platforms that don't have a release with cordova-js-src yet
+            copyProps(modules, collectFiles(path.join('src', 'legacy-exec', platform)));
+        } else {
+            //platform === test
+            copyProps(modules, collectFiles(path.join('src', platform)));
+        }
+
+    }
+    console.log(modules)
 
     if (platform === 'test') {
         // Add any platform-specific modules that have tests to the test bundle.
-        var testFilesPath = path.join('src', 'android', 'android');
+        var testFilesPath = path.join('node_modules', 'cordova-android', 'cordova-js-src', 'android');
         copyProps(modules, collectFiles(testFilesPath, 'android'));
-        modules['android/exec'] = path.join('src', 'android' , 'exec.js');
-        modules['ios/exec'] = path.join('src', 'ios' , 'exec.js');
+        modules['android/exec'] = path.join('node_modules', 'cordova-android', 'cordova-js-src', 'exec.js');
+        modules['ios/exec'] = path.join('node_modules', 'cordova-ios', 'cordova-js-src', 'exec.js');
     }
 
     var output = [];
