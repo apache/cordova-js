@@ -50,7 +50,10 @@ module.exports = {
         if (!window.WinJS) {
             var scriptElem = document.createElement("script");
 
-            if (navigator.appVersion.indexOf("Windows Phone 8.1;") !== -1) {
+            if (navigator.appVersion.indexOf('MSAppHost/3.0') !== -1) {
+                // Windows 10 UWP
+                scriptElem.src = '/WinJS/js/WinJS.js';
+            } else if (navigator.appVersion.indexOf("Windows Phone 8.1;") !== -1) {
                 // windows phone 8.1 + Mobile IE 11
                 scriptElem.src = "//Microsoft.Phone.WinJS.2.1/js/base.js";
             } else if (navigator.appVersion.indexOf("MSAppHost/2.0;") !== -1) {
