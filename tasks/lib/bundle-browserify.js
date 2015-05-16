@@ -30,11 +30,18 @@ module.exports = function bundle(platform, debug, commitId, platformVersion) {
     // XXX plugin_list is not present at this stage 
     b.ignore(path.join(root, 'src', 'common', 'plugin_list'));
 
-    b.transform(require_tr.transform);
+    b.transform(require_tr.transform, {'platform': platform});
 
-    b.add(path.join(root, 'src', platform, 'exec.js'));
-    
-    b.add(path.join(root, 'src', platform, 'platform.js'));
+    var cordovajssrc = path.join(process.cwd(), 'platforms', platform, 'platform_www', 'cordova-js-src');
+    //checks to see if browserify is run in a cli project and
+    //if the platform has a cordova-js-src to build cordova.js with
+    if(fs.existsSync(cordovajssrc)){ 
+        b.add(path.join(cordovajssrc, 'exec.js'));
+        b.add(path.join(cordovajssrc, 'platform.js'));
+    } else {
+        b.add(path.join(root, 'src', 'legacy-exec', platform, 'exec.js'));
+        b.add(path.join(root, 'src', 'legacy-exec', platform, 'platform.js'));
+    }
 
     b.add(path.join(root, 'src', 'scripts', 'bootstrap.js'));
 

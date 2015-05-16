@@ -37,10 +37,11 @@ var requireTr = {
 
   init: function(platform) {
     this.platform = platform;
-    this.modules = [];
+    this.modules[platform] = [];
   },
 
-  transform: function(file) {
+  transform: function(file, platObj) {
+    this.platform = platObj.platform;
     var data = '';
 
     function write(buf) {
@@ -48,17 +49,18 @@ var requireTr = {
     }
 
     function end() {
-        // SOME BS pre-transforms
+      var platform = platObj.platform;
+      // SOME BS pre-transforms
       if(data.match(/clobbers\('cordova\/plugin\/android\/app/)) {
         // Checking for '\' from the windows path
         root = root.replace(/\\/g, '/');
 
         if(file.match(/android\/platform.js$/) || file.match(/android\\platform.js$/)) {
           data = data.replace(/modulemapper\.clobbers.*\n/,
-                              util.format('navigator.app = require("%s/src/android/plugin/android/app")', root));
+                              util.format('navigator.app = require("%s/src/legacy-exec/android/plugin/android/app")', root));
         } else if (file.match(/amazon-fireos\/platform.js$/) || file.match(/amazon-fireos\\platform.js$/)) {
           data = data.replace(/modulemapper\.clobbers.*\n/,
-                              util.format('navigator.app = require("%s/src/amazon-fireos/plugin/android/app")', root));
+                              util.format('navigator.app = require("%s/src/legacy-exec/amazon-fireos/plugin/android/app")', root));
         }
       }
 
@@ -75,40 +77,42 @@ var requireTr = {
                             'getOriginalSymbol(window');
       }
      
-      this.queue(_updateRequires(data));
+      this.queue(_updateRequires(data, platform));
       this.queue(null);
     }
    
     return through(write, end);
   },
-  hasModule: function(module) {
-    for(var i = 0, j = this.modules.length ; i < j ; i++) {
-      if(this.modules[i].symbol === module) {
+  hasModule: function(module, platform) {
+    if(this.modules[platform] === undefined) {
+      this.modules[platform] = [];
+    }
+    var platformModules = this.modules[platform];
+
+    for(var i = 0, j = platformModules.length ; i < j ; i++) {
+      if(platformModules[i].symbol === module) {
         return true;
       }
     }
     return false;
   },
-  getModules: function() {
-    return this.modules;
+  getModules: function(platform) {
+    return this.modules[platform];
   },
-  getPlatform: function() {
-    return this.platform;
-  },
-  addModule: function(module) {
+  addModule: function(module, platform) {
     if(!module || !module.symbol || !module.path) {
       throw new Error("Can't add module without a symbol and a path");
     }
-    this.modules.push(module);
+    this.modules[platform].push(module);
   },
-  modules:[],
+  modules:{},
   platform: null
 }
 
 /*
  * visits AST and modifies all the require('cordova/*') and require('org.apache.cordova.*')
  */
-function _updateRequires(code) {
+function _updateRequires(code, platform) {
   var ast = UglifyJS.parse(code);
 
   var before = new UglifyJS.TreeTransformer(function(node, descend) {
@@ -131,6 +135,8 @@ function _updateRequires(code) {
            module.indexOf("cordova") === 0) {
 
           var scriptpath;
+          var cordovajssrc = path.join(process.cwd(), "platforms", platform, "platform_www", "cordova-js-src")
+
 
           // require('cordova') -> cordova.js
           if(module === "cordova") {
@@ -141,24 +147,35 @@ function _updateRequires(code) {
                                     path.join(root, "src", "common", "init_b"));
           // android and amazon-fireos have some special require's
           } else if(module.match(/cordova\/(android|amazon-fireos)\/(.+)/)) {
-            scriptPath = node.args[0].value = module.replace(/cordova\/(android|amazon-fireos)\/(.+)/,
-                                    path.join(root, "src", "$1", "android", "$2"));
+                if(fs.existsSync(cordovajssrc)) {
+                    //cordova cli project with cordova-js-src in platform
+                    scriptPath = node.args[0].value = module.replace(/cordova\/(android|amazon-fireos)\/(.+)/, path.join(cordovajssrc, "android", "$2"));
+                } else {
+                    //non cli or no cordova-js-src directory
+                    scriptPath = node.args[0].value = module.replace(/cordova\/(android|amazon-fireos)\/(.+)/, path.join(root, "src", "legacy-exec", "$1", "android", "$2"));
+                }
           // require('cordova/exec') and require('cordova/platform') -> platform's exec/platform
-          } else if(module.match(/cordova\/(platform|exec)$/)) {
-            scriptPath = node.args[0].value = module.replace(/cordova\/(platform|exec)/,
-                                                path.join(root, "src", requireTr.getPlatform(), "$1"));
+          } else if(module.match(/cordova\/(platform|exec)$/)) {                
+                if(fs.existsSync(cordovajssrc)) {
+                    //cordova cli project with cordova-js-src in platform
+                    scriptPath = node.args[0].value = module.replace(/cordova\/(platform|exec)/, path.join(cordovajssrc, "$1"));
+                } else {
+                    //non cli or no cordova-js-src directory
+                    scriptPath = node.args[0].value = module.replace(/cordova\/(platform|exec)/, path.join(root, "src", "legacy-exec", platform, "$1"));
+                }
+            
           // require('cordova/anything') should be under common/
           } else if(module.match(/cordova\/(.+)/)) {
             scriptPath = node.args[0].value = module.replace(/cordova\/(.+)/,
                                     path.join(root, "src", "common", "$1"));
           }
-          if(requireTr.hasModule(module) === false) {
-            requireTr.addModule({symbol: module, path: scriptPath});
+          if(requireTr.hasModule(module, platform) === false) {
+            requireTr.addModule({symbol: module, path: scriptPath}, platform);
           }
         }
         else if(module !== undefined && ( module.indexOf("org.apache.cordova") !== -1 ||
                                           module.indexOf("./") === 0 || module.indexOf("../") === 0 ) ) {
-          var modules = requireTr.getModules();
+          var modules = requireTr.getModules(platform);
 
           if(module.indexOf("../") === 0){
             module = module.replace('../', '');
