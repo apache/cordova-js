@@ -43,7 +43,8 @@ A unified JavaScript layer for [Apache Cordova](http://cordova.apache.org/) proj
      |  |  |-bootstrap.js ... bootstrap the Cordova platform, inject APIs and fire events
      |  |  '-require.js ..... module definition and require() impl
      |  |
-     |  '-<platform>/ ....... contains the platform-specific base modules
+     |  |-legacy-exec/ ...... contains old platform specific modules
+     |  |  |-<platform>/ .... contains the platform-specific base modules
      |
      |-tasks/ ............... custom grunt tasks
      |-tests/ ............... unit tests
@@ -62,19 +63,19 @@ All of the build tasks can be run via the `grunt` node module. Install it global
 
 Then from the repository root run:
 
-    grunt --platformVersion=3.6.0
+    grunt --platformVersion=4.0.0
 
 To compile the js for just one platform, run:
 
-    grunt compile:android --platformVersion=3.6.0
+    grunt compile:android --platformVersion=4.0.0
 
 To create the browserify version of the js, run:
 
-    grunt compile-browserify --platformVersion=3.6.0
+    grunt compile-browserify --platformVersion=4.0.0
 
 To compile the browserify version of the js for just one platform, run:
 
-    grunt compile-browserify:android --platformVersion=3.6.0
+    grunt compile-browserify:android --platformVersion=4.0.0
 
 For integration, see the 'Integration' section below.
 
@@ -126,14 +127,14 @@ Once the new js file has been added, any new projects created will use the updat
 
 # Adding a New Platform
 
-1. Add your platform as a directory under the `src` folder.
+1. Add your platform as a directory under the `legacy-exec` folder.
 2. Write a module that encapsulates your platform's `exec` method and
    call it `exec.js`. The `exec` method is a JavaScript function
    that enables communication from the platform's JavaScript environment
    into the platform's native environment. Each platform uses a different
    mechanism to enable this bridge. We recommend you check out the other
    platform `exec` definitions for inspiration. Drop this into the
-   `src/<platform>` folder you created in step 1. The `exec` method has the following method
+   `src/legacy-exec/<platform>` folder you created in step 1. The `exec` method has the following method
    signature: `function(success, fail, service, action, args)`, with the
    following parameters:
   - `success`: a success function callback
@@ -146,7 +147,7 @@ Once the new js file has been added, any new projects created will use the updat
     by the `exec` call
    It is required that new platform additions be as consistent as
    possible with the existing `service` and `action` labels.
-2. Define your platform definition object and name it `platform.js`. Drop this into the `src/<platform>` folder. This file should contain a **JSON** object with the following properties:
+2. Define your platform definition object and name it `platform.js`. Drop this into the `src/legacy-exec/<platform>` folder. This file should contain a **JSON** object with the following properties:
     - `id`: a string representing the platform. This should be the same
       name the .js file has
     - `objects`: the property names defined as children of this property

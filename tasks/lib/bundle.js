@@ -32,7 +32,6 @@ module.exports = function bundle(platform, debug, commitId, platformVersion) {
     var platformDep = path.join('node_modules', 'cordova-'+platform);
     //check to see if platform dependency has cordova-js-src directory
     if(fs.existsSync(platformDep) && fs.existsSync(path.join(platformDep, 'cordova-js-src'))) {
-        console.log('using node module platform dependency');
         copyProps(modules, collectFiles(path.join('node_modules', 'cordova-'+platform, 'cordova-js-src')));
     } else {
         if(platform !== 'test') {
@@ -44,8 +43,6 @@ module.exports = function bundle(platform, debug, commitId, platformVersion) {
         }
 
     }
-    console.log(modules)
-
     if (platform === 'test') {
         // Add any platform-specific modules that have tests to the test bundle.
         var testFilesPath = path.join('node_modules', 'cordova-android', 'cordova-js-src', 'android');

@@ -129,7 +129,6 @@ function _updateRequires(code, platform) {
         }
 
         var module = node.args[0].value;
-
         // make sure require only has one argument and that it starts with cordova (old style require.js)
         if(module !== undefined &&
            module.indexOf("cordova") === 0) {
@@ -137,7 +136,7 @@ function _updateRequires(code, platform) {
           var scriptpath;
           var cordovajssrc = path.join(process.cwd(), "platforms", platform, "platform_www", "cordova-js-src")
 
-
+    
           // require('cordova') -> cordova.js
           if(module === "cordova") {
             scriptPath = node.args[0].value = path.join(root, "src", "cordova_b");

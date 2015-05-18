@@ -16,6 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
 */
+var fs = require('fs');
+var path = require('path');
+
 try {
     require('browserify');
 } catch (e) {
@@ -41,9 +44,14 @@ module.exports = function(grunt) {
             }
         });
         if(!platformVersion){
-            console.log('please add a platform version flag and value');
-            console.log('ex: grunt compile-browserify --platformVersion=3.6.0');
-            throw new Error("platformVersion is required!");
+            if(fs.existsSync(path.join('node_modules','cordova-'+platformName))) {
+                var platformPkgJson = require('../node_modules/cordova-'+platformName+'/package.json');
+                platformVersion = platformPkgJson.version;
+            } else {
+                console.log('please add a platform version flag and value');
+                console.log('ex: grunt compile-browserify --platformVersion=3.6.0');
+                throw new Error("platformVersion is required!");
+            }
         }
         generate(platformName, useWindowsLineEndings, platformVersion, done);
     });

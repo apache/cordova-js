@@ -34,10 +34,13 @@ module.exports = function(grunt) {
                 platformVersion = flag.slice(equalIndex + 1);
             }
         });
-        if(!platformVersion){
-            //console.log('please add a platform version flag and value');
-            //console.log('ex: grunt compile --platformVersion=3.6.0');
-            platformVersion="N/A";
+        if(!platformVersion) {
+            if(fs.existsSync(path.join('node_modules','cordova-'+platformName))) {
+                var platformPkgJson = require('../node_modules/cordova-'+platformName+'/package.json');
+                platformVersion = platformPkgJson.version;
+            } else {
+                platformVersion="N/A";
+            }
         }
 
         generate(platformName, useWindowsLineEndings, platformVersion, done);

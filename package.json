@@ -12,7 +12,9 @@
     "node": "~0.10.x"
   },
   "scripts": {
-    "test": "grunt test --platformVersion=3.6.0"
+    "test": "grunt test --platformVersion=4.0.0",
+    "build": "grunt --platfromVersion=4.0.0",
+    "build-browserify": "grunt compile:browserify --platformVersion=4.0.0"
   },
   "contributors": [
     {
@@ -69,13 +71,8 @@
     "jasmine-node": "1.14.5",
     "jsdom-nogyp": "0.8.3",
     "mkdirp": "^0.5.0",
-    "grunt-cli": "0.1.13"
-  },
-  "dependencies": {
-    "browserify": "10.1.3",
-    "through": "2.3.4",
-    "uglify-js": "^2.4.15",
-    "cordova-android": "4.x",
+    "grunt-cli": "0.1.13",
+    "cordova-android": "4.0.x",
     "cordova-ios": "3.8.x",
     "cordova-blackberry10": "3.7.x" ,
     "cordova-firefoxos": "3.6.x",
@@ -83,6 +80,12 @@
     "cordova-amazon-fireos": "3.6.x",
     "cordova-wp8": "3.8.x",
     "cordova-windows": "3.8.x",
-    "cordova-browser": "3.6.0"
+    "cordova-browser": "3.6.x"
+
+  },
+  "dependencies": {
+    "browserify": "10.1.3",
+    "through": "2.3.4",
+    "uglify-js": "^2.4.15"
   }
 }
