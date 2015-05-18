@@ -48,9 +48,9 @@ module.exports = function(grunt) {
                 var platformPkgJson = require('../node_modules/cordova-'+platformName+'/package.json');
                 platformVersion = platformPkgJson.version;
             } else {
-                console.log('please add a platform version flag and value');
+                console.log('platformVersion not supplied. Setting platformVersion to N/A');
                 console.log('ex: grunt compile-browserify --platformVersion=3.6.0');
-                throw new Error("platformVersion is required!");
+                platformVersion = 'N/A';
             }
         }
         generate(platformName, useWindowsLineEndings, platformVersion, done);

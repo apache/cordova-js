@@ -17,6 +17,8 @@
  * under the License.
 */
 var generate = require('./lib/packager');
+var fs = require('fs');
+var path = require('path');
 
 module.exports = function(grunt) {
     grunt.registerMultiTask('compile', 'Packages cordova.js', function() {

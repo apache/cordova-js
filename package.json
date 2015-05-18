@@ -12,9 +12,9 @@
     "node": "~0.10.x"
   },
   "scripts": {
-    "test": "grunt test --platformVersion=4.0.0",
-    "build": "grunt --platfromVersion=4.0.0",
-    "build-browserify": "grunt compile:browserify --platformVersion=4.0.0"
+    "test": "grunt test",
+    "build": "grunt compile",
+    "build-browserify": "grunt compile-browserify"
   },
   "contributors": [
     {
