@@ -114,7 +114,6 @@ var requireTr = {
  */
 function _updateRequires(code, platform) {
   var ast = UglifyJS.parse(code);
-
   var before = new UglifyJS.TreeTransformer(function(node, descend) {
 
     // check all function calls
@@ -129,15 +128,14 @@ function _updateRequires(code, platform) {
         }
 
         var module = node.args[0].value;
-        console.log(module)
+
         // make sure require only has one argument and that it starts with cordova (old style require.js)
         if(module !== undefined &&
-           module.indexOf("cordova") === 0) {
+           module.indexOf("cordova") === 0 && module.indexOf("cordova-") !== 0) {
 
           var scriptPath;
           var cordovajssrc = path.join(process.cwd(), "platforms", platform, "platform_www", "cordova-js-src")
 
-    
           // require('cordova') -> cordova.js
           if(module === "cordova") {
             scriptPath = node.args[0].value = path.join(root, "src", "cordova_b");
@@ -173,9 +171,9 @@ function _updateRequires(code, platform) {
             requireTr.addModule({symbol: module, path: scriptPath}, platform);
           }
         }
-        else if(module !== undefined && ( module.indexOf("org.apache.cordova") !== -1 ||
-                                          module.indexOf("./") === 0 || module.indexOf("../") === 0 ) ) {
+        else if(module !== undefined && (module.indexOf("/") !== 0)){
           var modules = requireTr.getModules(platform);
+
 
           if(module.indexOf("../") === 0){
             module = module.replace('../', '');
@@ -206,6 +204,5 @@ function _updateRequires(code, platform) {
 
   return stream.toString();
 }
-
 
 module.exports = requireTr; 
