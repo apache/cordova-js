@@ -20,6 +20,24 @@
 -->
 ## Release Notes for Cordova JS ##
 
+### 4.0.0 (May 27, 2015)
+* CB-9057: Updated cordova.js for Windows to refer to base.js instead of the full-blown WinJS.js.
+* CB-6865 added browserify support for plugins with any id
+* CB-8441 added missing requires and updated npm run scripts
+* CB-8441 platformVersion flag not required anymore. Grab version from dependecy platform versions
+* CB-8441 updated workflow to use cordova-js-src when available
+* CB-8441 grunt compile now uses platform dependencies cordova-js-src for platform specific exec files
+* CB-8441 added platforms as dev dependencies
+* Added template-packaged WinJS reference for Windows 10 support. This closes #111
+* CB-8996 (Windows) Fixed invalid null comparison. This closes #110.
+* updated browserify dependency to 10.1.3
+* Revert "CB-8674: Creates a 'cordova.env' object, and then on Windows hangs the"
+* Revert "reverted global change to cordova object, added temp? 'activate' event to windows platform"
+* reverted global change to cordova object, added temp? 'activate' event to windows platform
+* CB-8674: Creates a 'cordova.env' object, and then on Windows hangs the activation arguments off of cordova.env.args.
+* android: Delete PRIVATE_API bridge mode enum, since it was removed in 4.0.0
+* CB-8838 - Disabled commandQueue for WK_WEBVIEW_BINDING. (closes #107)
+
 ### 3.9.0 (Apr 16, 2015)
 * Verify that window.cordova does not already exist and throw error if it does
 * Added appveyor badge
