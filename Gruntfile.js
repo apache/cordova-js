@@ -44,6 +44,7 @@ module.exports = function(grunt) {
             "windows": { useWindowsLineEndings: true },
             "wp8": { useWindowsLineEndings: true },
             "firefoxos": {},
+            "webos": {},
             "ubuntu": {},
             "browser": {}
         },
