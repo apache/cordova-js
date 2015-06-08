@@ -171,7 +171,9 @@ function _updateRequires(code, platform) {
             requireTr.addModule({symbol: module, path: scriptPath}, platform);
           }
         }
-        else if(module !== undefined && (module.indexOf("/") !== 0)){
+        // Using `> 0` instead of `!== 0` because on Windows (unlike the POSIX systems) if module
+        // is an absolute path, the condition `module.indexOf("/") !== 0` will be true (-1).
+        else if(module !== undefined && (module.indexOf("/") > 0)){
           var modules = requireTr.getModules(platform);
 
 
