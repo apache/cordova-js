@@ -97,7 +97,7 @@ var requireTr = {
     return false;
   },
   getModules: function(platform) {
-    return this.modules[platform];
+    return this.modules[platform] || [];
   },
   addModule: function(module, platform) {
     if(!module || !module.symbol || !module.path) {
