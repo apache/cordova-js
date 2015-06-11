@@ -18,6 +18,7 @@
 */
 var fs = require('fs');
 var path = require('path');
+var pkgJson = require(process.cwd() + '/package.json');
 
 try {
     require('browserify');
@@ -44,8 +45,8 @@ module.exports = function(grunt) {
             }
         });
         if(!platformVersion){
-            if(fs.existsSync(path.join('node_modules','cordova-'+platformName))) {
-                var platformPkgJson = require('../node_modules/cordova-'+platformName+'/package.json');
+            if(pkgJson['cordova-platforms']['cordova-'+platformName] && fs.existsSync(path.join(pkgJson['cordova-platforms']['cordova-'+platformName]))) {
+                var platformPkgJson = require('../' + pkgJson['cordova-platforms']['cordova-'+platformName] +'/package.json');
                 platformVersion = platformPkgJson.version;
             } else {
                 console.log('platformVersion not supplied. Setting platformVersion to N/A');

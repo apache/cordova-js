@@ -19,6 +19,7 @@
 var generate = require('./lib/packager');
 var fs = require('fs');
 var path = require('path');
+var pkgJson = require(process.cwd() + '/package.json');
 
 module.exports = function(grunt) {
     grunt.registerMultiTask('compile', 'Packages cordova.js', function() {
@@ -37,14 +38,14 @@ module.exports = function(grunt) {
             }
         });
         if(!platformVersion) {
-            if(fs.existsSync(path.join('node_modules','cordova-'+platformName))) {
-                var platformPkgJson = require('../node_modules/cordova-'+platformName+'/package.json');
+            //grab platformVersion from sibling platform directoreis
+            if(pkgJson['cordova-platforms']['cordova-'+platformName] && fs.existsSync(path.join(pkgJson['cordova-platforms']['cordova-'+platformName]))) {
+                var platformPkgJson = require('../' + pkgJson['cordova-platforms']['cordova-'+platformName]+'/package.json');
                 platformVersion = platformPkgJson.version;
             } else {
                 platformVersion="N/A";
             }
         }
-
         generate(platformName, useWindowsLineEndings, platformVersion, done);
     });
 }
