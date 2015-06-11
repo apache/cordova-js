@@ -31,10 +31,17 @@ module.exports = function(grunt) {
         //grabs --platformVersion flag
         var flags = grunt.option.flags();
         var platformVersion;
+        var platformPath = undefined;
         flags.forEach(function(flag) {
             if (flag.indexOf('platformVersion') > -1) {
                 var equalIndex = flag.indexOf('=');
                 platformVersion = flag.slice(equalIndex + 1);
+            }
+
+            if (flag.indexOf(platformName) > -1) {
+                var equalIndex = flag.indexOf('=');
+                platformPath = flag.slice(equalIndex + 1);
+                console.log(platformPath);
             }
         });
         if(!platformVersion) {
@@ -46,6 +53,6 @@ module.exports = function(grunt) {
                 platformVersion="N/A";
             }
         }
-        generate(platformName, useWindowsLineEndings, platformVersion, done);
+        generate(platformName, useWindowsLineEndings, platformVersion, platformPath, done);
     });
 }
