@@ -41,13 +41,18 @@ module.exports = function(grunt) {
             if (flag.indexOf(platformName) > -1) {
                 var equalIndex = flag.indexOf('=');
                 platformPath = flag.slice(equalIndex + 1);
-                console.log(platformPath);
             }
         });
         if(!platformVersion) {
+            var platformPkgJson;
+            //grab platformVersion from custom path
+            if(platformPath && fs.existsSync(platformPath)) {
+                platformPkgJson = require('../' + platformPath + '/package.json');
+                platformVersion = platformPkgJson.version;
+
             //grab platformVersion from sibling platform directoreis
-            if(pkgJson['cordova-platforms']['cordova-'+platformName] && fs.existsSync(path.join(pkgJson['cordova-platforms']['cordova-'+platformName]))) {
-                var platformPkgJson = require('../' + pkgJson['cordova-platforms']['cordova-'+platformName]+'/package.json');
+            } else if(pkgJson['cordova-platforms']['cordova-'+platformName] && fs.existsSync(path.join(pkgJson['cordova-platforms']['cordova-'+platformName]))) {
+                platformPkgJson = require('../' + pkgJson['cordova-platforms']['cordova-'+platformName]+'/package.json');
                 platformVersion = platformPkgJson.version;
             } else {
                 platformVersion="N/A";
