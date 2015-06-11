@@ -61,13 +61,19 @@ All of the build tasks can be run via the `grunt` node module. Install it global
 
     sudo npm install -g grunt-cli
 
+`grunt compile` task assumes that users have cordova-platforms as siblings to this cordova.js directory. When generating cordova.js, `grunt compile` will grab platform specific files from these directories if they exist. The default locations are defined in `package.json`.
+
 Then from the repository root run:
 
-    grunt --platformVersion=4.0.0
+    grunt 
 
 To compile the js for just one platform, run:
 
     grunt compile:android --platformVersion=4.0.0
+
+To comiple the js for all platforms but pass in a relative path custom root for your cordova-android and cordova-ios platforms, run:
+
+    grunt compile --android='../custompath/cordova-android' --ios='../custompath/cordova-ios'
 
 To create the browserify version of the js, run:
 
