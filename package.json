@@ -76,6 +76,7 @@
     "cordova-ios": "3.8.x",
     "cordova-blackberry10": "3.7.x" ,
     "cordova-firefoxos": "3.6.x",
+    "cordova-webos": "3.7.x",
     "cordova-ubuntu": "4.0.x",
     "cordova-amazon-fireos": "3.6.x",
     "cordova-wp8": "3.8.x",
