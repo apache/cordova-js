@@ -23,7 +23,7 @@ var copyProps    = require('./copy-props');
 var writeModule  = require('./write-module');
 var writeScript  = require('./write-script');
 var licensePath  = path.join(__dirname, '..', 'templates', 'LICENSE-for-js-file.txt');
-var pkgJson      = require(process.cwd()+'/package.json');
+var pkgJson      = require('../../package.json');
 
 module.exports = function bundle(platform, debug, commitId, platformVersion, platformPath) {
     var modules = collectFiles(path.join('src', 'common'));
@@ -31,19 +31,9 @@ module.exports = function bundle(platform, debug, commitId, platformVersion, pla
     var platformDep;
     modules[''] = path.join('src', 'cordova.js');
 
-    //Use passed in platformPath if it exists
-    if(platformPath) {
-        platformDep = path.join(process.cwd(), platformPath);
-    //see if platform location exists in package.json
-    } else if(pkgJson['cordova-platforms']['cordova-'+platform]){
-        platformDep = path.join(process.cwd(), pkgJson['cordova-platforms']['cordova-'+platform]);
-    } else {
-        platformDep = undefined;
-    }
-
-    //check to see if platform dependency has cordova-js-src directory
-    if(fs.existsSync(platformDep) && fs.existsSync(path.join(platformDep, 'cordova-js-src'))) {
-        copyProps(modules, collectFiles(path.join(platformDep, 'cordova-js-src')));
+    //check to see if platform has cordova-js-src directory
+    if(fs.existsSync(platformPath) && fs.existsSync(path.join(platformPath, 'cordova-js-src'))) {
+        copyProps(modules, collectFiles(path.join(platformPath, 'cordova-js-src')));
     } else {
         if(platform !== 'test') {
             //for platforms that don't have a release with cordova-js-src yet
@@ -54,6 +44,7 @@ module.exports = function bundle(platform, debug, commitId, platformVersion, pla
         }
 
     }
+    //test doesn't support custom paths
     if (platform === 'test') {
         var testFilesPath;
         // Add android platform-specific modules that have tests to the test bundle.

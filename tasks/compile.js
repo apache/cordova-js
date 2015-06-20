@@ -19,40 +19,45 @@
 var generate = require('./lib/packager');
 var fs = require('fs');
 var path = require('path');
-var pkgJson = require(process.cwd() + '/package.json');
+var pkgJson = require('../package.json');
 
 module.exports = function(grunt) {
     grunt.registerMultiTask('compile', 'Packages cordova.js', function() {
         var done = this.async();
         var platformName = this.target;
         var useWindowsLineEndings = this.data.useWindowsLineEndings;
-        var platformVersion;
        
         //grabs --platformVersion flag
         var flags = grunt.option.flags();
         var platformVersion;
         var platformPath = undefined;
         flags.forEach(function(flag) {
+            //see if --platformVersion was passed in
             if (flag.indexOf('platformVersion') > -1) {
                 var equalIndex = flag.indexOf('=');
                 platformVersion = flag.slice(equalIndex + 1);
             }
-
+            
+            //see if flags for platforms were passed in
+            //followed by custom paths
             if (flag.indexOf(platformName) > -1) {
                 var equalIndex = flag.indexOf('=');
                 platformPath = flag.slice(equalIndex + 1);
             }
         });
+        //Use platformPath from package.json, no custom platform path
+        if(platformPath === undefined) { 
+            platformPath = pkgJson['cordova-platforms']['cordova-'+platformName];
+        }
+        //Get absolute path to platform
+        if(platformPath) {
+            platformPath = path.resolve(platformPath);
+        }
         if(!platformVersion) {
             var platformPkgJson;
-            //grab platformVersion from custom path
-            if(platformPath && fs.existsSync(platformPath)) {
-                platformPkgJson = require('../' + platformPath + '/package.json');
-                platformVersion = platformPkgJson.version;
 
-            //grab platformVersion from sibling platform directoreis
-            } else if(pkgJson['cordova-platforms']['cordova-'+platformName] && fs.existsSync(path.join(pkgJson['cordova-platforms']['cordova-'+platformName]))) {
-                platformPkgJson = require('../' + pkgJson['cordova-platforms']['cordova-'+platformName]+'/package.json');
+            if(platformPath && fs.existsSync(platformPath)) {
+                platformPkgJson = require(platformPath +'/package.json');
                 platformVersion = platformPkgJson.version;
             } else {
                 platformVersion="N/A";

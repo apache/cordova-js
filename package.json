@@ -88,6 +88,7 @@
     "cordova-wp8": "../cordova-wp8",
     "cordova-windows": "../cordova-windows",
     "cordova-osx": "../cordova-osx",
-    "cordova-browser": "../cordova-browser"
+    "cordova-browser": "../cordova-browser",
+    "cordova-webos": "../cordova-webos"
   }
 }
