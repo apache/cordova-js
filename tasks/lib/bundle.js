@@ -47,19 +47,21 @@ module.exports = function bundle(platform, debug, commitId, platformVersion, pla
     //test doesn't support custom paths
     if (platform === 'test') {
         var testFilesPath;
+        var androidPath = path.resolve(pkgJson['cordova-platforms']['cordova-android']);
+        var iosPath = path.resolve(pkgJson['cordova-platforms']['cordova-ios']);
         // Add android platform-specific modules that have tests to the test bundle.
-        if(fs.existsSync(path.join(process.cwd(), pkgJson['cordova-platforms']['cordova-android']))) {
-            testFilesPath = path.join(process.cwd(), pkgJson['cordova-platforms']['cordova-android'], 'cordova-js-src', 'android');
-            modules['android/exec'] = path.join(process.cwd(), pkgJson['cordova-platforms']['cordova-android'], 'cordova-js-src', 'exec.js');
+        if(fs.existsSync(androidPath)) {
+            testFilesPath = path.resolve(androidPath, 'cordova-js-src', 'android');
+            modules['android/exec'] = path.resolve(androidPath, 'cordova-js-src', 'exec.js');
         } else {
-            testFilesPath = path.join('src', 'legacy-exec', 'android');
-            modules['android/exec'] = path.join('src', 'legacy-exec', 'android', 'exec.js');
+            testFilesPath = path.resolve('src', 'legacy-exec', 'android', 'android');
+            modules['android/exec'] = path.resolve('src', 'legacy-exec', 'android', 'exec.js');
         }
         copyProps(modules, collectFiles(testFilesPath, 'android'));
 
         //Add iOS platform-specific modules that have tests for the test bundle.
-        if(fs.existsSync(path.join(process.cwd(), pkgJson['cordova-platforms']['cordova-ios']))) {
-            modules['ios/exec'] = path.join(process.cwd(), pkgJson['cordova-platforms']['cordova-ios'], 'cordova-js-src', 'exec.js');
+        if(fs.existsSync(iosPath)) {
+            modules['ios/exec'] = path.join(iosPath, 'cordova-js-src', 'exec.js');
         } else {
             modules['ios/exec'] = path.join('src', 'legacy-exec', 'ios', 'exec.js');
         }
