@@ -45,8 +45,9 @@ module.exports = function(grunt) {
             }
         });
         if(!platformVersion){
-            if(pkgJson['cordova-platforms']['cordova-'+platformName] && fs.existsSync(path.join(pkgJson['cordova-platforms']['cordova-'+platformName]))) {
-                var platformPkgJson = require('../' + pkgJson['cordova-platforms']['cordova-'+platformName] +'/package.json');
+            var platformPath = pkgJson['cordova-platforms']['cordova-'+platformName];
+            if(platformPath && fs.existsSync(platformPath)) {
+                var platformPkgJson = require('../' + platformPath +'/package.json');
                 platformVersion = platformPkgJson.version;
             } else {
                 console.log('platformVersion not supplied. Setting platformVersion to N/A');
