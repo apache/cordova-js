@@ -227,6 +227,11 @@ var cordova = {
         } catch (err) {
             var msg = 'Error in ' + (isSuccess ? 'Success' : 'Error') + ' callbackId: ' + callbackId + ' : ' + err;
             console && console.log && console.log(msg);
+            if(console && console.log) {
+                if(err.stack) {
+                    console.log(err.stack);
+                }
+            }
             cordova.fireWindowEvent('cordovacallbackerror', { 'message': msg });
             throw err;
         }
