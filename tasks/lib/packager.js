@@ -32,21 +32,15 @@ module.exports = function generate(platform, useWindowsLineEndings, platformVers
         if(useWindowsLineEndings) {
             libraryRelease = "\ufeff" + libraryRelease.split(/\r?\n/).join("\r\n");
         }
-        var libraryDebug   = bundle(platform, true, commitId, platformVersion, platformPath);
-
+        
         time = new Date().valueOf() - time;
         if (!fs.existsSync('pkg')) {
             fs.mkdirSync('pkg');
-        }
-        if(!fs.existsSync('pkg/debug')) {
-            fs.mkdirSync('pkg/debug');
         }
 
         outFile = path.join('pkg', 'cordova.' + platform + '.js');
         fs.writeFileSync(outFile, libraryRelease, 'utf8');
 
-        outFile = path.join('pkg', 'debug', 'cordova.' + platform + '-debug.js');
-        fs.writeFileSync(outFile, libraryDebug, 'utf8');
 
         console.log('generated cordova.' + platform + '.js @ ' + commitId + ' in ' + time + 'ms');
         callback();

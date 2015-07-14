@@ -40,9 +40,6 @@ module.exports = function generate(platform, useWindowsLineEndings, platformVers
         if (!fs.existsSync('pkg')) {
             fs.mkdirSync('pkg');
         }
-       // if(!fs.existsSync('pkg/debug')) {
-       //     fs.mkdirSync('pkg/debug');
-       // }
 
         outReleaseFile = path.join('pkg', 'cordova.' + platform + '.js');
         outReleaseFileStream = fs.createWriteStream(outReleaseFile);
@@ -59,15 +56,5 @@ module.exports = function generate(platform, useWindowsLineEndings, platformVers
           console.log('generated cordova.' + platform + '.js @ ' + commitId + ' in ' + newtime + 'ms');
           done();
         });
-
-       // outDebugFile = path.join('pkg', 'debug', 'cordova.' + platform + '-debug.js');
-       // outDebugFileStream = fs.createWriteStream(outDebugFile);
-       // debugBundle = libraryDebug.bundle();
-       // debugBundle.pipe(outDebugFileStream);
-
-       // outDebugFileStream.on('end', function() {
-       //   var newtime = new Date().valueOf() - time;
-       //   console.log('generated cordova.' + platform + '-debug.js @ ' + commitId + ' in ' + newtime + 'ms');
-       // });
     });
 }
