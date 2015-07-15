@@ -23,12 +23,12 @@ var path             = require('path');
 var fs               = require('fs');
 var collect          = require('./collect');
 var jas              = require('jasmine-node');
-var testLibName      = path.join(__dirname, '..', '..', 'pkg', 'cordova.test.js')
-var testLib          = fs.readFileSync(testLibName, 'utf8')
+var testLibName      = path.join(__dirname, '..', '..', 'pkg', 'cordova.test.js');
+var testLib          = fs.readFileSync(testLibName, 'utf8');
 
-var jsdom    = require("jsdom-nogyp").jsdom;
-var document = jsdom(null, null, { url: 'file:///jsdomtest.info/a?b#c' });
-var window   = document.createWindow();
+var jsdom    = require("node-jsdom").jsdom;
+var document = jsdom(undefined, { url: 'file:///jsdomtest.info/a?b#c' });
+var window   = document.parentWindow;
 
 module.exports = function(callback) {
 

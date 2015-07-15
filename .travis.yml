@@ -4,6 +4,7 @@ git:
   depth: 10
 node_js:
   - "0.10"
+  - "0.12"
 install:
   - cd ..
   - git clone https://github.com/apache/cordova-android --depth 10
