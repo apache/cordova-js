@@ -51,20 +51,35 @@ var requireTr = {
     function end() {
       var platform = platObj.platform;
       // SOME BS pre-transforms
-      if(data.match(/clobbers\('cordova\/plugin\/android\/app/)) {
+      if(data.match(/clobbers\("cordova\/plugin\/android\/app/)) {
         // Checking for '\' from the windows path
         root = root.replace(/\\/g, '/');
 
+        // new way that uses files from cordova-js-src
+        if (file.match(/android\/platform_www\/cordova-js-src\/platform.js$/) || file.match(/android\\platform_www\\cordova-js-src\\platform.js$/)) {
+            var androidPath = path.dirname(file).replace(/\\/g, '/');
+
+            data = data.replace(/modulemapper\.clobbers.*\n/,
+                                util.format('navigator.app = require("%s/plugin/android/app.js");', androidPath));
+        } else if (file.match(/amazon-fireos\/platform_www\/cordova-js-src\/platform.js$/) || file.match(/amazon-fireos\\platform_www\\cordova-js-src\\platform.js$/)) {
+            var amazonfirePath = path.dirname(file).replace(/\\/g, '/');
+
+            data = data.replace(/modulemapper\.clobbers.*\n/,
+                                util.format('navigator.app = require("%s/plugin/android/app.js");', amazonfirePath));
+        }
+
+
+        // the old way, keep as a fallback
         if(file.match(/android\/platform.js$/) || file.match(/android\\platform.js$/)) {
           data = data.replace(/modulemapper\.clobbers.*\n/,
-                              util.format('navigator.app = require("%s/src/legacy-exec/android/plugin/android/app")', root));
+                              util.format('navigator.app = require("%s/src/legacy-exec/android/plugin/android/app");', root));
         } else if (file.match(/amazon-fireos\/platform.js$/) || file.match(/amazon-fireos\\platform.js$/)) {
           data = data.replace(/modulemapper\.clobbers.*\n/,
-                              util.format('navigator.app = require("%s/src/legacy-exec/amazon-fireos/plugin/android/app")', root));
+                              util.format('navigator.app = require("%s/src/legacy-exec/amazon-fireos/plugin/android/app");', root));
         }
       }
 
-      if(data.match(/clobbers\('cordova\/exec\/proxy/)) {
+      if(data.match(/clobbers\("cordova\/exec\/proxy/)) {
         // Checking for '\' from the windows path
         root = root.replace(/\\/g, '/');
 
