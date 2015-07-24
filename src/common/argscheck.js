@@ -19,7 +19,6 @@
  *
 */
 
-var exec = require('cordova/exec');
 var utils = require('cordova/utils');
 
 var moduleExports = module.exports;
