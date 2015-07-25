@@ -19,6 +19,10 @@
  *
 */
 
+/*
+    NOTE: this file is NOT used when we use the browserify workflow
+*/
+
 var modulemapper = require('cordova/modulemapper');
 var urlutil = require('cordova/urlutil');
 
