@@ -19,6 +19,9 @@
  *
 */
 
+console.log("this is the fucking spec!");
+
+
 describe("utils", function () {
     var utils = require('cordova/utils');
 
@@ -52,6 +55,32 @@ describe("utils", function () {
             var a = [1, 2, 1];
             expect(utils.arrayRemove(a, 1)).toBe(true);
             expect(a).toEqual([2, 1]);
+        });
+    });
+
+    describe("isArray",function() {
+        it("should return true for [].", function() {
+            var isArray = utils.isArray([]);
+            expect(isArray).toBe(true);
+        });
+        it("should return true for new Array().", function() {
+            var isArray = utils.isArray(new Array());
+            expect(isArray).toBe(true);
+        });
+        it("should return false for {}.", function() {
+            var isArray = utils.isArray({});
+            expect(isArray).toBe(false);
+        });
+    });
+
+    describe("isDate",function() {
+        it("should return true for new Date().", function() {
+            var isDate = utils.isDate(new Date());
+            expect(isDate).toBe(true);
+        });
+        it("should return false for {}.", function() {
+            var isDate = utils.isDate({});
+            expect(isDate).toBe(false);
         });
     });
 
