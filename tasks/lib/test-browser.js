@@ -35,6 +35,8 @@ var pathToVendor   = path.join(__dirname, '..', 'vendor');
 var pathToJasmine  = path.join(__dirname, '..', '..', 'node_modules', 'jasmine-node', 'lib', 'jasmine-node');
 var pathToTests    = path.join(__dirname, '..', '..', 'test');
 
+var SKIP_TESTS = false;
+
 var template = fs.readFileSync(pathToTemplate, "utf-8");
 
 // middlewar for GET '/cordova.test.js'
@@ -53,17 +55,23 @@ function root(req, res) {
         "Content-Type": "text/html"
     });
 
-    //FIXME in place collect thing is atrocious
-    //create the script tags to include
-    var tests = [];
-    collect(path.join(__dirname, '..', '..', 'test'), tests);
-    var specs = tests.map(function (file, path) {
-        return '<script src="' + file.replace(/\\/g, '/').replace(/^.*\/test\//, "/") +
-            '" type="text/javascript" charset="utf-8"></script>';
-    }).join('\n');
+    // When we testing browserify bundle, we don't need to include
+    // tests since they're already bundled with cordova.
+    if (!SKIP_TESTS) {
+        //FIXME in place collect thing is atrocious
+        //create the script tags to include
+        var tests = [];
+        collect(path.join(__dirname, '..', '..', 'test'), tests);
+        var specs = tests.map(function (file, path) {
+            return '<script src="' + file.replace(/\\/g, '/').replace(/^.*\/test\//, "/") +
+                '" type="text/javascript" charset="utf-8"></script>';
+        }).join('\n');
 
-    //inject in the test script includes and write the document
-    res.end(template.replace(/<!-- ##TESTS## -->/g, specs));
+        template = template.replace(/<!-- ##TESTS## -->/g, specs);
+    }
+
+    // write the document
+    res.end(template);
 }
 
 // connect router defn
@@ -72,8 +80,8 @@ function routes(app) {
     app.get('/', root);
 }
 
-module.exports = function() {
-
+module.exports = function(skipTests) {
+    SKIP_TESTS = skipTests;
     console.log('starting browser-based tests');
 
     var vendor = connect.static(pathToVendor);

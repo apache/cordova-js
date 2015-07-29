@@ -26,11 +26,11 @@ try {
 module.exports = function(grunt) {
     grunt.registerTask('_test', 'Runs test in node', function() {
         var done = this.async();
-        require('./lib/test-jsdom')(done);
+        require('./lib/test-jsdom')(done, arguments[0] === ('skip-tests'));
     });
 
     grunt.registerTask('_btest', 'Runs tests in the browser', function() {
-        require('./lib/test-browser')();
+        require('./lib/test-browser')(arguments[0] === ('skip-tests'));
         this.async(); // never finish.
     });
 };

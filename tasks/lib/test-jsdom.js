@@ -30,7 +30,7 @@ var jsdom    = require("node-jsdom").jsdom;
 var document = jsdom(undefined, { url: 'file:///jsdomtest.info/a?b#c' });
 var window   = document.parentWindow;
 
-module.exports = function(callback) {
+module.exports = function(callback, skipTests) {
 
     console.log('starting node-based tests');
 
@@ -57,11 +57,13 @@ module.exports = function(callback) {
     // Set up dummy navigator object
     navigator = window.navigator || {};
 
-    // load in our tests
-    var tests = [];
-    collect(path.join(__dirname, '..', '..', 'test'), tests);
-    for (var x in tests) {
-        eval(fs.readFileSync(tests[x], "utf-8"));
+    if (!skipTests) {
+        // load in our tests
+        var tests = [];
+        collect(path.join(__dirname, '..', '..', 'test'), tests);
+        for (var x in tests) {
+            eval(fs.readFileSync(tests[x], "utf-8"));
+        }
     }
 
     var env = jasmine.getEnv();

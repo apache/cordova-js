@@ -70,6 +70,6 @@ module.exports = function(grunt) {
     grunt.registerTask('test', ['compile:test', 'jshint', '_test']);
     grunt.registerTask('btest', ['compile:test', 'jshint', '_btest']);
     grunt.registerTask('cover', ['compile', '_cover']);
-    grunt.registerTask('test-browserify', ['compile-browserify:test', 'jshint', '_test']);
-    grunt.registerTask('btest-browserify', ['compile-browserify:test', 'jshint', '_btest']);
+    grunt.registerTask('test-browserify', ['compile-browserify:test', 'jshint', '_test:skip-tests']);
+    grunt.registerTask('btest-browserify', ['compile-browserify:test', 'jshint', '_btest:skip-tests']);
 };
