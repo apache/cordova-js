@@ -19,15 +19,18 @@
  *
 */
 
-/*global spyOn:false */
+module.exports = {
+    id: 'test platform',
+    bootstrap: function() {
+        var propertyreplacer = require('cordova/test/propertyreplacer');
 
-var propertyreplacer = require('cordova/propertyreplacer');
-
-exports.replace = function(moduleName, newValue) {
-    propertyreplacer.stub(define.moduleMap, moduleName, null);
-    define.remove(moduleName);
-    define(moduleName, function(require, exports, module) {
-        module.exports = newValue;
-    });
+        require('cordova/builder').replaceHookForTesting = function(obj, key) {
+            // This doesn't clean up non-clobbering assignments, nor does it work for
+            // getters. It does work to un-clobber clobbered / merged symbols, which
+            // is generally good enough for tests.
+            if (obj[key]) {
+                propertyreplacer.stub(obj, key);
+            }
+        };
+    }
 };
-

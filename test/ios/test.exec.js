@@ -28,7 +28,7 @@ describe('iOS exec', function () {
 
     var cordova = require('cordova');
     var exec = require('cordova/ios/exec');
-    var mockxhr = require('cordova/mockxhr');
+    var mockxhr = require('cordova/test/mockxhr');
     var winSpy = jasmine.createSpy('win');
     var failSpy = jasmine.createSpy('fail');
     var origUserAgent = navigator.userAgent;
