@@ -54,6 +54,8 @@ module.exports = function(callback) {
     // hijack require
     require = window.cordova.require;
     define  = window.cordova.define;
+    // Set up dummy navigator object
+    navigator = window.navigator || {};
 
     // load in our tests
     var tests = [];
