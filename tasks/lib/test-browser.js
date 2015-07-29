@@ -23,14 +23,19 @@
 var fs       = require('fs');
 var path     = require('path');
 var connect  = require('connect');
-var exec     = require('child_process').exec;
 var bundle   = require('./bundle');
 var collect  = require('./collect');
+var start    = require('open');
+
+var testLibName    = path.join(__dirname, '..', '..', 'pkg', 'cordova.test.js');
+var testLib        = fs.readFileSync(testLibName, 'utf8');
 
 var pathToTemplate = path.join(__dirname, '..', 'templates', 'suite.html');
 var pathToVendor   = path.join(__dirname, '..', 'vendor');
 var pathToJasmine  = path.join(__dirname, '..', '..', 'node_modules', 'jasmine-node', 'lib', 'jasmine-node');
 var pathToTests    = path.join(__dirname, '..', '..', 'test');
+
+var SKIP_TESTS = false;
 
 var template = fs.readFileSync(pathToTemplate, "utf-8");
 
@@ -40,7 +45,7 @@ function cordovajs(req, res) {
         "Cache-Control": "no-cache",
         "Content-Type": "text/javascript"
     });
-    res.end(bundle('test'));
+    res.end(testLib);
 }
 
 // middleware for GET '/'
@@ -50,28 +55,34 @@ function root(req, res) {
         "Content-Type": "text/html"
     });
 
-    //FIXME in place collect thing is atrocious
-    //create the script tags to include
-    var tests = [];
-    collect(path.join(__dirname, '..', '..', 'test'), tests);
-    var specs = tests.map(function (file, path) {
-        return '<script src="' + file.replace(/^.*\/test\//, "/") +
-            '" type="text/javascript" charset="utf-8"></script>';
-    }).join('');
+    // When we testing browserify bundle, we don't need to include
+    // tests since they're already bundled with cordova.
+    if (!SKIP_TESTS) {
+        //FIXME in place collect thing is atrocious
+        //create the script tags to include
+        var tests = [];
+        collect(path.join(__dirname, '..', '..', 'test'), tests);
+        var specs = tests.map(function (file, path) {
+            return '<script src="' + file.replace(/\\/g, '/').replace(/^.*\/test\//, "/") +
+                '" type="text/javascript" charset="utf-8"></script>';
+        }).join('\n');
 
-    //inject in the test script includes and write the document
-    res.end(template.replace(/<!-- ##TESTS## -->/g, specs));
+        template = template.replace(/<!-- ##TESTS## -->/g, specs);
+    }
+
+    // write the document
+    res.end(template);
 }
 
 // connect router defn
 function routes(app) {
     app.get('/cordova.test.js', cordovajs);
-    app.get('/', root)
+    app.get('/', root);
 }
 
-module.exports = function() {
-
-    console.log('starting browser-based tests')
+module.exports = function(skipTests) {
+    SKIP_TESTS = skipTests;
+    console.log('starting browser-based tests');
 
     var vendor = connect.static(pathToVendor);
     var jasmine = connect.static(pathToJasmine);
@@ -79,10 +90,10 @@ module.exports = function() {
     var router = connect.router(routes);
 
     connect(vendor, jasmine, tests, router).listen(3000);
-    
+
     console.log("Test Server running on:\n");
     console.log("http://127.0.0.1:3000\n");
 
-    exec('open http://127.0.0.1:3000');
+    start('http://127.0.0.1:3000');
 };
 

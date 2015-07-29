@@ -19,6 +19,8 @@
 var fs                 = require('fs');
 var path               = require('path');
 var util               = require('util');
+var through            = require('through2');
+var requireTr          = require('./require-tr');
 var bundle             = require('./bundle-browserify');
 var computeCommitId    = require('./compute-commit-id');
 var writeLicenseHeader = require('./write-license-header');
@@ -43,7 +45,20 @@ module.exports = function generate(platform, useWindowsLineEndings, platformVers
 
         outReleaseFile = path.join('pkg', 'cordova.' + platform + '.js');
         outReleaseFileStream = fs.createWriteStream(outReleaseFile);
-        
+
+        var symbolList = null;
+        var addSymbolList = through.obj(function(row, enc, next) {
+            if(symbolList === null) {
+                symbolList = requireTr.getModules(platform);
+                this.push(util.format('var symbolList = %s;\n%s\n', JSON.stringify(symbolList, null, 4), row));
+            } else {
+                this.push(row);
+            }
+            next();
+        });
+
+        libraryRelease.pipeline.get('wrap').push(addSymbolList);
+
         // write license header
         writeLicenseHeader(outReleaseFileStream, platform, commitId, platformVersion);
 

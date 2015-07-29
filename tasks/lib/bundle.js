@@ -35,14 +35,9 @@ module.exports = function bundle(platform, debug, commitId, platformVersion, pla
     if(fs.existsSync(platformPath) && fs.existsSync(path.join(platformPath, 'cordova-js-src'))) {
         copyProps(modules, collectFiles(path.join(platformPath, 'cordova-js-src')));
     } else {
-        if(platform !== 'test') {
-            //for platforms that don't have a release with cordova-js-src yet
-            copyProps(modules, collectFiles(path.join('src', 'legacy-exec', platform)));
-        } else {
-            //platform === test
-            copyProps(modules, collectFiles(path.join('src', platform)));
-        }
-
+        // for platforms that don't have a release with cordova-js-src yet
+        // or if platform === test
+        copyProps(modules, collectFiles(path.join('src', 'legacy-exec', platform)));
     }
     //test doesn't support custom paths
     if (platform === 'test') {
@@ -68,7 +63,7 @@ module.exports = function bundle(platform, debug, commitId, platformVersion, pla
     }
 
     var output = [];
-  
+
     output.push("// Platform: " + platform);
     output.push("// "  + commitId);
 
@@ -82,16 +77,16 @@ module.exports = function bundle(platform, debug, commitId, platformVersion, pla
     if (!scripts['require']) {
         throw new Error("didn't find a script for 'require'")
     }
-    
+
     writeScript(output, scripts['require'], debug)
 
     // write modules
     var moduleIds = Object.keys(modules)
     moduleIds.sort()
-    
+
     for (var i=0; i<moduleIds.length; i++) {
         var moduleId = moduleIds[i]
-       
+
         writeModule(output, modules[moduleId], moduleId, debug)
     }
 
@@ -101,9 +96,9 @@ module.exports = function bundle(platform, debug, commitId, platformVersion, pla
     if (!scripts['bootstrap']) {
         throw new Error("didn't find a script for 'bootstrap'")
     }
-    
+
     writeScript(output, scripts['bootstrap'], debug)
-    
+
     var bootstrapPlatform = 'bootstrap-' + platform
     if (scripts[bootstrapPlatform]) {
         writeScript(output, scripts[bootstrapPlatform], debug)

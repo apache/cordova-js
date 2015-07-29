@@ -20,8 +20,10 @@ var fs           = require('fs');
 var path         = require('path');
 var browserify   = require('browserify');
 var require_tr   = require('./require-tr');
-var root         = path.join(__dirname, '..', '..')
-
+var root         = path.join(__dirname, '..', '..');
+var pkgJson      = require('../../package.json');
+var collectFiles = require('./collect-files');
+var copyProps    = require('./copy-props');
 
 module.exports = function bundle(platform, debug, commitId, platformVersion) {
     require_tr.platform = platform;
@@ -41,6 +43,26 @@ module.exports = function bundle(platform, debug, commitId, platformVersion) {
     } else {
         b.add(path.join(root, 'src', 'legacy-exec', platform, 'exec.js'));
         b.add(path.join(root, 'src', 'legacy-exec', platform, 'platform.js'));
+    }
+
+    if (platform === 'test') {
+        // Add tests to bundle
+        // TODO: Also need to include android/ios tests
+        fs.readdirSync('test').forEach(function (item) {
+            var itemPath = path.resolve('test', item);
+            if (fs.statSync(itemPath).isFile()) b.add(itemPath);
+        });
+
+        // Add rest of modules from cordova-js-src/legacy-exec directory
+        // TODO: this probably should be done for all platforms?
+        fs.readdirSync(path.join(root, 'src', 'legacy-exec', platform, platform)).forEach(function (item) {
+            var itemPath = path.resolve(root, 'src', 'legacy-exec', platform, platform, item);
+            if (fs.statSync(itemPath).isFile()) b.add(itemPath);
+        });
+
+        // Ignore fake modules from tests, otherwise browserify fails to generate bundle
+        ['your mom', 'dino', 'a', 'ModuleA', 'ModuleB', 'ModuleC']
+        .forEach(b.ignore.bind(b));
     }
 
     b.add(path.join(root, 'src', 'scripts', 'bootstrap.js'));

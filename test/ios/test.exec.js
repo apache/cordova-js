@@ -19,6 +19,8 @@
  *
 */
 
+/*jshint jasmine:true*/
+
 describe('iOS exec', function () {
     var SERVICE = 'TestService';
     var ACTION = 'TestAction';
@@ -26,21 +28,26 @@ describe('iOS exec', function () {
 
     var cordova = require('cordova');
     var exec = require('cordova/ios/exec');
-    var mockxhr = require('cordova/mockxhr');
+    var mockxhr = require('cordova/test/mockxhr');
     var winSpy = jasmine.createSpy('win');
     var failSpy = jasmine.createSpy('fail');
+    var origUserAgent = navigator.userAgent;
 
     beforeEach(function() {
         winSpy.reset();
         failSpy.reset();
         mockxhr.install();
         exec.setJsToNativeBridgeMode(exec.jsToNativeModes.XHR_NO_PAYLOAD);
-        navigator = { userAgent: 'hi there (' + VC_ADDR + ')' };
+        navigator.__defineGetter__('userAgent', function(){
+            return 'hi there (' + VC_ADDR + ')';
+        });
     });
 
     afterEach(function() {
         expect(mockxhr.activeXhrs.length).toBe(0);
-        delete navigator;
+        navigator.__defineGetter__('userAgent', function(){
+            return origUserAgent;
+        });
     });
 
     afterEach(mockxhr.uninstall);

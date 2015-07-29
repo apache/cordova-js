@@ -149,7 +149,10 @@ function _updateRequires(code, platform) {
            module.indexOf("cordova") === 0 && module.indexOf("cordova-") !== 0) {
 
           var scriptPath;
-          var cordovajssrc = path.join(process.cwd(), "platforms", platform, "platform_www", "cordova-js-src")
+          var cordovajssrc = path.join(process.cwd(), "platforms", platform, "platform_www", "cordova-js-src");
+          // Amazon uses "android" directory
+          var platformName = platform === "amazon-fireos" ? "android" : platform;
+          var platformModuleRe = new RegExp('cordova\/(' + platformName + ')\/(.+)');
 
           // require('cordova') -> cordova.js
           if(module === "cordova") {
@@ -158,17 +161,19 @@ function _updateRequires(code, platform) {
           }  else if(module.match(/cordova\/init/)) {
             scriptPath = node.args[0].value = module.replace(/cordova\/init/,
                                     path.join(root, "src", "common", "init_b"));
-          // android and amazon-fireos have some special require's
-          } else if(module.match(/cordova\/(android|amazon-fireos)\/(.+)/)) {
+          // handle platform's special special requires
+          } else if(module.match(platformModuleRe)) {
                 if(fs.existsSync(cordovajssrc)) {
                     //cordova cli project with cordova-js-src in platform
-                    scriptPath = node.args[0].value = module.replace(/cordova\/(android|amazon-fireos)\/(.+)/, path.join(cordovajssrc, "android", "$2"));
+                    scriptPath = node.args[0].value = module.replace(platformModuleRe,
+                        path.join(cordovajssrc, platformName, "$2"));
                 } else {
                     //non cli or no cordova-js-src directory
-                    scriptPath = node.args[0].value = module.replace(/cordova\/(android|amazon-fireos)\/(.+)/, path.join(root, "src", "legacy-exec", "$1", "android", "$2"));
+                    scriptPath = node.args[0].value = module.replace(platformModuleRe,
+                        path.join(root, "src", "legacy-exec", "$1", platformName, "$2"));
                 }
           // require('cordova/exec') and require('cordova/platform') -> platform's exec/platform
-          } else if(module.match(/cordova\/(platform|exec)$/)) {                
+          } else if(module.match(/cordova\/(platform|exec)$/)) {
                 if(fs.existsSync(cordovajssrc)) {
                     //cordova cli project with cordova-js-src in platform
                     scriptPath = node.args[0].value = module.replace(/cordova\/(platform|exec)/, path.join(cordovajssrc, "$1"));
