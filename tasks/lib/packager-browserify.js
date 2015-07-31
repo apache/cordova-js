@@ -19,7 +19,6 @@
 var fs                 = require('fs');
 var path               = require('path');
 var util               = require('util');
-var requireTr          = require('./require-tr');
 var bundle             = require('./bundle-browserify');
 var computeCommitId    = require('./compute-commit-id');
 var writeLicenseHeader = require('./write-license-header');
@@ -52,4 +51,4 @@ module.exports = function generate(platform, useWindowsLineEndings, platformVers
           done();
         });
     });
-}
+};
