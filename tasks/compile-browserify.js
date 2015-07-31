@@ -55,6 +55,6 @@ module.exports = function(grunt) {
                 platformVersion = 'N/A';
             }
         }
-        generate(platformName, useWindowsLineEndings, platformVersion, done);
+        generate(platformName, useWindowsLineEndings, platformVersion, platformPath, done);
     });
 }

@@ -98,19 +98,7 @@ function createEvent(type, data) {
 var cordova = {
     platformVersion:PLATFORM_VERSION_BUILD_LABEL,
     version:PLATFORM_VERSION_BUILD_LABEL,
-    require: function(module) {
-        console.log(module);
-        if(symbolList) {
-          for(var i = 0 ; i < symbolList.length ; i++) {
-            if(module === symbolList[i].symbol) {
-              return require(symbolList[i].path);
-            }
-          }
-        } else {
-          console.log("else");
-          return require(module);
-        }
-    },
+    require: require,
     platformId:platform.id,
     /**
      * Methods to add/remove your own addEventListener hijacking on document + window.

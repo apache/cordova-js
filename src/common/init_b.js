@@ -21,6 +21,7 @@
 
 var channel = require('cordova/channel');
 var cordova = require('cordova');
+var modulemapper = require('cordova/modulemapper');
 var platform = require('cordova/platform');
 var utils = require('cordova/utils');
 
@@ -113,6 +114,7 @@ platform.bootstrap && platform.bootstrap();
  * Create all cordova objects once native side is ready.
  */
 channel.join(function() {
+    modulemapper.mapModules(window);
 
     platform.initialize && platform.initialize();
 

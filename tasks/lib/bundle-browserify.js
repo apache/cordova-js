@@ -9,7 +9,7 @@
  *
  *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to 
+ * Unless required by applicable law or agreed to
  * software distributed under the License is distr
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS
  * KIND, either express or implied.  See the Licen
@@ -19,53 +19,63 @@
 var fs           = require('fs');
 var path         = require('path');
 var browserify   = require('browserify');
-var require_tr   = require('./require-tr');
 var root         = path.join(__dirname, '..', '..');
 var pkgJson      = require('../../package.json');
 var collectFiles = require('./collect-files');
 var copyProps    = require('./copy-props');
 
-module.exports = function bundle(platform, debug, commitId, platformVersion) {
-    require_tr.platform = platform;
-    // FIXME: need to find a way to void ignore missing
-    var b = browserify({debug: debug});
-    // XXX plugin_list is not present at this stage 
-    b.ignore(path.join(root, 'src', 'common', 'plugin_list'));
+module.exports = function bundle(platform, debug, commitId, platformVersion, platformPath) {
+    platformPath = fs.existsSync(platformPath) && fs.existsSync(path.join(platformPath, 'cordova-js-src')) ?
+        path.join(platformPath, 'cordova-js-src') :
+        path.resolve(root, 'src', 'legacy-exec', platform);
 
-    b.transform(require_tr.transform, {'platform': platform});
+    var platformDirname = platform === 'amazon-fireos' ? 'android' : platform;
 
-    var cordovajssrc = path.join(process.cwd(), 'platforms', platform, 'platform_www', 'cordova-js-src');
-    //checks to see if browserify is run in a cli project and
-    //if the platform has a cordova-js-src to build cordova.js with
-    if(fs.existsSync(cordovajssrc)){ 
-        b.add(path.join(cordovajssrc, 'exec.js'));
-        b.add(path.join(cordovajssrc, 'platform.js'));
-    } else {
-        b.add(path.join(root, 'src', 'legacy-exec', platform, 'exec.js'));
-        b.add(path.join(root, 'src', 'legacy-exec', platform, 'platform.js'));
-    }
+    var modules = {'cordova': path.resolve(root, 'src', 'cordova_b.js')};
+    copyProps(modules, collectFiles(path.resolve(root, 'src', 'common'), 'cordova'));
+    copyProps(modules, collectFiles(platformPath, 'cordova'));
 
+    // Replace standart initialization script with browserify's one
+    delete modules['cordova/init_b'];
+    delete modules['cordova/modulemapper_b'];
+    delete modules['cordova/pluginloader'];
+    modules['cordova/init'] = path.resolve(root, 'src', 'common', 'init_b.js');
+    modules['cordova/modulemapper'] = path.resolve(root, 'src', 'common', 'modulemapper_b.js');
+
+    // test doesn't support custom paths
     if (platform === 'test') {
-        // Add tests to bundle
-        // TODO: Also need to include android/ios tests
-        fs.readdirSync('test').forEach(function (item) {
-            var itemPath = path.resolve('test', item);
-            if (fs.statSync(itemPath).isFile()) b.add(itemPath);
-        });
+        var testFilesPath;
+        var androidPath = path.resolve(pkgJson['cordova-platforms']['cordova-android']);
+        var iosPath = path.resolve(pkgJson['cordova-platforms']['cordova-ios']);
+        // Add android platform-specific modules that have tests to the test bundle.
+        if(fs.existsSync(androidPath)) {
+            testFilesPath = path.resolve(androidPath, 'cordova-js-src', 'android');
+            modules['cordova/android/exec'] = path.resolve(androidPath, 'cordova-js-src', 'exec.js');
+        } else {
+            testFilesPath = path.resolve('src', 'legacy-exec', 'android', 'android');
+            modules['cordova/android/exec'] = path.resolve(root, 'src', 'legacy-exec', 'android', 'exec.js');
+        }
+        copyProps(modules, collectFiles(testFilesPath, 'cordova/android'));
 
-        // Add rest of modules from cordova-js-src/legacy-exec directory
-        // TODO: this probably should be done for all platforms?
-        fs.readdirSync(path.join(root, 'src', 'legacy-exec', platform, platform)).forEach(function (item) {
-            var itemPath = path.resolve(root, 'src', 'legacy-exec', platform, platform, item);
-            if (fs.statSync(itemPath).isFile()) b.add(itemPath);
-        });
-
-        // Ignore fake modules from tests, otherwise browserify fails to generate bundle
-        ['your mom', 'dino', 'a', 'ModuleA', 'ModuleB', 'ModuleC']
-        .forEach(b.ignore.bind(b));
+        //Add iOS platform-specific modules that have tests for the test bundle.
+        if(fs.existsSync(iosPath)) {
+            modules['cordova/ios/exec'] = path.join(iosPath, 'cordova-js-src', 'exec.js');
+        } else {
+            modules['cordova/ios/exec'] = path.resolve(root, 'src', 'legacy-exec', 'ios', 'exec.js');
+        }
+        copyProps(modules, collectFiles(testFilesPath, 'cordova/ios'));
     }
 
-    b.add(path.join(root, 'src', 'scripts', 'bootstrap.js'));
+    modules = Object.keys(modules)
+    .map(function (moduleId) {
+        return {
+            file: modules[moduleId],
+            expose: moduleId
+        };
+    });
 
-    return b;
-}
+    return browserify({debug: !!debug, detectGlobals: false})
+        .require(modules)
+        .exclude('cordova/plugin_list')
+        .exclude('cordova/pluginloader');
+};
