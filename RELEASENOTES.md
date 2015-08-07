@@ -20,6 +20,28 @@
 -->
 ## Release Notes for Cordova JS ##
 
+### 4.1.0 (Aug 06, 2015)
+* CB-9429 Removes tests from resultant bundle
+* CB-9436 Removes `require-tr` bundle transformation
+* CB-9429 Enables jsdom/browser tests for browserify.
+* add comment about where/when this file is used
+* alt versions of isArray if available, isDate uses instanceof, clean up extend and close
+* added tests for isArray and isDate
+* argscheck does not use exec
+* Fix webOS SmartTV/wearable detection
+* Add webOS as a platform to build from/for.
+* Fixed issues with data transforms when using browserify
+* CB-9370 Fixes failing tests on Node 0.12 due to stale dependency
+* CB-9291 Removes the requirement for specific NodeJS version
+* remove firefox, failing on windows
+* Added common 'activated' channel
+* CB-9156 added support for absolute platform paths
+* CB-9156 platform version grabbing supports custom paths
+* CB-9156 added ability to pass in custom path via command line for platforms
+* Adding .ratignore file.
+* CB-9137 Fixes cordova-lib tests failures
+* CB-8468 - Application freezes if breakpoint hits JavaScript callback invoked from native
+
 ### 4.0.0 (May 27, 2015)
 * CB-9057: Updated cordova.js for Windows to refer to base.js instead of the full-blown WinJS.js.
 * CB-6865 added browserify support for plugins with any id
