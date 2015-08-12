@@ -19,7 +19,9 @@
  *
 */
 
-if(window.cordova){
+// Workaround for Windows 10 in hosted environment case
+// http://www.w3.org/html/wg/drafts/html/master/browsers.html#named-access-on-the-window-object
+if (window.cordova && !(window.cordova instanceof HTMLElement)) {
     throw new Error("cordova already defined");
 }
 
