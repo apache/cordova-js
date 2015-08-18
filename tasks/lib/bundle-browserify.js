@@ -38,9 +38,10 @@ module.exports = function bundle(platform, debug, commitId, platformVersion, pla
     // Replace standart initialization script with browserify's one
     delete modules['cordova/init_b'];
     delete modules['cordova/modulemapper_b'];
-    delete modules['cordova/pluginloader'];
+    delete modules['cordova/pluginloader_b'];
     modules['cordova/init'] = path.resolve(root, 'src', 'common', 'init_b.js');
     modules['cordova/modulemapper'] = path.resolve(root, 'src', 'common', 'modulemapper_b.js');
+    modules['cordova/pluginloader'] = path.resolve(root, 'src', 'common', 'pluginloader_b.js');
 
     // test doesn't support custom paths
     if (platform === 'test') {
@@ -76,6 +77,5 @@ module.exports = function bundle(platform, debug, commitId, platformVersion, pla
 
     return browserify({debug: !!debug, detectGlobals: false})
         .require(modules)
-        .exclude('cordova/plugin_list')
-        .exclude('cordova/pluginloader');
+        .exclude('cordova/plugin_list');
 };
