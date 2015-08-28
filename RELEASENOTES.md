@@ -20,6 +20,10 @@
 -->
 ## Release Notes for Cordova JS ##
 
+### 4.1.1 (Aug 28, 2015)
+* CB-9505 Correct plugin modules loading within browserify flow. This closes #126
+* CB-9342 Fix deviceReady event not fired on Windows 10 in hosted environment
+
 ### 4.1.0 (Aug 06, 2015)
 * CB-9429 Removes tests from resultant bundle
 * CB-9436 Removes `require-tr` bundle transformation
