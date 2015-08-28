@@ -26,7 +26,7 @@ var jas              = require('jasmine-node');
 var testLibName      = path.join(__dirname, '..', '..', 'pkg', 'cordova.test.js');
 var testLib          = fs.readFileSync(testLibName, 'utf8');
 
-var jsdom    = require("node-jsdom").jsdom;
+var jsdom    = require("jsdom-no-contextify").jsdom;
 var document = jsdom(undefined, { url: 'file:///jsdomtest.info/a?b#c' });
 var window   = document.parentWindow;
 
