@@ -26,6 +26,8 @@
 
 A unified JavaScript layer for [Apache Cordova](http://cordova.apache.org/) projects.
 
+:warning: Check issues on the [JIRA issue tracker](https://issues.apache.org/jira/browse/CB-6956?jql=project%20%3D%20CB%20AND%20resolution%20%3D%20Unresolved%20AND%20component%20%3D%20CordovaJS%20ORDER%20BY%20priority%20DESC)
+
 # Project Structure
 
     ./
