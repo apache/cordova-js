@@ -20,6 +20,10 @@
 -->
 ## Release Notes for Cordova JS ##
 
+### 4.1.2 (Oct 30, 2015)
+* CB-9800 Fixing contribute link.
+* CB-9370 Changes jsdom dependency to avoid package installation issues
+
 ### 4.1.1 (Aug 28, 2015)
 * CB-9505 Correct plugin modules loading within browserify flow. This closes #126
 * CB-9342 Fix deviceReady event not fired on Windows 10 in hosted environment
