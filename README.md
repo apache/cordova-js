@@ -26,6 +26,9 @@
 
 A unified JavaScript layer for [Apache Cordova](http://cordova.apache.org/) projects.
 
+:warning: Report issues on the [Apache Cordova issue tracker](https://issues.apache.org/jira/issues/?jql=project%20%3D%20CB%20AND%20status%20in%20%28Open%2C%20%22In%20Progress%22%2C%20Reopened%29%20AND%20resolution%20%3D%20Unresolved%20AND%20component%20%3D%20%22CordovaJS%22%20ORDER%20BY%20priority%20DESC%2C%20summary%20ASC%2C%20updatedDate%20DESC)
+
+
 # Project Structure
 
     ./
@@ -33,7 +36,7 @@ A unified JavaScript layer for [Apache Cordova](http://cordova.apache.org/) proj
      |  |-cordova.js ........ common Cordova stuff
      |  |-common/ ........... base modules shared across platfoms
      |  |  |-builder.js ..... injects in our classes onto window and navigator
-     |  |  |-channel.js ..... pub/sub impl for custom framework events 
+     |  |  |-channel.js ..... pub/sub impl for custom framework events
      |  |  |-init.js ........ common locations to add Cordova objects to browser globals
      |  |  |-exec.js ........ interace stub for each platform specific version of exec.js
      |  |  |-platform.js .... stub for platform's specific version of platform.js
@@ -65,7 +68,7 @@ All of the build tasks can be run via the `grunt` node module. Install it global
 
 Then from the repository root run:
 
-    grunt 
+    grunt
 
 To compile the js for just one platform, run:
 
@@ -110,7 +113,7 @@ The `boot` method does all the work.  First, it grabs the common platform defini
 # Testing
 
 Tests run in node or the browser. To run the tests in node:
-    
+
     grunt test --platformVersion=3.6.0
 
 To run them in the browser:
@@ -173,7 +176,7 @@ Once the new js file has been added, any new projects created will use the updat
       not clobber existing objects, instead it will recursively merge
       this object into the specific target
     - `initialize`: a function that fires immediately after the `objects` (see above) are defined in the global scope
-   
+
    The following is a simple example of a platform definition:
 
     <pre>
