@@ -28,7 +28,6 @@ describe('iOS exec', function () {
 
     var cordova = require('cordova');
     var exec = require('cordova/ios/exec');
-    var mockxhr = require('cordova/test/mockxhr');
     var winSpy = jasmine.createSpy('win');
     var failSpy = jasmine.createSpy('fail');
     var origUserAgent = navigator.userAgent;
@@ -36,32 +35,13 @@ describe('iOS exec', function () {
     beforeEach(function() {
         winSpy.reset();
         failSpy.reset();
-        mockxhr.install();
-        exec.setJsToNativeBridgeMode(exec.jsToNativeModes.XHR_NO_PAYLOAD);
-        navigator.__defineGetter__('userAgent', function(){
-            return 'hi there (' + VC_ADDR + ')';
-        });
     });
 
     afterEach(function() {
-        expect(mockxhr.activeXhrs.length).toBe(0);
         navigator.__defineGetter__('userAgent', function(){
             return origUserAgent;
         });
     });
-
-    afterEach(mockxhr.uninstall);
-
-    function expectXhr() {
-        expect(mockxhr.activeXhrs.length).toBeGreaterThan(0, 'expected an XHR to have been sent.');
-        var mockXhr = mockxhr.activeXhrs[0];
-        expect(mockXhr.url).toMatch(/^\/!gap_exec\\?/);
-        expect(mockXhr.requestHeaders['vc']).toBe(VC_ADDR, 'missing vc header');
-        expect(mockXhr.requestHeaders['rc']).toBeDefined('missing rc header.');
-        expect(mockXhr.requestHeaders['cmds']).not.toBeDefined();
-        expect(mockXhr.requestPayload).toBe(null);
-        mockXhr.simulateResponse(200, '');
-    }
 
     function simulateNativeBehaviour(codes) {
         var execPayload = JSON.parse(exec.nativeFetchMessages());
@@ -80,49 +60,6 @@ describe('iOS exec', function () {
         it('should return "" from nativeFetchMessages work when nothing is pending.', function() {
             var execPayload = exec.nativeFetchMessages();
             expect(execPayload).toBe('');
-        });
-        it('should work in the win case.', function() {
-            exec(winSpy, failSpy, SERVICE, ACTION, []);
-            expectXhr();
-            simulateNativeBehaviour([1]);
-            expect(winSpy).toHaveBeenCalledWith('payload');
-            expect(failSpy).not.toHaveBeenCalled();
-        });
-        it('should work in the fail case.', function() {
-            exec(winSpy, failSpy, SERVICE, ACTION, []);
-            expectXhr();
-            simulateNativeBehaviour([2]);
-            expect(winSpy).not.toHaveBeenCalled();
-            expect(failSpy).toHaveBeenCalledWith('payload');
-        });
-        it('should use only one XHR for multiple calls.', function() {
-            exec(winSpy, failSpy, SERVICE, ACTION, []);
-            exec(winSpy, failSpy, SERVICE, ACTION, []);
-            expectXhr();
-            simulateNativeBehaviour([1, 2]);
-            expect(winSpy).toHaveBeenCalledWith('payload');
-            expect(failSpy).toHaveBeenCalledWith('payload');
-        });
-        it('should send an extra XHR when commands flushed before XHR finishes', function() {
-            exec(winSpy, failSpy, SERVICE, ACTION, []);
-            simulateNativeBehaviour([1]);
-            exec(winSpy, failSpy, SERVICE, ACTION, []);
-            expectXhr();
-            expectXhr();
-            simulateNativeBehaviour([2]);
-            expect(winSpy).toHaveBeenCalledWith('payload');
-            expect(failSpy).toHaveBeenCalledWith('payload');
-        });
-        it('should return pending calls made from callbacks.', function() {
-            function callMore() {
-                exec(winSpy, failSpy, SERVICE, ACTION, []);
-                exec(winSpy, failSpy, SERVICE, ACTION, []);
-            }
-            exec(callMore, failSpy, SERVICE, ACTION, []);
-            expectXhr();
-            simulateNativeBehaviour([1, 1, 1]);
-            expect(winSpy.callCount).toBe(2);
-            expect(failSpy).not.toHaveBeenCalled();
         });
     });
 });
