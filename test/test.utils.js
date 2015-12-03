@@ -19,9 +19,6 @@
  *
 */
 
-console.log("this is the fucking spec!");
-
-
 describe("utils", function () {
     var utils = require('cordova/utils');
 
