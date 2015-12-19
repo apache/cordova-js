@@ -36,7 +36,7 @@ describe("channel", function () {
     });
 
     describe("subscribe method", function() {
-        it("should throw an exception if no function is provided", function() {
+        it("should throw an exception if no arguments are provided", function() {
             expect(function() {
                 multiChannel.subscribe();
             }).toThrow();
@@ -48,6 +48,15 @@ describe("channel", function () {
             expect(function() {
                 multiChannel.subscribe(undefined);
             }).toThrow();
+        });
+        it("should accept a function or an EventListener object implementing the handleEvent interface", function() {
+            expect(function() {
+                multiChannel.subscribe(function () {});
+            }).not.toThrow();
+
+            expect(function() {
+                multiChannel.subscribe({handleEvent: function () {}});
+            }).not.toThrow();
 
             expect(function() {
                 multiChannel.subscribe({apply:function(){},call:function(){}});
@@ -82,12 +91,26 @@ describe("channel", function () {
     });
 
     describe("unsubscribe method", function() {
-        it("should throw an exception if passed in null or undefined", function() {
+        it("should throw an exception if no arguments are provided", function() {
             expect(function() {
                 multiChannel.unsubscribe();
             }).toThrow();
+
             expect(function() {
                 multiChannel.unsubscribe(null);
+            }).toThrow();
+        });
+        it("should accept a function or an EventListener object implementing the handleEvent interface", function() {
+            expect(function() {
+                multiChannel.unsubscribe(function () {});
+            }).not.toThrow();
+
+            expect(function() {
+                multiChannel.unsubscribe({handleEvent: function () {}});
+            }).not.toThrow();
+
+            expect(function() {
+                multiChannel.unsubscribe({apply:function(){},call:function(){}});
             }).toThrow();
         });
         it("should not decrement numHandlers if unsubscribing something that does not exist", function() {
