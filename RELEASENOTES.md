@@ -20,6 +20,10 @@
 -->
 ## Release Notes for Cordova JS ##
 
+### 4.1.3 (Jan 25, 2016)
+* CB-9883 - remove unused bridge tests
+* add **JIRA** issue tracker link
+
 ### 4.1.2 (Oct 30, 2015)
 * CB-9800 Fixing contribute link.
 * CB-9370 Changes jsdom dependency to avoid package installation issues
