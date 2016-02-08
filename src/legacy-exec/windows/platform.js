@@ -20,9 +20,7 @@
 */
 
 module.exports = {
-    // for backward compatibility we report 'windows8' when run on Windows 8.0 and 
-    // 'windows' for Windows 8.1 and Windows Phone 8.1
-    id: (navigator.appVersion.indexOf("MSAppHost/1.0") !== -1) ? 'windows8' : 'windows',
+    id: 'windows',
     bootstrap:function() {
         var cordova = require('cordova'),
             exec = require('cordova/exec'),
@@ -59,9 +57,6 @@ module.exports = {
             } else if (navigator.appVersion.indexOf("MSAppHost/2.0;") !== -1) {
                 // windows 8.1 + IE 11
                 scriptElem.src = "//Microsoft.WinJS.2.0/js/base.js";
-            } else {
-                // windows 8.0 + IE 10
-                scriptElem.src = "//Microsoft.WinJS.1.0/js/base.js";
             }
             scriptElem.addEventListener("load", onWinJSReady);
             document.head.appendChild(scriptElem);
