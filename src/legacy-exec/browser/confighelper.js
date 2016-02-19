@@ -71,7 +71,7 @@ function readConfig(success, error) {
     }
 
     try {
-        xhr.open("get", "config.xml", true);
+        xhr.open("get", "/config.xml", true);
         xhr.send();
     } catch(e) {
         fail('[Browser][cordova.js][readConfig] Could not XHR config.xml: ' + JSON.stringify(e));
