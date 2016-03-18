@@ -20,6 +20,10 @@
 -->
 ## Release Notes for Cordova JS ##
 
+### 4.1.4 (Mar 17, 2016)
+* CB-10650 Non-index `content.src` causes Splashscreen to be not displayed on browser
+* CB-10558 Update `cordova-js` according to **windows8** deprecation
+
 ### 4.1.3 (Jan 25, 2016)
 * CB-9883 - remove unused bridge tests
 * add **JIRA** issue tracker link
