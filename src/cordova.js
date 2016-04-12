@@ -26,8 +26,8 @@ if (window.cordova && !(window.cordova instanceof HTMLElement)) {
 }
 
 
-var channel = require('cordova/channel');
-var platform = require('cordova/platform');
+var channel = require('common/channel');
+var platform = require('common/platform');
 
 
 /**
