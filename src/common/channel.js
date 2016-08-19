@@ -135,7 +135,9 @@ var Channel = function(type, sticky) {
     };
 
 function forceFunction(f) {
+    if (typeof f == 'object' && f.handleEvent) f = f.handleEvent;
     if (typeof f != 'function') throw "Function required as first argument!";
+    return f;
 }
 
 /**
@@ -147,7 +149,7 @@ function forceFunction(f) {
  */
 Channel.prototype.subscribe = function(f, c) {
     // need a function to call
-    forceFunction(f);
+    f = forceFunction(f);
     if (this.state == 2) {
         f.apply(c || this, this.fireArgs);
         return;
@@ -179,7 +181,7 @@ Channel.prototype.subscribe = function(f, c) {
  */
 Channel.prototype.unsubscribe = function(f) {
     // need a function to unsubscribe
-    forceFunction(f);
+    f = forceFunction(f);
 
     var guid = f.observer_guid,
         handler = this.handlers[guid];
