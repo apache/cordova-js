@@ -108,7 +108,10 @@ utils.clone = function(obj) {
 
     retVal = {};
     for(i in obj){
-        if((!(i in retVal) || retVal[i] != obj[i]) && typeof obj[i] != 'undefined') {
+        // https://issues.apache.org/jira/browse/CB-11522 'unknown' type may be returned in
+        // custom protocol activation case on Windows Phone 8.1 causing "No such interface supported" exception
+        // on cloning.
+        if((!(i in retVal) || retVal[i] != obj[i]) && typeof obj[i] != 'undefined' && typeof obj[i] != 'unknown') {
             retVal[i] = utils.clone(obj[i]);
         }
     }
