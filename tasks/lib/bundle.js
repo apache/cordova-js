@@ -33,7 +33,6 @@ module.exports = function bundle(platform, debug, commitId, platformVersion, pla
    
     //check to see if platform has cordova-js-src directory
     if(fs.existsSync(platformPath) && fs.existsSync(path.join(platformPath, 'cordova-js-src'))) {
-        console.log(platformPath);
         copyProps(modules, collectFiles(path.join(platformPath, 'cordova-js-src')));
     } else {
         // for platforms that don't have a release with cordova-js-src yet

@@ -66,10 +66,10 @@ module.exports = function(grunt) {
 
     // defaults
     grunt.registerTask('default', ['build', 'test']);
-    grunt.registerTask('build', ['compile', 'jshint', 'whitespace-check']);
-    grunt.registerTask('test', ['compile:test', 'jshint', '_test']);
-    grunt.registerTask('btest', ['compile:test', 'jshint', '_btest']);
+    grunt.registerTask('build', ['compile', 'whitespace-check']);
+    grunt.registerTask('test', ['compile:test', '_test']);
+    grunt.registerTask('btest', ['compile:test', '_btest']);
     grunt.registerTask('cover', ['compile', '_cover']);
-    grunt.registerTask('test-browserify', ['compile-browserify:test', 'jshint', '_test']);
-    grunt.registerTask('btest-browserify', ['compile-browserify:test', 'jshint', '_btest']);
+    grunt.registerTask('test-browserify', ['compile-browserify:test', '_test']);
+    grunt.registerTask('btest-browserify', ['compile-browserify:test', '_btest']);
 };
