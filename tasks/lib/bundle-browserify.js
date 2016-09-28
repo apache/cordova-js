@@ -25,9 +25,16 @@ var collectFiles = require('./collect-files');
 var copyProps    = require('./copy-props');
 
 module.exports = function bundle(platform, debug, commitId, platformVersion, platformPath) {
-    platformPath = fs.existsSync(platformPath) && fs.existsSync(path.join(platformPath, 'cordova-js-src')) ?
-        path.join(platformPath, 'cordova-js-src') :
-        path.resolve(root, 'src', 'legacy-exec', platform);
+
+    if (fs.existsSync(platformPath) && fs.existsSync(path.join(platformPath, 'cordova-js-src'))) {
+        platformPath = path.join(platformPath, 'cordova-js-src');   
+    } else {
+        if(platform === 'test') {
+            platformPath = path.resolve(root, 'src', 'legacy-exec', platform);
+        } else {
+            console.log('Your version of '  + platform + ' does not contain cordova-js-src. Update to a newer version of ' + platform + '.');
+        }
+    }    
 
     var platformDirname = platform === 'amazon-fireos' ? 'android' : platform;
 
@@ -45,16 +52,18 @@ module.exports = function bundle(platform, debug, commitId, platformVersion, pla
 
     // test doesn't support custom paths
     if (platform === 'test') {
-        var testFilesPath;
         var androidPath = path.resolve(pkgJson['cordova-platforms']['cordova-android']);
         var iosPath = path.resolve(pkgJson['cordova-platforms']['cordova-ios']);
+        var testFilesPath = path.resolve(androidPath, 'cordova-js-src', 'android');
         // Add android platform-specific modules that have tests to the test bundle.
         if(fs.existsSync(androidPath)) {
-            testFilesPath = path.resolve(androidPath, 'cordova-js-src', 'android');
+            
             modules['cordova/android/exec'] = path.resolve(androidPath, 'cordova-js-src', 'exec.js');
         } else {
-            testFilesPath = path.resolve('src', 'legacy-exec', 'android', 'android');
-            modules['cordova/android/exec'] = path.resolve(root, 'src', 'legacy-exec', 'android', 'exec.js');
+            //testFilesPath = path.resolve('src', 'legacy-exec', 'android', 'android');
+            //modules['cordova/android/exec'] = path.resolve(root, 'src', 'legacy-exec', 'android', 'exec.js');
+            console.log('Couldn\'t add android test files.');
+            throw 'Stopped process';
         }
         copyProps(modules, collectFiles(testFilesPath, 'cordova/android'));
 
@@ -62,7 +71,9 @@ module.exports = function bundle(platform, debug, commitId, platformVersion, pla
         if(fs.existsSync(iosPath)) {
             modules['cordova/ios/exec'] = path.join(iosPath, 'cordova-js-src', 'exec.js');
         } else {
-            modules['cordova/ios/exec'] = path.resolve(root, 'src', 'legacy-exec', 'ios', 'exec.js');
+            //modules['cordova/ios/exec'] = path.resolve(root, 'src', 'legacy-exec', 'ios', 'exec.js');
+            console.log('Couldn\'t add iOS test files.');
+            throw 'Stopped process';
         }
         copyProps(modules, collectFiles(testFilesPath, 'cordova/ios'));
     }
