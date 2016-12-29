@@ -64,7 +64,7 @@ describe('android exec.processMessages', function () {
         it('Test#001 : should process messages in order even when called recursively', function () {
             var firstCallbackId = null;
             var callCount = 0;
-            nativeApi.exec.andCallFake(function (secret, service, action, callbackId, argsJson) {
+            nativeApi.exec.and.callFake(function (secret, service, action, callbackId, argsJson) {
                 expect(secret).toBe(1234);
                 ++callCount;
                 if (callCount === 1) {
@@ -101,7 +101,7 @@ describe('android exec.processMessages', function () {
             });
         });
         it('Test#002 : should process messages asynchronously', function () {
-            nativeApi.exec.andCallFake(function (secret, service, action, callbackId, argsJson) {
+            nativeApi.exec.and.callFake(function (secret, service, action, callbackId, argsJson) {
                 expect(secret).toBe(1234);
                 return createCallbackMessage(true, false, 1, callbackId, 'stwo');
             });
@@ -129,7 +129,7 @@ describe('android exec.processMessages', function () {
 
         function performExecAndReturn (messages) {
 
-            nativeApi.exec.andCallFake(function (secret, service, action, callbackId, argsJson) {
+            nativeApi.exec.and.callFake(function (secret, service, action, callbackId, argsJson) {
                 return messages;
             });
 
@@ -214,7 +214,7 @@ describe('android exec.processMessages', function () {
         it('Test#012 : should poll for more messages when hitting an *', function () {
             var message1 = createCallbackMessage(false, false, 3, 'id', 'sfoo');
             var message2 = createCallbackMessage(true, true, 1, 'id', 'f');
-            nativeApi.retrieveJsMessages.andCallFake(function () {
+            nativeApi.retrieveJsMessages.and.callFake(function () {
                 expect(callbackSpy).toHaveBeenCalledWith('id', false, 3, ['foo'], false);
                 callbackSpy.reset();
                 return message2;
@@ -230,7 +230,7 @@ describe('android exec.processMessages', function () {
             var message2 = createCallbackMessage(false, false, 3, 'id', 'scall2');
             var message3 = createCallbackMessage(false, false, 3, 'id', 'scall3');
 
-            callbackSpy.andCallFake(function () {
+            callbackSpy.and.callFake(function () {
                 if (callbackSpy.calls.length === 1) {
                     performExecAndReturn(message3);
                 }

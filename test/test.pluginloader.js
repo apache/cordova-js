@@ -51,7 +51,7 @@ describe('pluginloader', function () {
     }
 
     it('Test#001 : should inject cordova_plugins.js when it is not already there', function () {
-        injectScript.andCallFake(function (url, onload, onerror) {
+        injectScript.and.callFake(function (url, onload, onerror) {
             // jsdom deficiencies:
             if (typeof location !== 'undefined') {
                 expect(url).toBe(window.location.href.replace(/\/[^\/]*?$/, '/foo/cordova_plugins.js')); // eslint-disable-line no-useless-escape
@@ -90,7 +90,7 @@ describe('pluginloader', function () {
                 { 'file': 'some/path.js', 'id': 'some.id' }
             ];
         });
-        injectScript.andCallFake(function (url, onload, onerror) {
+        injectScript.and.callFake(function (url, onload, onerror) {
             // jsdom deficiencies:
             if (typeof location !== 'undefined') {
                 expect(url).toBe(window.location.href.replace(/\/[^\/]*?$/, '/foo/some/path.js')); // eslint-disable-line no-useless-escape
