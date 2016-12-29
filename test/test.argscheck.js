@@ -73,7 +73,7 @@ describe('argscheck', function () {
         var testFunc = createTestFunc(true);
         expect(function () { testFunc(null, null, null, null, null, new Date()); }).toThrow('Wrong type for parameter "func" of testFunc: Expected Function, but got Date.');
     });
-    it('should not throw when checking is disabled', function () {
+    it('Test#011 : should not throw when checking is disabled', function () {
         var testFunc = createTestFunc(false);
         argscheck.enableChecks = false;
         testFunc();
