@@ -26,8 +26,8 @@ describe('iOS exec', function () {
     var origUserAgent = navigator.userAgent;
 
     beforeEach(function () {
-        winSpy.reset();
-        failSpy.reset();
+        winSpy.calls.reset();
+        failSpy.calls.reset();
     });
 
     afterEach(function () {

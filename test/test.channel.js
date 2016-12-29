@@ -24,11 +24,8 @@ describe('channel', function () {
     var multiChannel;
     var stickyChannel;
 
-    function callCount (spy) {
-        return spy.argsForCall.length;
-    }
     function expectCallCount (spy, count) {
-        expect(callCount(spy)).toEqual(count);
+        expect(spy).toHaveBeenCalledTimes(count);
     }
     beforeEach(function () {
         multiChannel = channel.create('multiChannel');
@@ -187,7 +184,7 @@ describe('channel', function () {
 
             testChannel.subscribe(handler);
             testChannel.fire(1, 2, 3);
-            expect(handler.argsForCall[0]).toEqual({0: 1, 1: 2, 2: 3});
+            expect(handler.calls.argsFor(0)).toEqual([ 1, 2, 3 ]);
         });
         it('Test#013 : should not fire a handler that was unsubscribed', function () {
             var testChannel = multi ? multiChannel : stickyChannel;
@@ -250,7 +247,7 @@ describe('channel', function () {
 
             expectCallCount(before, 1);
             expectCallCount(after, 1);
-            expect(after.argsForCall[0]).toEqual({0: 1, 1: 2, 2: 3});
+            expect(after.calls.argsFor(0)).toEqual([ 1, 2, 3 ]);
         });
         it('Test#018 : should instantly trigger the callback if the event is currently being fired.', function () {
             var handler1 = jasmine.createSpy().and.callFake(function () { stickyChannel.subscribe(handler2); });
@@ -338,7 +335,7 @@ describe('channel', function () {
     describe('onHasSubscribersChange', function () {
         it('Test#027 : should be called only when the first subscriber is added and last subscriber is removed.', function () {
             var handler = jasmine.createSpy().and.callFake(function () {
-                if (callCount(handler) === 1) {
+                if (handler.calls.count() === 1) {
                     expect(this.numHandlers).toEqual(1);
                 } else {
                     expect(this.numHandlers).toEqual(0);

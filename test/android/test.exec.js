@@ -31,8 +31,8 @@ describe('android exec.processMessages', function () {
     };
 
     beforeEach(function () {
-        nativeApi.exec.reset();
-        nativeApi.retrieveJsMessages.reset();
+        nativeApi.exec.calls.reset();
+        nativeApi.retrieveJsMessages.calls.reset();
         // Avoid a log message warning about the lack of _nativeApi.
         exec.setJsToNativeBridgeMode(exec.jsToNativeModes.PROMPT);
         nativeApiProvider.set(nativeApi);
@@ -119,7 +119,7 @@ describe('android exec.processMessages', function () {
         var callbackSpy = jasmine.createSpy('callbackFromNative');
 
         beforeEach(function () {
-            callbackSpy.reset();
+            callbackSpy.calls.reset();
             cordova.callbackFromNative = callbackSpy;
         });
 
@@ -216,7 +216,7 @@ describe('android exec.processMessages', function () {
             var message2 = createCallbackMessage(true, true, 1, 'id', 'f');
             nativeApi.retrieveJsMessages.and.callFake(function () {
                 expect(callbackSpy).toHaveBeenCalledWith('id', false, 3, ['foo'], false);
-                callbackSpy.reset();
+                callbackSpy.calls.reset();
                 return message2;
             });
             performExecAndReturn(message1 + '*');
@@ -242,10 +242,10 @@ describe('android exec.processMessages', function () {
             }, 200);
 
             runs(function () {
-                expect(callbackSpy.argsForCall.length).toEqual(3);
-                expect(callbackSpy.argsForCall[0]).toEqual(['id', false, 3, ['call1'], false]);
-                expect(callbackSpy.argsForCall[1]).toEqual(['id', false, 3, ['call2'], false]);
-                expect(callbackSpy.argsForCall[2]).toEqual(['id', false, 3, ['call3'], false]);
+                expect(callbackSpy).toHaveBeenCalledTimes(3);
+                expect(callbackSpy.calls.argsFor(0)).toEqual(['id', false, 3, ['call1'], false]);
+                expect(callbackSpy.calls.argsFor(1)).toEqual(['id', false, 3, ['call2'], false]);
+                expect(callbackSpy.calls.argsFor(2)).toEqual(['id', false, 3, ['call3'], false]);
             });
         });
     });
