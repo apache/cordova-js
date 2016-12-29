@@ -18,7 +18,7 @@
  *
 */
 
-var builder = require('cordova/builder'),
+var builder = require('./builder'),
     moduleMap = define.moduleMap,
     symbolList,
     deprecationMap;

@@ -21,9 +21,9 @@
 
 describe("builder", function () {
 
-    var builder = require('cordova/builder');
+    var builder = require('../src/common/builder');
 
-    it("includes the module into the target", function () {
+    it("Test#001 : includes the module into the target", function () {
 
         var target = {},
             objects = {
@@ -38,7 +38,7 @@ describe("builder", function () {
         expect(target.foo).toBe(require("cordova/builder"));
     });
 
-    it("returns an empty object literal if no path", function () {
+    it("Test#002 : returns an empty object literal if no path", function () {
         var target = {},
             objects = {cat: {}};
 
@@ -47,7 +47,7 @@ describe("builder", function () {
         expect(target.cat).toBeDefined();
     });
 
-    it("builds out the children", function () {
+    it("Test#003 : builds out the children", function () {
 
         var target = {},
             objects = {

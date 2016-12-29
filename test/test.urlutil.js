@@ -20,13 +20,13 @@
 */
 
 describe('urlutil', function () {
-    var urlutil = require('cordova/urlutil');
+    var urlutil = require('../src/common/urlutil');
     if (typeof process != 'undefined') {
         // Tests don't work under jsdom.
         return;
     }
 
-    it('can handle absolute URLs', function () {
+    it('Test#001 : can handle absolute URLs', function () {
         expect(urlutil.makeAbsolute('http://www.foo.com')).toBe('http://www.foo.com/');
         expect(urlutil.makeAbsolute('http://www.foo.com?foo#bar')).toBe('http://www.foo.com/?foo#bar');
         expect(urlutil.makeAbsolute('http://www.foo.com/%20hi')).toBe('http://www.foo.com/%20hi');
@@ -38,17 +38,17 @@ describe('urlutil', function () {
         expect(urlutil.makeAbsolute('/foo?a#b')).toBe(rootUrl + 'foo?a#b');
         expect(urlutil.makeAbsolute('/foo/b%20ar')).toBe(rootUrl + 'foo/b%20ar');
     }
-    it('can handle root-relative URLs', function () {
+    it('Test#002 : can handle root-relative URLs', function () {
         testRootRelative(window.location.href);
     });
 
-    it('can handle relative URLs', function () {
+    it('Test#003 : can handle relative URLs', function () {
         var rootUrl = window.location.href.replace(/[?#].*/, '').replace(/[^\/]*$/, '');
         expect(urlutil.makeAbsolute('foo?a#b')).toBe(rootUrl + 'foo?a#b');
         expect(urlutil.makeAbsolute('foo/b%20ar')).toBe(rootUrl + 'foo/b%20ar');
     });
 
-    it('can handle relative URLs with base tags', function () {
+    it('Test#004 : can handle relative URLs with base tags', function () {
         var rootUrl = 'http://base.com/esab/';
         var baseTag = document.createElement('base');
         baseTag.href = rootUrl;
@@ -61,7 +61,7 @@ describe('urlutil', function () {
         testRootRelative(rootUrl);
     });
 
-    it('can handle scheme-relative URLs', function () {
+    it('Test#005 : can handle scheme-relative URLs', function () {
         var rootUrl = window.location.href.replace(/:.*/, '');
         expect(urlutil.makeAbsolute('//www.foo.com/baz%20?foo#bar')).toBe(rootUrl + '://www.foo.com/baz%20?foo#bar');
     });

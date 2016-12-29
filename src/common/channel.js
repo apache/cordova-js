@@ -19,7 +19,7 @@
  *
 */
 
-var utils = require('cordova/utils'),
+var utils = require('./utils'),
     nextGuid = 1;
 
 /**

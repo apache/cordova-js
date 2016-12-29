@@ -19,7 +19,7 @@
  *
 */
 
-var modulemapper = require('cordova/modulemapper');
+var modulemapper = require('./modulemapper');
 
 // Handler for the cordova_plugins.js content.
 // See plugman's plugin_loader.js for the details of this object.
