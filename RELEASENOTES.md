@@ -20,6 +20,9 @@
 -->
 ## Release Notes for Cordova JS ##
 
+### 4.2.1 (Jan 17, 2017)
+* [CB-12358](https://issues.apache.org/jira/browse/CB-12358) updated deps for release
+
 ### 4.2.0 (Oct 21, 2016)
 * [CB-12017](https://issues.apache.org/jira/browse/CB-12017) updated dependencies in `package.json`
 * [CB-3785](https://issues.apache.org/jira/browse/CB-3785) add support for `EventListener interface` to `Channel.prototype.subscribe` 
