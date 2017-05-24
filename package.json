@@ -8,6 +8,9 @@
     "type": "git",
     "url": "http://git-wip-us.apache.org/repos/asf/cordova-js.git"
   },
+  "bugs": {
+    "url": "https://github.com/apache/cordova-website/issues"
+  },
   "scripts": {
     "test": "grunt test",
     "build": "grunt compile",
