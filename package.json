@@ -6,7 +6,7 @@
   "homepage": "http://cordova.apache.org",
   "repository": {
     "type": "git",
-    "url": "http://git-wip-us.apache.org/repos/asf/cordova-js.git"
+    "url": "https://github.com/apache/cordova-js"
   },
   "bugs": {
     "url": "https://issues.apache.org/jira/browse/CB"
