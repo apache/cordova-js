@@ -31,7 +31,7 @@ var require,
         requireStack = [],
     // Map of module ID -> index into requireStack of modules currently being built.
         inProgressModules = {},
-        SEPARATOR = "/";
+        SEPARATOR = ".";
 
 
 

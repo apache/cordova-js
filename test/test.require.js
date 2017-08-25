@@ -145,15 +145,5 @@ describe("require + define", function () {
             define("a", factory);
             require("a");
         });
-
-        it("can handle multiple defined modules that use relative require paths", function () {
-            define("plugin/ios/foo", function (require, exports, module) {
-                module.exports = require("./bar") * 2;
-            });
-            define("plugin/ios/bar", function (require, exports, module) {
-                module.exports = 2;
-            });
-            expect(require("plugin/ios/foo")).toEqual(4);
-        });
     });
 });
