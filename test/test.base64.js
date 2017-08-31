@@ -20,9 +20,9 @@
 */
 
 describe("base64", function () {
-    var base64 = require('cordova/base64');
+    var base64 = require('../src/common/base64');
 
-    it("can base64 encode strings correctly", function () {
+    it("Test#001 : can base64 encode strings correctly", function () {
         var arrayBuffer = new ArrayBuffer(6),
             view = new Uint8Array(arrayBuffer);
         for (var i = 0; i < view.length; i++) {
@@ -36,7 +36,7 @@ describe("base64", function () {
         expect(base64.fromArrayBuffer(arrayBuffer)).toBe('AAECAwQF');
     });
 
-    it("can base64 encode a binary string in an ArrayBuffer", function () {
+    it("Test#002 : can base64 encode a binary string in an ArrayBuffer", function () {
       var arrayBuffer = new ArrayBuffer(256),
           view = new Uint8Array(arrayBuffer);
           base64string = 'AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8gISIjJCUmJygpKissLS4vMDEyMzQ1Njc4OTo7PD0+P0BBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWltcXV5fYGFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6e3x9fn+AgYKDhIWGh4iJiouMjY6PkJGSk5SVlpeYmZqbnJ2en6ChoqOkpaanqKmqq6ytrq+wsbKztLW2t7i5uru8vb6/wMHCw8TFxsfIycrLzM3Oz9DR0tPU1dbX2Nna29zd3t/g4eLj5OXm5+jp6uvs7e7v8PHy8/T19vf4+fr7/P3+/w=='
@@ -48,7 +48,7 @@ describe("base64", function () {
       expect(base64.fromArrayBuffer(arrayBuffer)).toBe(base64string);
     });
 
-    it("can base64 encode an text string in an ArrayBuffer", function () {
+    it("Test#003 : can base64 encode an text string in an ArrayBuffer", function () {
         var orig = 'Some Awesome Test This Is!'
             , base64string = typeof btoa != 'undefined' ? btoa(orig) : new Buffer('Some Awesome Test This Is!', 'binary').toString('base64')
             , arrayBuffer = new ArrayBuffer(orig.length)
@@ -61,7 +61,7 @@ describe("base64", function () {
         expect(base64.fromArrayBuffer(arrayBuffer)).toBe(base64string);
     });
 
-    it("can decode a base64-encoded text string into an ArrayBuffer", function () {
+    it("Test#004 : can decode a base64-encoded text string into an ArrayBuffer", function () {
         var orig = 'Some Awesome Test This Is!',
             base64string = typeof btoa != 'undefined' ? btoa(orig) : new Buffer(orig, 'binary').toString('base64');
 

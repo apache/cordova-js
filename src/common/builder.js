@@ -19,7 +19,7 @@
  *
 */
 
-var utils = require('cordova/utils');
+var utils = require('./utils');
 
 function each(objects, func, context) {
     for (var prop in objects) {

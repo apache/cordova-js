@@ -19,8 +19,8 @@
  *
 */
 
-var modulemapper = require('cordova/modulemapper');
-var urlutil = require('cordova/urlutil');
+var modulemapper = require('./modulemapper');
+var urlutil = require('./urlutil');
 
 // Helper function to inject a <script> tag.
 // Exported for testing.

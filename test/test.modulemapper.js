@@ -19,7 +19,7 @@
 */
 
 describe('modulemapper', function() {
-    var modulemapper = require('cordova/modulemapper'),
+    var modulemapper = require('../src/common/modulemapper'),
         testmodule = require('cordova/test/testmodule'),
         utils = require('cordova/utils');
     var context;
@@ -41,10 +41,10 @@ describe('modulemapper', function() {
         modulemapper.reset();
     });
 
-    it('should throw in module does not exist', function() {
+    it('Test#001 : should throw in module does not exist', function() {
         expect(function() { modulemapper.clobbers('cordova/invalid', 'newProp'); }).toThrow();
     });
-    it('should properly set a new top-level property', function() {
+    it('Test#002 : should properly set a new top-level property', function() {
         modulemapper.clobbers('cordova/test/testmodule', 'newProp1');
         modulemapper.defaults('cordova/test/testmodule', 'newProp2');
         modulemapper.merges('cordova/test/testmodule', 'newProp3');
@@ -53,7 +53,7 @@ describe('modulemapper', function() {
         expect(context.newProp2).toBe(testmodule);
         expect(context.newProp3).toBe(testmodule);
     });
-    it('should properly set a new non-top-level property', function() {
+    it('Test#003 : should properly set a new non-top-level property', function() {
         modulemapper.clobbers('cordova/test/testmodule', 'foo1.newProp');
         modulemapper.defaults('cordova/test/testmodule', 'foo2.newProp');
         modulemapper.merges('cordova/test/testmodule', 'foo3.newProp');
@@ -62,7 +62,7 @@ describe('modulemapper', function() {
         expect(context.foo2.newProp).toBe(testmodule);
         expect(context.foo3.newProp).toBe(testmodule);
     });
-    it('should properly set a new non-top-level property #2', function() {
+    it('Test#004 : should properly set a new non-top-level property #2', function() {
         modulemapper.clobbers('cordova/test/testmodule', 'foo1.bar.newProp');
         modulemapper.defaults('cordova/test/testmodule', 'foo2.bar.newProp');
         modulemapper.merges('cordova/test/testmodule', 'foo3.bar.newProp');
@@ -71,7 +71,7 @@ describe('modulemapper', function() {
         expect(context.foo2.bar.newProp).toBe(testmodule);
         expect(context.foo3.bar.newProp).toBe(testmodule);
     });
-    it('should properly set a non-new non-top-level property', function() {
+    it('Test#005 : should properly set a non-new non-top-level property', function() {
         modulemapper.clobbers('cordova/test/testmodule', 'obj.newProp1');
         modulemapper.defaults('cordova/test/testmodule', 'obj.newProp2');
         modulemapper.merges('cordova/test/testmodule', 'obj.newProp3');
@@ -80,7 +80,7 @@ describe('modulemapper', function() {
         expect(context.obj.newProp2).toBe(testmodule);
         expect(context.obj.newProp3).toBe(testmodule);
     });
-    it('should clobber existing properties', function() {
+    it('Test#006 : should clobber existing properties', function() {
         modulemapper.clobbers('cordova/test/testmodule', 'num');
         modulemapper.clobbers('cordova/test/testmodule', 'obj.str');
         modulemapper.clobbers('cordova/test/testmodule', 'getme');
@@ -91,7 +91,7 @@ describe('modulemapper', function() {
         expect(context.getme).toBe(testmodule);
         expect(context.TestClass).toBe(testmodule);
     });
-    it('should not clobber existing properties when using defaults', function() {
+    it('Test#007 : should not clobber existing properties when using defaults', function() {
         modulemapper.defaults('cordova/test/testmodule', 'num');
         modulemapper.defaults('cordova/test/testmodule', 'obj.str');
         modulemapper.defaults('cordova/test/testmodule', 'obj.getme');
@@ -102,13 +102,13 @@ describe('modulemapper', function() {
         expect(context.getme).not.toBe(testmodule);
         expect(context.TestClass).not.toBe(testmodule);
     });
-    it('should throw when namespace is a non-object', function() {
+    it('Test#008 : should throw when namespace is a non-object', function() {
         expect(function() {
             modulemapper.merges('cordova/test/testmodule', 'num');
             modulemapper.mapModules(context);
         }).toThrow();
     });
-    it('should merge into objects', function() {
+    it('Test#009 : should merge into objects', function() {
         modulemapper.merges('cordova/test/testmodule', 'obj');
         modulemapper.mapModules(context);
         for (var k in testmodule) {
@@ -120,20 +120,20 @@ describe('modulemapper', function() {
         expect(context.obj.subObj.num).toBe(9);
         expect(context.obj.subObj.str).toBe(testmodule.subObj.str);
     });
-    it('should merge into constructor prototypes', function() {
+    it('Test#010 : should merge into constructor prototypes', function() {
         modulemapper.merges('cordova/test/testmodule', 'TestClass');
         modulemapper.mapModules(context);
         for (var k in testmodule) {
             expect(context.TestClass.prototype[k]).toBe(testmodule[k]);
         }
     });
-    it('should maintain order of calls', function() {
+    it('Test#011 : should maintain order of calls', function() {
         modulemapper.merges('cordova/test/testmodule', 'obj');
         modulemapper.clobbers('cordova/test/testmodule', 'obj');
         modulemapper.mapModules(context);
         expect(context.obj).toBe(testmodule);
     });
-    it('should maintain order of calls2', function() {
+    it('Test#012 : should maintain order of calls2', function() {
         modulemapper.merges('cordova/test/testmodule', 'obj.foo');
         modulemapper.clobbers('cordova/test/testmodule', 'obj');
         modulemapper.merges('cordova/test/testmodule', 'obj.obj');
@@ -143,30 +143,30 @@ describe('modulemapper', function() {
         expect(context.obj).not.toBe(testmodule.obj);
         expect(context.obj.obj).toBe(testmodule.obj);
     });
-    it('should return undefined for getOriginalSymbol("unknown")', function() {
+    it('Test#013 : should return undefined for getOriginalSymbol("unknown")', function() {
         expect(modulemapper.getOriginalSymbol(context, 'blah')).toBeUndefined();
         modulemapper.mapModules(context);
         expect(modulemapper.getOriginalSymbol(context, 'obj.foo.bar')).toBeUndefined('obj.foo.bar');
     });
-    it('should remember original symbols when clobbering', function() {
+    it('Test#014 : should remember original symbols when clobbering', function() {
         var orig = context.obj;
         modulemapper.clobbers('cordova/test/testmodule', 'obj');
         modulemapper.mapModules(context);
         expect(modulemapper.getOriginalSymbol(context, 'obj')).toBe(orig);
     });
-    it('should remember original symbols when double clobbering', function() {
+    it('Test#015 : should remember original symbols when double clobbering', function() {
         var orig = context.obj;
         modulemapper.clobbers('cordova/test/testmodule', 'obj');
         modulemapper.clobbers('cordova/test/testmodule', 'obj');
         modulemapper.mapModules(context);
         expect(modulemapper.getOriginalSymbol(context, 'obj')).toBe(orig);
     });
-    it('should return original symbols when symbol was not clobbered', function() {
+    it('Test#016 : should return original symbols when symbol was not clobbered', function() {
         modulemapper.mapModules(context);
         expect(modulemapper.getOriginalSymbol(context, 'obj')).toBe(context.obj);
         expect(modulemapper.getOriginalSymbol(context, 'obj.str')).toBe(context.obj.str);
     });
-    it('should log about deprecated property access', function() {
+    it('Test#017 : should log about deprecated property access', function() {
         var origConsoleLog = console.log;
         console.log = jasmine.createSpy('console.log');
         this.after(function() {

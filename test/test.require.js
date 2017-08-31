@@ -27,22 +27,22 @@ describe("require + define", function () {
     });
 
     describe("when defining", function () {
-        it("can define and remove module", function () {
+        it("Test#001 : can define and remove module", function () {
             define("a", jasmine.createSpy());
             define.remove("a");
         });
 
-        it("can remove a module that doesn't exist", function () {
+        it("Test#002 : can remove a module that doesn't exist", function () {
             define.remove("can't touch this");
         });
 
-        it("throws an error the module already exists", function () {
+        it("Test#003 : throws an error the module already exists", function () {
             expect(function () {
                 define("cordova", function () {});
             }).toThrow("module cordova already defined");
         });
 
-        it("doesn't call the factory method when defining", function () {
+        it("Test#004 : doesn't call the factory method when defining", function () {
             var factory = jasmine.createSpy();
             define("ff", factory);
             expect(factory).not.toHaveBeenCalled();
@@ -50,13 +50,13 @@ describe("require + define", function () {
     });
 
     describe("when requiring", function () {
-        it("throws an exception when module doesn't exist", function () {
+        it("Test#005 : throws an exception when module doesn't exist", function () {
             expect(function () {
                 require("your mom");
             }).toThrow("module your mom not found");
         });
 
-        it("throws an exception when modules depend on each other", function () {
+        it("Test#006 : throws an exception when modules depend on each other", function () {
             define("ModuleA", function(require, exports, module) {
                 require("ModuleB");
             });
@@ -70,7 +70,7 @@ describe("require + define", function () {
             define.remove("ModuleB");
         });
 
-        it("throws an exception when a cycle of requires occurs", function () {
+        it("Test#007 : throws an exception when a cycle of requires occurs", function () {
             define("ModuleA", function(require, exports, module) {
                 require("ModuleB");
             });
@@ -88,7 +88,7 @@ describe("require + define", function () {
             define.remove("ModuleC");
         });
 
-        it("calls the factory method when requiring", function () {
+        it("Test#008 : calls the factory method when requiring", function () {
             var factory = jasmine.createSpy();
             define("dino", factory);
             require("dino");
@@ -102,7 +102,7 @@ describe("require + define", function () {
             define.remove("dino");
         });
 
-        it("returns the exports object", function () {
+        it("Test#009 : returns the exports object", function () {
             define("a", function (require, exports, module) {
                 exports.stuff = "asdf";
             });
@@ -112,7 +112,7 @@ describe("require + define", function () {
             define.remove("a");
         });
 
-        it("can use both the exports and module.exports object", function () {
+        it("Test#010 : can use both the exports and module.exports object", function () {
             define("a", function (require, exports, module) {
                 exports.a = "a";
                 module.exports.b = "b";
@@ -124,7 +124,7 @@ describe("require + define", function () {
             define.remove("a");
         });
 
-        it("returns was is assigned to module.exports", function () {
+        it("Test#011 : returns was is assigned to module.exports", function () {
             var Foo = function () { };
             define("a", function (require, exports, module) {
                 module.exports = new Foo();
@@ -135,7 +135,7 @@ describe("require + define", function () {
             define.remove("a");
         });
 
-        it("has the id and exports values but not the factory on the module object", function () {
+        it("Test#012 : has the id and exports values but not the factory on the module object", function () {
             var factory = function (require, exports, module) {
                 expect(module.id).toBe("a");
                 expect(module.exports).toBeDefined();

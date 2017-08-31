@@ -33,8 +33,8 @@ describe('iOS exec', function () {
     var origUserAgent = navigator.userAgent;
 
     beforeEach(function() {
-        winSpy.reset();
-        failSpy.reset();
+        winSpy.calls.reset();
+        failSpy.calls.reset();
     });
 
     afterEach(function() {
@@ -57,7 +57,7 @@ describe('iOS exec', function () {
     }
 
     describe('exec', function() {
-        it('should return "" from nativeFetchMessages work when nothing is pending.', function() {
+        it('Test#001 : should return "" from nativeFetchMessages work when nothing is pending.', function() {
             var execPayload = exec.nativeFetchMessages();
             expect(execPayload).toBe('');
         });
