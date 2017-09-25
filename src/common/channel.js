@@ -19,8 +19,8 @@
  *
 */
 
-var utils = require('cordova/utils'),
-    nextGuid = 1;
+var utils = require('cordova/utils');
+var nextGuid = 1;
 
 /**
  * Custom pub-sub "channel" that can have functions subscribed to it
@@ -60,7 +60,7 @@ var utils = require('cordova/utils'),
  * @constructor
  * @param type  String the channel name
  */
-var Channel = function(type, sticky) {
+var Channel = function (type, sticky) {
     this.type = type;
     // Map of guid -> function.
     this.handlers = {};
@@ -73,72 +73,73 @@ var Channel = function(type, sticky) {
     // Function that is called when the first listener is subscribed, or when
     // the last listener is unsubscribed.
     this.onHasSubscribersChange = null;
-},
-    channel = {
-        /**
-         * Calls the provided function only after all of the channels specified
-         * have been fired. All channels must be sticky channels.
-         */
-        join: function(h, c) {
-            var len = c.length,
-                i = len,
-                f = function() {
-                    if (!(--i)) h();
-                };
-            for (var j=0; j<len; j++) {
-                if (c[j].state === 0) {
-                    throw Error('Can only use join with sticky channels.');
-                }
-                c[j].subscribe(f);
+};
+var channel = {
+    /**
+     * Calls the provided function only after all of the channels specified
+     * have been fired. All channels must be sticky channels.
+     */
+    join: function (h, c) {
+        var len = c.length;
+        var i = len;
+        var f = function () {
+            if (!(--i)) h();
+        };
+        for (var j = 0; j < len; j++) {
+            if (c[j].state === 0) {
+                throw Error('Can only use join with sticky channels.');
             }
-            if (!len) h();
-        },
-        create: function(type) {
-            return channel[type] = new Channel(type, false);
-        },
-        createSticky: function(type) {
-            return channel[type] = new Channel(type, true);
-        },
-
-        /**
-         * cordova Channels that must fire before "deviceready" is fired.
-         */
-        deviceReadyChannelsArray: [],
-        deviceReadyChannelsMap: {},
-
-        /**
-         * Indicate that a feature needs to be initialized before it is ready to be used.
-         * This holds up Cordova's "deviceready" event until the feature has been initialized
-         * and Cordova.initComplete(feature) is called.
-         *
-         * @param feature {String}     The unique feature name
-         */
-        waitForInitialization: function(feature) {
-            if (feature) {
-                var c = channel[feature] || this.createSticky(feature);
-                this.deviceReadyChannelsMap[feature] = c;
-                this.deviceReadyChannelsArray.push(c);
-            }
-        },
-
-        /**
-         * Indicate that initialization code has completed and the feature is ready to be used.
-         *
-         * @param feature {String}     The unique feature name
-         */
-        initializationComplete: function(feature) {
-            var c = this.deviceReadyChannelsMap[feature];
-            if (c) {
-                c.fire();
-            }
+            c[j].subscribe(f);
         }
-    };
+        if (!len) h();
+    },
+    /* eslint-disable no-return-assign */
+    create: function (type) {
+        return channel[type] = new Channel(type, false);
+    },
+    createSticky: function (type) {
+        return channel[type] = new Channel(type, true);
+    },
+    /* eslint-enable no-return-assign */
+    /**
+     * cordova Channels that must fire before "deviceready" is fired.
+     */
+    deviceReadyChannelsArray: [],
+    deviceReadyChannelsMap: {},
 
-function checkSubscriptionArgument(argument) {
-    if (typeof argument !== "function" && typeof argument.handleEvent !== "function") {
+    /**
+     * Indicate that a feature needs to be initialized before it is ready to be used.
+     * This holds up Cordova's "deviceready" event until the feature has been initialized
+     * and Cordova.initComplete(feature) is called.
+     *
+     * @param feature {String}     The unique feature name
+     */
+    waitForInitialization: function (feature) {
+        if (feature) {
+            var c = channel[feature] || this.createSticky(feature);
+            this.deviceReadyChannelsMap[feature] = c;
+            this.deviceReadyChannelsArray.push(c);
+        }
+    },
+
+    /**
+     * Indicate that initialization code has completed and the feature is ready to be used.
+     *
+     * @param feature {String}     The unique feature name
+     */
+    initializationComplete: function (feature) {
+        var c = this.deviceReadyChannelsMap[feature];
+        if (c) {
+            c.fire();
+        }
+    }
+};
+
+function checkSubscriptionArgument (argument) {
+    if (typeof argument !== 'function' && typeof argument.handleEvent !== 'function') {
         throw new Error(
-                "Must provide a function or an EventListener object " +
-                "implementing the handleEvent interface."
+            'Must provide a function or an EventListener object ' +
+                'implementing the handleEvent interface.'
         );
     }
 }
@@ -150,11 +151,11 @@ function checkSubscriptionArgument(argument) {
  * and a guid that can be used to stop subscribing to the channel.
  * Returns the guid.
  */
-Channel.prototype.subscribe = function(eventListenerOrFunction, eventListener) {
+Channel.prototype.subscribe = function (eventListenerOrFunction, eventListener) {
     checkSubscriptionArgument(eventListenerOrFunction);
     var handleEvent, guid;
 
-    if (eventListenerOrFunction && typeof eventListenerOrFunction === "object") {
+    if (eventListenerOrFunction && typeof eventListenerOrFunction === 'object') {
         // Received an EventListener object implementing the handleEvent interface
         handleEvent = eventListenerOrFunction.handleEvent;
         eventListener = eventListenerOrFunction;
@@ -163,13 +164,13 @@ Channel.prototype.subscribe = function(eventListenerOrFunction, eventListener) {
         handleEvent = eventListenerOrFunction;
     }
 
-    if (this.state == 2) {
+    if (this.state === 2) {
         handleEvent.apply(eventListener || this, this.fireArgs);
         return;
     }
 
     guid = eventListenerOrFunction.observer_guid;
-    if (typeof eventListener === "object") {
+    if (typeof eventListener === 'object') {
         handleEvent = utils.close(eventListener, handleEvent);
     }
 
@@ -184,7 +185,7 @@ Channel.prototype.subscribe = function(eventListenerOrFunction, eventListener) {
     if (!this.handlers[guid]) {
         this.handlers[guid] = handleEvent;
         this.numHandlers++;
-        if (this.numHandlers == 1) {
+        if (this.numHandlers === 1) {
             this.onHasSubscribersChange && this.onHasSubscribersChange();
         }
     }
@@ -193,11 +194,11 @@ Channel.prototype.subscribe = function(eventListenerOrFunction, eventListener) {
 /**
  * Unsubscribes the function with the given guid from the channel.
  */
-Channel.prototype.unsubscribe = function(eventListenerOrFunction) {
+Channel.prototype.unsubscribe = function (eventListenerOrFunction) {
     checkSubscriptionArgument(eventListenerOrFunction);
     var handleEvent, guid, handler;
 
-    if (eventListenerOrFunction && typeof eventListenerOrFunction === "object") {
+    if (eventListenerOrFunction && typeof eventListenerOrFunction === 'object') {
         // Received an EventListener object implementing the handleEvent interface
         handleEvent = eventListenerOrFunction.handleEvent;
     } else {
@@ -219,11 +220,11 @@ Channel.prototype.unsubscribe = function(eventListenerOrFunction) {
 /**
  * Calls all functions subscribed to this channel.
  */
-Channel.prototype.fire = function(e) {
-    var fail = false,
-        fireArgs = Array.prototype.slice.call(arguments);
+Channel.prototype.fire = function (e) {
+    var fail = false; // eslint-disable-line no-unused-vars
+    var fireArgs = Array.prototype.slice.call(arguments);
     // Apply stickiness.
-    if (this.state == 1) {
+    if (this.state === 1) {
         this.state = 2;
         this.fireArgs = fireArgs;
     }
@@ -237,14 +238,13 @@ Channel.prototype.fire = function(e) {
         for (var i = 0; i < toCall.length; ++i) {
             toCall[i].apply(this, fireArgs);
         }
-        if (this.state == 2 && this.numHandlers) {
+        if (this.state === 2 && this.numHandlers) {
             this.numHandlers = 0;
             this.handlers = {};
             this.onHasSubscribersChange && this.onHasSubscribersChange();
         }
     }
 };
-
 
 // defining them here so they are ready super fast!
 // DOM event that is received when the web page is loaded and parsed.

@@ -19,31 +19,26 @@
  *
 */
 
-/*jshint jasmine:true*/
+/* jshint jasmine:true */
 
 describe('iOS exec', function () {
-    var SERVICE = 'TestService';
-    var ACTION = 'TestAction';
-    var VC_ADDR = '1234';
-
-    var cordova = require('cordova');
     var exec = require('cordova/ios/exec');
     var winSpy = jasmine.createSpy('win');
     var failSpy = jasmine.createSpy('fail');
     var origUserAgent = navigator.userAgent;
 
-    beforeEach(function() {
+    beforeEach(function () {
         winSpy.reset();
         failSpy.reset();
     });
 
-    afterEach(function() {
-        navigator.__defineGetter__('userAgent', function(){
+    afterEach(function () {
+        navigator.__defineGetter__('userAgent', function () {
             return origUserAgent;
         });
     });
 
-    function simulateNativeBehaviour(codes) {
+    function simulateNativeBehaviour (codes) { // eslint-disable-line no-unused-vars
         var execPayload = JSON.parse(exec.nativeFetchMessages());
         while (execPayload.length && codes.length) {
             var curPayload = execPayload.shift();
@@ -56,8 +51,8 @@ describe('iOS exec', function () {
         expect(codes.length).toBe(0, 'Wrong number of results.');
     }
 
-    describe('exec', function() {
-        it('should return "" from nativeFetchMessages work when nothing is pending.', function() {
+    describe('exec', function () {
+        it('should return "" from nativeFetchMessages work when nothing is pending.', function () {
             var execPayload = exec.nativeFetchMessages();
             expect(execPayload).toBe('');
         });

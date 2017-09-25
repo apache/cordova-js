@@ -19,15 +19,14 @@
  *
 */
 
-/*global spyOn:false */
-
+/* eslint-disable no-undef */
 var propertyreplacer = require('cordova/test/propertyreplacer');
 
-exports.replace = function(moduleName, newValue) {
+exports.replace = function (moduleName, newValue) {
     propertyreplacer.stub(define.moduleMap, moduleName, null);
     define.remove(moduleName);
-    define(moduleName, function(require, exports, module) {
+    define(moduleName, function (require, exports, module) {
         module.exports = newValue;
     });
 };
-
+/* eslint-enable no-undef */

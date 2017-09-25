@@ -28,16 +28,16 @@ var utils = require('cordova/utils');
 
 var platformInitChannelsArray = [channel.onNativeReady, channel.onPluginsReady];
 
-function logUnfiredChannels(arr) {
+function logUnfiredChannels (arr) {
     for (var i = 0; i < arr.length; ++i) {
-        if (arr[i].state != 2) {
+        if (arr[i].state !== 2) {
             console.log('Channel not fired: ' + arr[i].type);
         }
     }
 }
 
-window.setTimeout(function() {
-    if (channel.onDeviceReady.state != 2) {
+window.setTimeout(function () {
+    if (channel.onDeviceReady.state !== 2) {
         console.log('deviceready has not fired after 5 seconds.');
         logUnfiredChannels(platformInitChannelsArray);
         logUnfiredChannels(channel.deviceReadyChannelsArray);
@@ -46,20 +46,19 @@ window.setTimeout(function() {
 
 // Replace navigator before any modules are required(), to ensure it happens as soon as possible.
 // We replace it so that properties that can't be clobbered can instead be overridden.
-function replaceNavigator(origNavigator) {
-    var CordovaNavigator = function() {};
+function replaceNavigator (origNavigator) {
+    var CordovaNavigator = function () {};
     CordovaNavigator.prototype = origNavigator;
     var newNavigator = new CordovaNavigator();
     // This work-around really only applies to new APIs that are newer than Function.bind.
     // Without it, APIs such as getGamepads() break.
     if (CordovaNavigator.bind) {
         for (var key in origNavigator) {
-            if (typeof origNavigator[key] == 'function') {
+            if (typeof origNavigator[key] === 'function') {
                 newNavigator[key] = origNavigator[key].bind(origNavigator);
-            }
-            else {
-                (function(k) {
-                    utils.defineGetterSetter(newNavigator,key,function() {
+            } else {
+                (function (k) {
+                    utils.defineGetterSetter(newNavigator, key, function () {
                         return origNavigator[k];
                     });
                 })(key);
@@ -75,12 +74,12 @@ if (window.navigator) {
 
 if (!window.console) {
     window.console = {
-        log: function(){}
+        log: function () {}
     };
 }
 if (!window.console.warn) {
-    window.console.warn = function(msg) {
-        this.log("warn: " + msg);
+    window.console.warn = function (msg) {
+        this.log('warn: ' + msg);
     };
 }
 
@@ -91,10 +90,10 @@ channel.onActivated = cordova.addDocumentEventHandler('activated');
 channel.onDeviceReady = cordova.addStickyDocumentEventHandler('deviceready');
 
 // Listen for DOMContentLoaded and notify our channel subscribers.
-if (document.readyState == 'complete' || document.readyState == 'interactive') {
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
     channel.onDOMContentLoaded.fire();
 } else {
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         channel.onDOMContentLoaded.fire();
     }, false);
 }
@@ -115,8 +114,8 @@ platform.bootstrap && platform.bootstrap();
 
 // Wrap in a setTimeout to support the use-case of having plugin JS appended to cordova.js.
 // The delay allows the attached modules to be defined before the plugin loader looks for them.
-setTimeout(function() {
-    pluginloader.load(function() {
+setTimeout(function () {
+    pluginloader.load(function () {
         channel.onPluginsReady.fire();
     });
 }, 0);
@@ -124,7 +123,7 @@ setTimeout(function() {
 /**
  * Create all cordova objects once native side is ready.
  */
-channel.join(function() {
+channel.join(function () {
     modulemapper.mapModules(window);
 
     platform.initialize && platform.initialize();
@@ -135,9 +134,8 @@ channel.join(function() {
     // Fire onDeviceReady event once page has fully loaded, all
     // constructors have run and cordova info has been received from native
     // side.
-    channel.join(function() {
+    channel.join(function () {
         require('cordova').fireDocumentEvent('deviceready');
     }, channel.deviceReadyChannelsArray);
 
 }, platformInitChannelsArray);
-

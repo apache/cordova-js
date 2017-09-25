@@ -21,7 +21,7 @@
 
 describe('urlutil', function () {
     var urlutil = require('cordova/urlutil');
-    if (typeof process != 'undefined') {
+    if (typeof process !== 'undefined') {
         // Tests don't work under jsdom.
         return;
     }
@@ -32,7 +32,7 @@ describe('urlutil', function () {
         expect(urlutil.makeAbsolute('http://www.foo.com/%20hi')).toBe('http://www.foo.com/%20hi');
     });
 
-    function testRootRelative(url) {
+    function testRootRelative (url) {
         var rootUrl = url.slice(0, 10) + url.slice(10).replace(/[?#].*/, '').replace(/\/.*/, '') + '/';
         expect(urlutil.makeAbsolute('/')).toBe(rootUrl);
         expect(urlutil.makeAbsolute('/foo?a#b')).toBe(rootUrl + 'foo?a#b');
@@ -43,7 +43,7 @@ describe('urlutil', function () {
     });
 
     it('can handle relative URLs', function () {
-        var rootUrl = window.location.href.replace(/[?#].*/, '').replace(/[^\/]*$/, '');
+        var rootUrl = window.location.href.replace(/[?#].*/, '').replace(/[^\/]*$/, ''); // eslint-disable-line no-useless-escape
         expect(urlutil.makeAbsolute('foo?a#b')).toBe(rootUrl + 'foo?a#b');
         expect(urlutil.makeAbsolute('foo/b%20ar')).toBe(rootUrl + 'foo/b%20ar');
     });
@@ -53,7 +53,7 @@ describe('urlutil', function () {
         var baseTag = document.createElement('base');
         baseTag.href = rootUrl;
         document.head.appendChild(baseTag);
-        this.after(function() {
+        this.after(function () {
             document.head.removeChild(baseTag);
         });
         expect(urlutil.makeAbsolute('foo?a#b')).toBe(rootUrl + 'foo?a#b');

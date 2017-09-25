@@ -19,32 +19,30 @@
  *
 */
 
-/*jshint -W079 */
-/*jshint -W020 */
+/* jshint -W079 */
+/* jshint -W020 */
 
-var require,
-    define;
+var require;
+var define;
 
 (function () {
-    var modules = {},
+    var modules = {};
     // Stack of moduleIds currently being built.
-        requireStack = [],
+    var requireStack = [];
     // Map of module ID -> index into requireStack of modules currently being built.
-        inProgressModules = {},
-        SEPARATOR = ".";
+    var inProgressModules = {};
+    var SEPARATOR = '.';
 
-
-
-    function build(module) {
-        var factory = module.factory,
-            localRequire = function (id) {
-                var resultantId = id;
-                //Its a relative path, so lop off the last portion and add the id (minus "./")
-                if (id.charAt(0) === ".") {
-                    resultantId = module.id.slice(0, module.id.lastIndexOf(SEPARATOR)) + SEPARATOR + id.slice(2);
-                }
-                return require(resultantId);
-            };
+    function build (module) {
+        var factory = module.factory;
+        var localRequire = function (id) {
+            var resultantId = id;
+            // Its a relative path, so lop off the last portion and add the id (minus "./")
+            if (id.charAt(0) === '.') {
+                resultantId = module.id.slice(0, module.id.lastIndexOf(SEPARATOR)) + SEPARATOR + id.slice(2);
+            }
+            return require(resultantId);
+        };
         module.exports = {};
         delete module.factory;
         factory(localRequire, module.exports, module);
@@ -53,10 +51,10 @@ var require,
 
     require = function (id) {
         if (!modules[id]) {
-            throw "module " + id + " not found";
+            throw 'module ' + id + ' not found';
         } else if (id in inProgressModules) {
             var cycle = requireStack.slice(inProgressModules[id]).join('->') + '->' + id;
-            throw "Cycle in require graph: " + cycle;
+            throw 'Cycle in require graph: ' + cycle;
         }
         if (modules[id].factory) {
             try {
@@ -73,7 +71,7 @@ var require,
 
     define = function (id, factory) {
         if (modules[id]) {
-            throw "module " + id + " already defined";
+            throw 'module ' + id + ' already defined';
         }
 
         modules[id] = {
@@ -89,8 +87,8 @@ var require,
     define.moduleMap = modules;
 })();
 
-//Export for use in node
-if (typeof module === "object" && typeof require === "function") {
+// Export for use in node
+if (typeof module === 'object' && typeof require === 'function') {
     module.exports.require = require;
     module.exports.define = define;
 }

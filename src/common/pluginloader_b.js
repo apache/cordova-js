@@ -23,14 +23,14 @@ var modulemapper = require('cordova/modulemapper');
 
 // Handler for the cordova_plugins.js content.
 // See plugman's plugin_loader.js for the details of this object.
-function handlePluginsObject(moduleList) {
+function handlePluginsObject (moduleList) {
     // if moduleList is not defined or empty, we've nothing to do
     if (!moduleList || !moduleList.length) {
         return;
     }
 
     // Loop through all the modules and then through their clobbers and merges.
-    for (var i = 0, module; module = moduleList[i]; i++) {
+    for (var i = 0, module; module = moduleList[i]; i++) { // eslint-disable-line no-cond-assign
         if (module.clobbers && module.clobbers.length) {
             for (var j = 0; j < module.clobbers.length; j++) {
                 modulemapper.clobbers(module.id, module.clobbers[j]);
@@ -54,10 +54,9 @@ function handlePluginsObject(moduleList) {
 // but the method accepts callback to be compatible with non-browserify flow.
 // onDeviceReady is blocked on onPluginsReady. onPluginsReady is fired when there are
 // no plugins to load, or they are all done.
-exports.load = function(callback) {
-    var moduleList = require("cordova/plugin_list");
+exports.load = function (callback) {
+    var moduleList = require('cordova/plugin_list');
     handlePluginsObject(moduleList);
 
     callback();
 };
-

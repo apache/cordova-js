@@ -15,7 +15,8 @@
     "url": "https://issues.apache.org/jira/browse/CB"
   },
   "scripts": {
-    "test": "grunt test",
+    "eslint": "eslint src test pkg",
+    "test": "grunt test && npm run eslint",
     "build": "grunt compile",
     "build-browserify": "grunt compile-browserify"
   },
@@ -68,6 +69,13 @@
   ],
   "devDependencies": {
     "connect": "^3.5.0",
+    "eslint": "^4.7.2",
+    "eslint-config-semistandard": "^11.0.0",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-node": "^5.1.1",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^3.0.1",
     "grunt": "^1.0.1",
     "grunt-contrib-clean": "^1.0.0",
     "grunt-contrib-jshint": "^1.0.0",

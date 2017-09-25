@@ -19,158 +19,158 @@
  *
 */
 
-describe("utils", function () {
+describe('utils', function () {
     var utils = require('cordova/utils');
 
-    describe("utils.arrayIndexOf", function() {
-        it("should return -1 when not found", function() {
-            expect(utils.arrayIndexOf([1,2,3], 4)).toBe(-1);
+    describe('utils.arrayIndexOf', function () {
+        it('should return -1 when not found', function () {
+            expect(utils.arrayIndexOf([1, 2, 3], 4)).toBe(-1);
         });
-        it("should return 0 for first item", function() {
-            expect(utils.arrayIndexOf([1,2,3], 1)).toBe(0);
+        it('should return 0 for first item', function () {
+            expect(utils.arrayIndexOf([1, 2, 3], 1)).toBe(0);
         });
-        it("should return 2 for last item", function() {
-            expect(utils.arrayIndexOf([1,2,3], 3)).toBe(2);
+        it('should return 2 for last item', function () {
+            expect(utils.arrayIndexOf([1, 2, 3], 3)).toBe(2);
         });
-        it("should return index of first occurance", function() {
-            expect(utils.arrayIndexOf([1,2,1], 1)).toBe(0);
+        it('should return index of first occurance', function () {
+            expect(utils.arrayIndexOf([1, 2, 1], 1)).toBe(0);
         });
     });
 
-    describe("utils.arrayRemove", function() {
-        it("should return true when removed.", function() {
+    describe('utils.arrayRemove', function () {
+        it('should return true when removed.', function () {
             var a = [1, 2, 3];
             expect(utils.arrayRemove(a, 2)).toBe(true);
             expect(a).toEqual([1, 3]);
         });
-        it("should return false when item was not there.", function() {
+        it('should return false when item was not there.', function () {
             var a = [1, 2, 3];
             expect(utils.arrayRemove(a, 4)).toBe(false);
             expect(a).toEqual([1, 2, 3]);
         });
-        it("should remove only first occurance", function() {
+        it('should remove only first occurance', function () {
             var a = [1, 2, 1];
             expect(utils.arrayRemove(a, 1)).toBe(true);
             expect(a).toEqual([2, 1]);
         });
     });
 
-    describe("isArray",function() {
-        it("should return true for [].", function() {
+    describe('isArray', function () {
+        it('should return true for [].', function () {
             var isArray = utils.isArray([]);
             expect(isArray).toBe(true);
         });
-        it("should return true for new Array().", function() {
-            var isArray = utils.isArray(new Array());
+        it('should return true for new Array().', function () {
+            var isArray = utils.isArray(new Array()); // eslint-disable-line no-array-constructor
             expect(isArray).toBe(true);
         });
-        it("should return false for {}.", function() {
+        it('should return false for {}.', function () {
             var isArray = utils.isArray({});
             expect(isArray).toBe(false);
         });
     });
 
-    describe("isDate",function() {
-        it("should return true for new Date().", function() {
+    describe('isDate', function () {
+        it('should return true for new Date().', function () {
             var isDate = utils.isDate(new Date());
             expect(isDate).toBe(true);
         });
-        it("should return false for {}.", function() {
+        it('should return false for {}.', function () {
             var isDate = utils.isDate({});
             expect(isDate).toBe(false);
         });
     });
 
-    describe("when cloning", function () {
-        it("can clone an array", function () {
-            var orig = [1, 2, 3, {four: 4}, "5"];
+    describe('when cloning', function () {
+        it('can clone an array', function () {
+            var orig = [1, 2, 3, {four: 4}, '5'];
 
             expect(utils.clone(orig)).toEqual(orig);
             expect(utils.clone(orig)).not.toBe(orig);
         });
 
-        it("can clone null", function () {
+        it('can clone null', function () {
             expect(utils.clone(null)).toBeNull();
         });
 
-        it("can clone undefined", function () {
+        it('can clone undefined', function () {
             expect(utils.clone(undefined)).not.toBeDefined();
         });
 
-        it("can clone a function", function () {
+        it('can clone a function', function () {
             var f = function () { return 4; };
             expect(utils.clone(f)).toBe(f);
         });
 
-        it("can clone a number", function () {
+        it('can clone a number', function () {
             expect(utils.clone(4)).toBe(4);
         });
 
-        it("can clone a string", function () {
-            expect(utils.clone("why")).toBe("why");
+        it('can clone a string', function () {
+            expect(utils.clone('why')).toBe('why');
         });
 
-        it("can clone a date", function () {
+        it('can clone a date', function () {
             var d = Date.now();
             expect(utils.clone(d)).toBe(d);
         });
 
-        it("can clone an object", function () {
+        it('can clone an object', function () {
 
             var orig = {
                 a: {
                     b: {
-                        c: "d"
-                    },
+                        c: 'd'
+                    }
                 },
-                e: "f",
-                g: "unit"
-            },
-            expected = {
+                e: 'f',
+                g: 'unit'
+            };
+            var expected = {
                 a: {
                     b: {
-                        c: "d"
-                    },
+                        c: 'd'
+                    }
                 },
-                e: "f",
-                g: "unit"
+                e: 'f',
+                g: 'unit'
             };
 
             expect(utils.clone(orig)).toEqual(expected);
         });
     });
 
-    describe("when closing around a function", function () {
-        it("calls the original function when calling the closed function", function () {
+    describe('when closing around a function', function () {
+        it('calls the original function when calling the closed function', function () {
             var f = jasmine.createSpy();
             utils.close(null, f)();
             expect(f).toHaveBeenCalled();
         });
 
-        it("uses the correct context for the closed function", function () {
+        it('uses the correct context for the closed function', function () {
             var context = {};
             utils.close(context, function () {
                 expect(this).toBe(context);
             })();
         });
 
-        it("passes the arguments to the closed function", function () {
+        it('passes the arguments to the closed function', function () {
             utils.close(null, function (arg) {
                 expect(arg).toBe(1);
             })(1);
         });
 
-        it("overrides the arguments when provided", function () {
+        it('overrides the arguments when provided', function () {
             utils.close(null, function (arg) {
                 expect(arg).toBe(42);
             }, [42])(16);
         });
     });
 
-    it("can create a uuid", function () {
+    it('can create a uuid', function () {
         var uuid = utils.createUUID();
         expect(uuid).toMatch(/^(\{{0,1}([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){12}\}{0,1})$/);
         expect(uuid).not.toEqual(utils.createUUID());
     });
-    
+
 });

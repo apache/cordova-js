@@ -19,48 +19,47 @@
  *
 */
 
-describe("builder", function () {
+describe('builder', function () {
 
     var builder = require('cordova/builder');
 
-    it("includes the module into the target", function () {
+    it('includes the module into the target', function () {
 
-        var target = {},
-            objects = {
-                foo: {
-                    path: "cordova/builder"
-                }
-            };
-
+        var target = {};
+        var objects = {
+            foo: {
+                path: 'cordova/builder'
+            }
+        };
 
         builder.buildIntoAndClobber(objects, target);
         expect(target.foo).toBeDefined();
-        expect(target.foo).toBe(require("cordova/builder"));
+        expect(target.foo).toBe(require('cordova/builder'));
     });
 
-    it("returns an empty object literal if no path", function () {
-        var target = {},
-            objects = {cat: {}};
+    it('returns an empty object literal if no path', function () {
+        var target = {};
+        var objects = {cat: {}};
 
         builder.buildIntoButDoNotClobber(objects, target);
 
         expect(target.cat).toBeDefined();
     });
 
-    it("builds out the children", function () {
+    it('builds out the children', function () {
 
-        var target = {},
-            objects = {
-               homer: {
-                   children: {
-                       bart: {},
-                       lisa: {},
-                       maggie: {
-                           path: "cordova/builder"
-                       }
-                   }
-               }
-            };
+        var target = {};
+        var objects = {
+            homer: {
+                children: {
+                    bart: {},
+                    lisa: {},
+                    maggie: {
+                        path: 'cordova/builder'
+                    }
+                }
+            }
+        };
 
         builder.buildIntoButDoNotClobber(objects, target);
 

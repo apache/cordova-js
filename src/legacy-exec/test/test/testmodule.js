@@ -20,7 +20,7 @@
 */
 
 module.exports = {
-    func: function() {},
+    func: function () {},
     num: 2,
     obj: { str: 'hello' },
     subObj: { str: 'testSubObj' }
