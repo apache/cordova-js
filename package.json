@@ -86,7 +86,7 @@
     "open": "0.0.5"
   },
   "dependencies": {
-    "browserify": "14.0.0"
+    "browserify": "14.4.0"
   },
   "cordova-platforms": {
     "cordova-android": "../cordova-android",
