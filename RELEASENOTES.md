@@ -20,6 +20,15 @@
 -->
 ## Release Notes for Cordova JS ##
 
+### 4.2.2 (Oct 04, 2017)
+* [CB-12017](https://issues.apache.org/jira/browse/CB-12017) updated dependencies for `Browserify`
+* [CB-12762](https://issues.apache.org/jira/browse/CB-12762) point `package.json` repo items to github mirrors instead of apache repos
+* [CB-12895](https://issues.apache.org/jira/browse/CB-12895) added `eslint` to repo
+* [CB-13232](https://issues.apache.org/jira/browse/CB-13232) added test for cordova's unique local style require
+* [CB-8990](https://issues.apache.org/jira/browse/CB-8990) bump nodejs requirement to 4.0.0+
+* [CB-12847](https://issues.apache.org/jira/browse/CB-12847) added `bugs` entry to `package.json`.
+* [CB-12748](https://issues.apache.org/jira/browse/CB-12748) Update CI to test node 4 and 6
+
 ### 4.2.1 (Jan 17, 2017)
 * [CB-12358](https://issues.apache.org/jira/browse/CB-12358) updated deps for release
 
