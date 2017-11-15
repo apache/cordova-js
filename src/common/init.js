@@ -89,6 +89,19 @@ channel.onResume = cordova.addDocumentEventHandler('resume');
 channel.onActivated = cordova.addDocumentEventHandler('activated');
 channel.onDeviceReady = cordova.addStickyDocumentEventHandler('deviceready');
 
+// We Replace the default visibilityState to make it accessible for us
+var _visibilityState = 'visible';
+function setVisibilityState() {
+    _visibilityState = this; 
+    cordova.fireDocumentEvent('visibilitychange');  
+}
+utils.defineGetter(document, 'visibilityState', function () {
+    return _visibilityState;
+});
+
+channel.onPause.subscribe(setVisibilityState, 'hidden');
+channel.onResume.subscribe(setVisibilityState, 'visible');
+
 // Listen for DOMContentLoaded and notify our channel subscribers.
 if (document.readyState === 'complete' || document.readyState === 'interactive') {
     channel.onDOMContentLoaded.fire();
