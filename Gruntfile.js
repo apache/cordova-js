@@ -49,17 +49,10 @@ module.exports = function(grunt) {
             "browser": {}
         },
         clean: ['pkg'],
-        jshint: {
-            options: {
-                jshintrc: '.jshintrc',
-            },
-            src: ['src/**/*.js']
-        },
     });
 
     // external tasks
     grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-contrib-jshint');
 
     // custom tasks
     grunt.loadTasks('tasks');
