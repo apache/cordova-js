@@ -5,7 +5,7 @@
   "engines": {
     "node": ">=4.0.0"
   },
-  "version": "4.2.3-dev",
+  "version": "4.2.4",
   "homepage": "http://cordova.apache.org",
   "repository": {
     "type": "git",
@@ -78,9 +78,8 @@
     "eslint-plugin-standard": "^3.0.1",
     "grunt": "^1.0.1",
     "grunt-contrib-clean": "^1.0.0",
-    "grunt-contrib-jshint": "^1.0.0",
     "istanbul": "^0.4.5",
-    "jasmine-node": "1.14.5",
+    "jasmine-node": "github:brodybits/jasmine-node#1.15.0-rc1",
     "jsdom-no-contextify": "^3.1.0",
     "mkdirp": "^0.5.0",
     "open": "0.0.5"

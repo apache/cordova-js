@@ -20,6 +20,12 @@
 -->
 ## Release Notes for Cordova JS ##
 
+### 4.2.4 (Jun 17, 2018)
+* package.json update devDependencies
+
+### 4.2.3-dev (Oct 30, 2017)
+* [CB-13501](https://issues.apache.org/jira/browse/CB-13501) : added support for node 8
+
 ### 4.2.2 (Oct 04, 2017)
 * [CB-12017](https://issues.apache.org/jira/browse/CB-12017) updated dependencies for `Browserify`
 * [CB-12762](https://issues.apache.org/jira/browse/CB-12762) point `package.json` repo items to github mirrors instead of apache repos
