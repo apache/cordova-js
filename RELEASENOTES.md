@@ -20,6 +20,9 @@
 -->
 ## Release Notes for Cordova JS ##
 
+### 4.2.4 (Jun 17, 2018)
+* package.json update devDependencies
+
 ### 4.2.3-dev (Oct 30, 2017)
 * [CB-13501](https://issues.apache.org/jira/browse/CB-13501) : added support for node 8
 
