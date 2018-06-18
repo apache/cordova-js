@@ -22,10 +22,10 @@
 
 var fs       = require('fs');
 var path     = require('path');
-var connect  = require('connect');
-var bundle   = require('./bundle');
+
+var express  = require('express');
+
 var collect  = require('./collect');
-var start    = require('open');
 
 var testLibName    = path.join(__dirname, '..', '..', 'pkg', 'cordova.test.js');
 var testLib        = fs.readFileSync(testLibName, 'utf8');
@@ -77,16 +77,16 @@ function routes(app) {
 module.exports = function() {
     console.log('starting browser-based tests');
 
-    var vendor = connect.static(pathToVendor);
-    var jasmine = connect.static(pathToJasmine);
-    var tests  = connect.static(pathToTests);
-    var router = connect.router(routes);
+    var app = express();
 
-    connect(vendor, jasmine, tests, router).listen(3000);
+    app.set('port', 3000);
 
-    console.log("Test Server running on:\n");
-    console.log("http://127.0.0.1:3000\n");
+    app.use(express.static(pathToVendor));
+    app.use(express.static(pathToJasmine));
+    app.use(express.static(pathToTests));
 
-    start('http://127.0.0.1:3000');
+    routes(app);
+
+    app.listen(3000, () => console.log('Test Server running on: http://localhost:3000'));
 };
 
