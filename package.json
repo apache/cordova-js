@@ -78,7 +78,7 @@
     "grunt": "^1.0.1",
     "grunt-contrib-clean": "^1.0.0",
     "istanbul": "^0.4.5",
-    "jasmine-node": "1.14.5",
+    "jasmine-node": "^1.14.6",
     "jsdom-no-contextify": "^3.1.0",
     "mkdirp": "^0.5.0"
   },
