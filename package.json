@@ -18,8 +18,7 @@
     "eslint": "eslint src test pkg",
     "test": "grunt test && npm run eslint",
     "btest": "grunt btest && npm run eslint",
-    "build": "grunt compile",
-    "build-browserify": "grunt compile-browserify"
+    "build": "grunt compile"
   },
   "license": "Apache-2.0",
   "contributors": [
