@@ -82,7 +82,7 @@
     "istanbul": "^0.4.5",
     "jasmine-node": "^1.14.6",
     "jsdom-no-contextify": "^3.1.0",
-    "mkdirp": "^0.5.0"
+    "mkdirp": "^0.5.1"
   },
   "dependencies": {
     "browserify": "14.4.0"
