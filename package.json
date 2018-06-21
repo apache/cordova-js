@@ -67,6 +67,7 @@
       "email": "stevengill97@gmail.com"
     }
   ],
+  "dependencies": {},
   "devDependencies": {
     "eslint": "^4.19.1",
     "eslint-config-semistandard": "^12.0.1",
@@ -83,7 +84,6 @@
     "jsdom-no-contextify": "^3.1.0",
     "mkdirp": "^0.5.1"
   },
-  "dependencies": {},
   "cordova-platforms": {
     "cordova-android": "../cordova-android",
     "cordova-ios": "../cordova-ios",
