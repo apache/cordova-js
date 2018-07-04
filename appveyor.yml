@@ -9,7 +9,6 @@ environment:
 install:
   - ps: Install-Product node $env:nodejs_version
 
-  - npm -g install npm@5 # QUICK FIX for Node.js 4.x
   - set PATH=%APPDATA%\npm;%PATH%
 
   - cd ..
