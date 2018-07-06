@@ -74,7 +74,7 @@ To compile the js for just one platform, run:
 
     grunt compile:android --platformVersion=4.0.0
 
-To comiple the js for all platforms but pass in a custom path for your cordova-android and cordova-ios platforms, run:
+To compile the js for all platforms but pass in a custom path for your cordova-android and cordova-ios platforms, run:
 
     grunt compile --android='../custompath/cordova-android' --ios='../custompath/cordova-ios'
 
