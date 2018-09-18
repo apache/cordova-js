@@ -50,7 +50,7 @@ describe('pluginloader', function () {
         done = true;
     }
 
-    it('should inject cordova_plugins.js when it is not already there', function () {
+    it('Test#001 : should inject cordova_plugins.js when it is not already there', function () {
         injectScript.andCallFake(function (url, onload, onerror) {
             // jsdom deficiencies:
             if (typeof location !== 'undefined') {
@@ -73,7 +73,7 @@ describe('pluginloader', function () {
         });
     });
 
-    it('should not inject cordova_plugins.js when it is already there', function () {
+    it('Test#002 : should not inject cordova_plugins.js when it is already there', function () {
         define('cordova/plugin_list', function (require, exports, module) {
             module.exports = [];
         });
@@ -83,7 +83,8 @@ describe('pluginloader', function () {
             expect(injectScript).not.toHaveBeenCalled();
         });
     });
-    it('should inject plugin scripts when they are not already there', function () {
+
+    it('Test#003 : should inject plugin scripts when they are not already there', function () {
         define('cordova/plugin_list', function (require, exports, module) {
             module.exports = [
                 { 'file': 'some/path.js', 'id': 'some.id' }
@@ -108,7 +109,7 @@ describe('pluginloader', function () {
         });
     });
 
-    it('should not inject plugin scripts when they are already there', function () {
+    it('Test#004 : should not inject plugin scripts when they are already there', function () {
         define('cordova/plugin_list', function (require, exports, module) {
             module.exports = [
                 { 'file': 'some/path.js', 'id': 'some.id' }
