@@ -78,16 +78,6 @@ To compile the js for all platforms but pass in a custom path for your cordova-a
 
     grunt compile --android='../custompath/cordova-android' --ios='../custompath/cordova-ios'
 
-To create the browserify version of the js, run:
-
-    grunt compile-browserify --platformVersion=4.0.0
-
-To compile the browserify version of the js for just one platform, run:
-
-    grunt compile-browserify:android --platformVersion=4.0.0
-
-NOTE: browserify method does not support custom paths for platform repos.
-
 For integration, see the 'Integration' section below.
 
 ## Known Issues
