@@ -34,20 +34,6 @@ module.exports = function(grunt) {
             "ubuntu": {},
             "browser": {}
         },
-        "compile-browserify": {
-            "amazon-fireos": {},
-            "android": {},
-            "blackberry10": {},
-            "ios": {},
-            "osx": {},
-            "test": {},
-            "windows": { useWindowsLineEndings: true },
-            "wp8": { useWindowsLineEndings: true },
-            "firefoxos": {},
-            "webos": {},
-            "ubuntu": {},
-            "browser": {}
-        },
         clean: ['pkg'],
     });
 
@@ -63,6 +49,4 @@ module.exports = function(grunt) {
     grunt.registerTask('test', ['compile:test', '_test']);
     grunt.registerTask('btest', ['compile:test', '_btest']);
     grunt.registerTask('cover', ['compile', '_cover']);
-    grunt.registerTask('test-browserify', ['compile-browserify:test', '_test']);
-    grunt.registerTask('btest-browserify', ['compile-browserify:test', '_btest']);
 };

@@ -18,8 +18,7 @@
     "eslint": "eslint src test pkg",
     "test": "grunt test && npm run eslint",
     "btest": "grunt btest && npm run eslint",
-    "build": "grunt compile",
-    "build-browserify": "grunt compile-browserify"
+    "build": "grunt compile"
   },
   "license": "Apache-2.0",
   "contributors": [
@@ -68,6 +67,7 @@
       "email": "stevengill97@gmail.com"
     }
   ],
+  "dependencies": {},
   "devDependencies": {
     "eslint": "^4.7.2",
     "eslint-config-semistandard": "^11.0.0",
@@ -83,9 +83,6 @@
     "jasmine-node": "^1.14.6",
     "jsdom-no-contextify": "^3.1.0",
     "mkdirp": "^0.5.0"
-  },
-  "dependencies": {
-    "browserify": "14.4.0"
   },
   "cordova-platforms": {
     "cordova-android": "../cordova-android",
