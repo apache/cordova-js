@@ -61,7 +61,7 @@ describe('android exec.processMessages', function () {
     }
 
     describe('exec', function () {
-        it('should process messages in order even when called recursively', function () {
+        it('Test#001 : should process messages in order even when called recursively', function () {
             var firstCallbackId = null;
             var callCount = 0;
             nativeApi.exec.andCallFake(function (secret, service, action, callbackId, argsJson) {
@@ -100,7 +100,7 @@ describe('android exec.processMessages', function () {
                 expect(winSpy3).toHaveBeenCalledWith('three');
             });
         });
-        it('should process messages asynchronously', function () {
+        it('Test#002 : should process messages asynchronously', function () {
             nativeApi.exec.andCallFake(function (secret, service, action, callbackId, argsJson) {
                 expect(secret).toBe(1234);
                 return createCallbackMessage(true, false, 1, callbackId, 'stwo');
@@ -139,63 +139,63 @@ describe('android exec.processMessages', function () {
             waitsFor(function () { return callbackSpy.wasCalled; }, 200);
         }
 
-        it('should handle payloads of false', function () {
+        it('Test#003 : should handle payloads of false', function () {
             var messages = createCallbackMessage(true, true, 1, 'id', 'f');
             performExecAndReturn(messages);
             runs(function () {
                 expect(callbackSpy).toHaveBeenCalledWith('id', true, 1, [false], true);
             });
         });
-        it('should handle payloads of true', function () {
+        it('Test#004 : should handle payloads of true', function () {
             var messages = createCallbackMessage(true, true, 1, 'id', 't');
             performExecAndReturn(messages);
             runs(function () {
                 expect(callbackSpy).toHaveBeenCalledWith('id', true, 1, [true], true);
             });
         });
-        it('should handle payloads of null', function () {
+        it('Test#005 : should handle payloads of null', function () {
             var messages = createCallbackMessage(true, true, 1, 'id', 'N');
             performExecAndReturn(messages);
             runs(function () {
                 expect(callbackSpy).toHaveBeenCalledWith('id', true, 1, [null], true);
             });
         });
-        it('should handle payloads of numbers', function () {
+        it('Test#006 : should handle payloads of numbers', function () {
             var messages = createCallbackMessage(true, true, 1, 'id', 'n-3.3');
             performExecAndReturn(messages);
             runs(function () {
                 expect(callbackSpy).toHaveBeenCalledWith('id', true, 1, [-3.3], true);
             });
         });
-        it('should handle payloads of strings', function () {
+        it('Test#007 : should handle payloads of strings', function () {
             var messages = createCallbackMessage(true, true, 1, 'id', 'sHello world');
             performExecAndReturn(messages);
             runs(function () {
                 expect(callbackSpy).toHaveBeenCalledWith('id', true, 1, ['Hello world'], true);
             });
         });
-        it('should handle payloads of JSON objects', function () {
+        it('Test#008 : should handle payloads of JSON objects', function () {
             var messages = createCallbackMessage(true, true, 1, 'id', '{"a":1}');
             performExecAndReturn(messages);
             runs(function () {
                 expect(callbackSpy).toHaveBeenCalledWith('id', true, 1, [{a: 1}], true);
             });
         });
-        it('should handle payloads of JSON arrays', function () {
+        it('Test#009 : should handle payloads of JSON arrays', function () {
             var messages = createCallbackMessage(true, true, 1, 'id', '[1]');
             performExecAndReturn(messages);
             runs(function () {
                 expect(callbackSpy).toHaveBeenCalledWith('id', true, 1, [[1]], true);
             });
         });
-        it('should handle other callback opts', function () {
+        it('Test#010 : should handle other callback opts', function () {
             var messages = createCallbackMessage(false, false, 3, 'id', 'sfoo');
             performExecAndReturn(messages);
             runs(function () {
                 expect(callbackSpy).toHaveBeenCalledWith('id', false, 3, ['foo'], false);
             });
         });
-        it('should handle multiple messages', function () {
+        it('Test#011 : should handle multiple messages', function () {
             var message1 = createCallbackMessage(false, false, 3, 'id', 'sfoo');
             var message2 = createCallbackMessage(true, true, 1, 'id', 'f');
             var messages = message1 + message2;
@@ -211,7 +211,7 @@ describe('android exec.processMessages', function () {
                 expect(callbackSpy).toHaveBeenCalledWith('id', true, 1, [false], true);
             });
         });
-        it('should poll for more messages when hitting an *', function () {
+        it('Test#012 : should poll for more messages when hitting an *', function () {
             var message1 = createCallbackMessage(false, false, 3, 'id', 'sfoo');
             var message2 = createCallbackMessage(true, true, 1, 'id', 'f');
             nativeApi.retrieveJsMessages.andCallFake(function () {
@@ -225,7 +225,7 @@ describe('android exec.processMessages', function () {
                 expect(callbackSpy).toHaveBeenCalledWith('id', true, 1, [false], true);
             });
         });
-        it('should call callbacks in order when one callback enqueues another.', function () {
+        it('Test#013 : should call callbacks in order when one callback enqueues another.', function () {
             var message1 = createCallbackMessage(false, false, 3, 'id', 'scall1');
             var message2 = createCallbackMessage(false, false, 3, 'id', 'scall2');
             var message3 = createCallbackMessage(false, false, 3, 'id', 'scall3');
