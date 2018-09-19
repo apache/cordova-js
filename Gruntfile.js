@@ -38,8 +38,7 @@ module.exports = function(grunt) {
     grunt.loadTasks('tasks');
 
     // defaults
-    grunt.registerTask('default', ['build', 'test']);
-    grunt.registerTask('build', ['compile', 'whitespace-check']);
+    grunt.registerTask('default', ['compile', 'test']);
     grunt.registerTask('test', ['compile:test', '_test']);
     grunt.registerTask('cover', ['compile', '_cover']);
 };
