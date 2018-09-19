@@ -144,6 +144,7 @@ describe('require + define', function () {
 
             define('a', factory);
             require('a');
+            define.remove('a');
         });
 
         it("can handle multiple defined modules that use cordova's unique handling of relative require paths", function () {
