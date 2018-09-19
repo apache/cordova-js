@@ -21,17 +21,11 @@ module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         compile: {
-            "amazon-fireos": {},
             "android": {},
-            "blackberry10": {},
             "ios": {},
             "osx": {},
             "test": {},
             "windows": { useWindowsLineEndings: true },
-            "wp8": { useWindowsLineEndings: true },
-            "firefoxos": {},
-            "webos": {},
-            "ubuntu": {},
             "browser": {}
         },
         clean: ['pkg'],
