@@ -28,9 +28,4 @@ module.exports = function(grunt) {
         var done = this.async();
         require('./lib/test-jsdom')(done);
     });
-
-    grunt.registerTask('_btest', 'Runs tests in the browser', function() {
-        require('./lib/test-browser')();
-        this.async(); // never finish.
-    });
 };

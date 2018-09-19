@@ -17,7 +17,6 @@
   "scripts": {
     "eslint": "eslint src test pkg",
     "test": "grunt test && npm run eslint",
-    "btest": "grunt btest && npm run eslint",
     "build": "grunt compile"
   },
   "license": "Apache-2.0",
