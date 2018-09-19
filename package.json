@@ -75,7 +75,6 @@
     "eslint-plugin-node": "^5.1.1",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
-    "express": "^4.16.3",
     "grunt": "^1.0.1",
     "grunt-contrib-clean": "^1.0.0",
     "istanbul": "^0.4.5",
@@ -86,14 +85,8 @@
   "cordova-platforms": {
     "cordova-android": "../cordova-android",
     "cordova-ios": "../cordova-ios",
-    "cordova-blackberry10": "../cordova-blackberry",
-    "cordova-firefoxos": "../cordova-firefoxos",
-    "cordova-ubuntu": "../cordova-ubuntu",
-    "cordova-amazon-fireos": "../cordova-amazon-fireos",
-    "cordova-wp8": "../cordova-wp8",
     "cordova-windows": "../cordova-windows",
     "cordova-osx": "../cordova-osx",
-    "cordova-browser": "../cordova-browser",
-    "cordova-webos": "../cordova-webos"
+    "cordova-browser": "../cordova-browser"
   }
 }

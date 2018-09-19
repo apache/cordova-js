@@ -19,8 +19,6 @@
  *
 */
 
-/* jshint jasmine:true */
-
 describe('iOS exec', function () {
     var exec = require('cordova/ios/exec');
     var winSpy = jasmine.createSpy('win');

@@ -21,17 +21,11 @@ module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         compile: {
-            "amazon-fireos": {},
             "android": {},
-            "blackberry10": {},
             "ios": {},
             "osx": {},
             "test": {},
             "windows": { useWindowsLineEndings: true },
-            "wp8": { useWindowsLineEndings: true },
-            "firefoxos": {},
-            "webos": {},
-            "ubuntu": {},
             "browser": {}
         },
         clean: ['pkg'],
@@ -44,8 +38,7 @@ module.exports = function(grunt) {
     grunt.loadTasks('tasks');
 
     // defaults
-    grunt.registerTask('default', ['build', 'test']);
-    grunt.registerTask('build', ['compile', 'whitespace-check']);
+    grunt.registerTask('default', ['compile', 'test']);
     grunt.registerTask('test', ['compile:test', '_test']);
     grunt.registerTask('cover', ['compile', '_cover']);
 };

@@ -19,9 +19,6 @@
  *
 */
 
-/* jshint -W079 */
-/* jshint -W020 */
-
 var require;
 var define;
 
