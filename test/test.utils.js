@@ -38,7 +38,7 @@ describe('utils', function () {
     });
 
     describe('utils.arrayRemove', function () {
-        it('should return true when removed.', function () {
+        it('Test#005 : should return true when removed.', function () {
             var a = [1, 2, 3];
             expect(utils.arrayRemove(a, 2)).toBe(true);
             expect(a).toEqual([1, 3]);

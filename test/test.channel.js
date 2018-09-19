@@ -336,7 +336,7 @@ describe('channel', function () {
         });
     });
     describe('onHasSubscribersChange', function () {
-        it('should be called only when the first subscriber is added and last subscriber is removed.', function () {
+        it('Test#027 : should be called only when the first subscriber is added and last subscriber is removed.', function () {
             var handler = jasmine.createSpy().andCallFake(function () {
                 if (callCount(handler) === 1) {
                     expect(this.numHandlers).toEqual(1);
