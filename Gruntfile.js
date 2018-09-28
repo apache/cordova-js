@@ -38,7 +38,5 @@ module.exports = function(grunt) {
     grunt.loadTasks('tasks');
 
     // defaults
-    grunt.registerTask('default', ['compile', 'test']);
-    grunt.registerTask('test', ['compile:test', '_test']);
-    grunt.registerTask('cover', ['compile', '_cover']);
+    grunt.registerTask('default', ['compile']);
 };
