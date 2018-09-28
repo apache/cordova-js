@@ -20,7 +20,8 @@
 */
 
 describe('pluginloader', function () {
-    var pluginloader = require('cordova/pluginloader');
+    const { define } = cordova;
+    var pluginloader = cordova.require('cordova/pluginloader');
     var injectScript;
     var cdvScript;
     beforeEach(function () {
@@ -36,10 +37,8 @@ describe('pluginloader', function () {
             cdvScript.parentNode.removeChild(cdvScript);
             cdvScript = null;
         }
-        /* eslint-disable no-undef */
         define.remove('cordova/plugin_list');
         define.remove('some.id');
-        /* eslint-enable no-undef */
     });
 
     it('Test#001 : should inject cordova_plugins.js when it is not already there', function (done) {

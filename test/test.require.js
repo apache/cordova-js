@@ -18,12 +18,13 @@
  * under the License.
  *
 */
-/* eslint-disable no-undef */
+
 describe('require + define', function () {
+    const { require, define } = cordova;
+
     it('exists off of cordova', function () {
-        var cordova = require('cordova');
-        expect(cordova.require).toBeDefined();
-        expect(cordova.define).toBeDefined();
+        expect(require).toBeDefined();
+        expect(define).toBeDefined();
     });
 
     describe('when defining', function () {

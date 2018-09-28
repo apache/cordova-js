@@ -20,7 +20,7 @@
 */
 
 describe('argscheck', function () {
-    var argscheck = require('cordova/argscheck');
+    var argscheck = cordova.require('cordova/argscheck');
 
     function createTestFunc (allowNull) {
         return function testFunc (num, obj, arr, str, date, func) {

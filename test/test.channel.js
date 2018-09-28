@@ -20,7 +20,7 @@
 */
 
 describe('channel', function () {
-    var channel = require('cordova/channel');
+    var channel = cordova.require('cordova/channel');
     var multiChannel;
     var stickyChannel;
 

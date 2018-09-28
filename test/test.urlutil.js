@@ -20,7 +20,7 @@
 */
 
 describe('urlutil', function () {
-    var urlutil = require('cordova/urlutil');
+    var urlutil = cordova.require('cordova/urlutil');
     if (typeof process !== 'undefined') {
         // Tests don't work under jsdom.
         return;

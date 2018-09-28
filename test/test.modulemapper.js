@@ -19,9 +19,9 @@
 */
 
 describe('modulemapper', function () {
-    var modulemapper = require('cordova/modulemapper');
-    var testmodule = require('cordova/test/testmodule');
-    var utils = require('cordova/utils');
+    var modulemapper = cordova.require('cordova/modulemapper');
+    var testmodule = cordova.require('cordova/test/testmodule');
+    var utils = cordova.require('cordova/utils');
     var context;
 
     beforeEach(function () {

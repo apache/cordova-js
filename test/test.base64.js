@@ -20,7 +20,7 @@
 */
 
 describe('base64', function () {
-    var base64 = require('cordova/base64');
+    var base64 = cordova.require('cordova/base64');
 
     it('Test#001 : can base64 encode strings correctly', function () {
         var arrayBuffer = new ArrayBuffer(6);

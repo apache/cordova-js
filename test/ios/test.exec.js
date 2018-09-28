@@ -20,7 +20,7 @@
 */
 
 describe('iOS exec', function () {
-    var exec = require('cordova/ios/exec');
+    var exec = cordova.require('cordova/ios/exec');
     var winSpy = jasmine.createSpy('win');
     var failSpy = jasmine.createSpy('fail');
     var origUserAgent = navigator.userAgent;
