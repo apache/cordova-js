@@ -19,9 +19,9 @@
 */
 
 describe('modulemapper', function () {
-    var modulemapper = require('cordova/modulemapper');
-    var testmodule = require('cordova/test/testmodule');
-    var utils = require('cordova/utils');
+    var modulemapper = cordova.require('cordova/modulemapper');
+    var testmodule = cordova.require('cordova/test/testmodule');
+    var utils = cordova.require('cordova/utils');
     var context;
 
     beforeEach(function () {
@@ -167,19 +167,15 @@ describe('modulemapper', function () {
         expect(modulemapper.getOriginalSymbol(context, 'obj.str')).toBe(context.obj.str);
     });
     it('Test#017 : should log about deprecated property access', function () {
-        var origConsoleLog = console.log;
-        console.log = jasmine.createSpy('console.log');
-        this.after(function () {
-            console.log = origConsoleLog;
-        });
+        spyOn(console, 'log');
         modulemapper.clobbers('cordova/test/testmodule', 'obj', 'Use foo instead');
         modulemapper.defaults('cordova/test/testmodule', 'newProp', 'Use foo instead');
         modulemapper.mapModules(context);
         context.obj.func();
         context.obj.func();
-        expect(console.log.callCount).toBe(1);
+        expect(console.log).toHaveBeenCalledTimes(1);
         context.newProp.func();
         context.newProp.func();
-        expect(console.log.callCount).toBe(2);
+        expect(console.log).toHaveBeenCalledTimes(2);
     });
 });

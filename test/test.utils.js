@@ -20,7 +20,7 @@
 */
 
 describe('utils', function () {
-    var utils = require('cordova/utils');
+    var utils = cordova.require('cordova/utils');
 
     describe('utils.arrayIndexOf', function () {
         it('Test#001 : should return -1 when not found', function () {

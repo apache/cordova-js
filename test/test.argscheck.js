@@ -20,7 +20,7 @@
 */
 
 describe('argscheck', function () {
-    var argscheck = require('cordova/argscheck');
+    var argscheck = cordova.require('cordova/argscheck');
 
     function createTestFunc (allowNull) {
         return function testFunc (num, obj, arr, str, date, func) {
@@ -50,28 +50,28 @@ describe('argscheck', function () {
     });
     it('Test#005 : should throw when given invalid number', function () {
         var testFunc = createTestFunc(true);
-        expect(function () { testFunc('foo', null, null, null, null, null); }).toThrow('Wrong type for parameter "num" of testFunc: Expected Number, but got String.');
+        expect(function () { testFunc('foo', null, null, null, null, null); }).toThrowError('Wrong type for parameter "num" of testFunc: Expected Number, but got String.');
     });
     it('Test#006 : should throw when given invalid object', function () {
         var testFunc = createTestFunc(true);
         // Do not allow arrays for objects since we're usually dealing with JSON when expecting objects.
-        expect(function () { testFunc(null, [], null, null, null, null); }).toThrow('Wrong type for parameter "obj" of testFunc: Expected Object, but got Array.');
+        expect(function () { testFunc(null, [], null, null, null, null); }).toThrowError('Wrong type for parameter "obj" of testFunc: Expected Object, but got Array.');
     });
     it('Test#007 : should throw when given invalid array', function () {
         var testFunc = createTestFunc(true);
-        expect(function () { testFunc(null, null, {}, null, null, null); }).toThrow('Wrong type for parameter "arr" of testFunc: Expected Array, but got Object.');
+        expect(function () { testFunc(null, null, {}, null, null, null); }).toThrowError('Wrong type for parameter "arr" of testFunc: Expected Array, but got Object.');
     });
     it('Test#008 : should throw when given invalid string', function () {
         var testFunc = createTestFunc(true);
-        expect(function () { testFunc(null, null, null, 5, null, null); }).toThrow('Wrong type for parameter "str" of testFunc: Expected String, but got Number.');
+        expect(function () { testFunc(null, null, null, 5, null, null); }).toThrowError('Wrong type for parameter "str" of testFunc: Expected String, but got Number.');
     });
     it('Test#009 : should throw when given invalid date', function () {
         var testFunc = createTestFunc(true);
-        expect(function () { testFunc(null, null, null, null, 233, null); }).toThrow('Wrong type for parameter "date" of testFunc: Expected Date, but got Number.');
+        expect(function () { testFunc(null, null, null, null, 233, null); }).toThrowError('Wrong type for parameter "date" of testFunc: Expected Date, but got Number.');
     });
     it('Test#010 : should throw when given invalid function', function () {
         var testFunc = createTestFunc(true);
-        expect(function () { testFunc(null, null, null, null, null, new Date()); }).toThrow('Wrong type for parameter "func" of testFunc: Expected Function, but got Date.');
+        expect(function () { testFunc(null, null, null, null, null, new Date()); }).toThrowError('Wrong type for parameter "func" of testFunc: Expected Function, but got Date.');
     });
     it('Test#011 : should not throw when checking is disabled', function () {
         var testFunc = createTestFunc(false);

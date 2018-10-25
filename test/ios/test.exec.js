@@ -20,14 +20,14 @@
 */
 
 describe('iOS exec', function () {
-    var exec = require('cordova/ios/exec');
+    var exec = cordova.require('cordova/ios/exec');
     var winSpy = jasmine.createSpy('win');
     var failSpy = jasmine.createSpy('fail');
     var origUserAgent = navigator.userAgent;
 
     beforeEach(function () {
-        winSpy.reset();
-        failSpy.reset();
+        winSpy.calls.reset();
+        failSpy.calls.reset();
     });
 
     afterEach(function () {

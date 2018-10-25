@@ -20,7 +20,7 @@
 */
 
 describe('urlutil', function () {
-    var urlutil = require('cordova/urlutil');
+    var urlutil = cordova.require('cordova/urlutil');
     if (typeof process !== 'undefined') {
         // Tests don't work under jsdom.
         return;
@@ -53,12 +53,13 @@ describe('urlutil', function () {
         var baseTag = document.createElement('base');
         baseTag.href = rootUrl;
         document.head.appendChild(baseTag);
-        this.after(function () {
+        try {
+            expect(urlutil.makeAbsolute('foo?a#b')).toBe(rootUrl + 'foo?a#b');
+            expect(urlutil.makeAbsolute('foo/b%20ar')).toBe(rootUrl + 'foo/b%20ar');
+            testRootRelative(rootUrl);
+        } finally {
             document.head.removeChild(baseTag);
-        });
-        expect(urlutil.makeAbsolute('foo?a#b')).toBe(rootUrl + 'foo?a#b');
-        expect(urlutil.makeAbsolute('foo/b%20ar')).toBe(rootUrl + 'foo/b%20ar');
-        testRootRelative(rootUrl);
+        }
     });
 
     it('Test#005 : can handle scheme-relative URLs', function () {
