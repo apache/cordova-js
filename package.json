@@ -89,6 +89,7 @@
     "cordova-ios": "../cordova-ios",
     "cordova-windows": "../cordova-windows",
     "cordova-osx": "../cordova-osx",
-    "cordova-browser": "../cordova-browser"
+    "cordova-browser": "../cordova-browser",
+    "cordova-electron": "../cordova-electron"
   }
 }
