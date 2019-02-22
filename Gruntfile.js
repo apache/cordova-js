@@ -26,7 +26,8 @@ module.exports = function(grunt) {
             "osx": {},
             "test": {},
             "windows": { useWindowsLineEndings: true },
-            "browser": {}
+            "browser": {},
+            "electron": {}
         },
         clean: ['pkg'],
     });
