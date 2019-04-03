@@ -16,9 +16,10 @@
   },
   "scripts": {
     "eslint": "eslint --ignore-path .gitignore .",
-    "pretest": "grunt compile:test",
+    "pretest": "npm run build:test",
     "test": "npm run eslint && karma start",
-    "build": "grunt compile"
+    "build": "grunt compile",
+    "build:test": "node test/build.js pkg/cordova.test.js"
   },
   "license": "Apache-2.0",
   "contributors": [
@@ -67,7 +68,11 @@
       "email": "stevengill97@gmail.com"
     }
   ],
-  "dependencies": {},
+  "dependencies": {
+    "execa": "^1.0.0",
+    "fs-extra": "^8.0.1",
+    "globby": "^9.2.0"
+  },
   "devDependencies": {
     "eslint": "^5.16.0",
     "eslint-config-semistandard": "^13.0.0",
@@ -83,13 +88,5 @@
     "karma-chrome-launcher": "^2.2.0",
     "karma-jasmine": "^2.0.1",
     "puppeteer": "^1.14.0"
-  },
-  "cordova-platforms": {
-    "cordova-android": "../cordova-android",
-    "cordova-ios": "../cordova-ios",
-    "cordova-windows": "../cordova-windows",
-    "cordova-osx": "../cordova-osx",
-    "cordova-browser": "../cordova-browser",
-    "cordova-electron": "../cordova-electron"
   }
 }
