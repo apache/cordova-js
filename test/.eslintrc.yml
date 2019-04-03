@@ -1,2 +1,5 @@
 env:
     jasmine: true
+
+globals:
+    cordova: false

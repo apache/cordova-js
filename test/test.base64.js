@@ -20,9 +20,9 @@
 */
 
 describe('base64', function () {
-    var base64 = require('cordova/base64');
+    var base64 = cordova.require('cordova/base64');
 
-    it('can base64 encode strings correctly', function () {
+    it('Test#001 : can base64 encode strings correctly', function () {
         var arrayBuffer = new ArrayBuffer(6);
         var view = new Uint8Array(arrayBuffer);
         for (var i = 0; i < view.length; i++) {
@@ -36,7 +36,7 @@ describe('base64', function () {
         expect(base64.fromArrayBuffer(arrayBuffer)).toBe('AAECAwQF');
     });
 
-    it('can base64 encode a binary string in an ArrayBuffer', function () {
+    it('Test#002 : can base64 encode a binary string in an ArrayBuffer', function () {
         var arrayBuffer = new ArrayBuffer(256);
         var view = new Uint8Array(arrayBuffer);
         /* eslint-disable no-undef */
@@ -49,7 +49,7 @@ describe('base64', function () {
         expect(base64.fromArrayBuffer(arrayBuffer)).toBe(base64string);
     });
 
-    it('can base64 encode an text string in an ArrayBuffer', function () {
+    it('Test#003 : can base64 encode an text string in an ArrayBuffer', function () {
         var orig = 'Some Awesome Test This Is!';
         var base64string = typeof btoa !== 'undefined' ? btoa(orig) : Buffer.from('Some Awesome Test This Is!', 'binary').toString('base64');
         var arrayBuffer = new ArrayBuffer(orig.length);
@@ -62,7 +62,7 @@ describe('base64', function () {
         expect(base64.fromArrayBuffer(arrayBuffer)).toBe(base64string);
     });
 
-    it('can decode a base64-encoded text string into an ArrayBuffer', function () {
+    it('Test#004 : can decode a base64-encoded text string into an ArrayBuffer', function () {
         var orig = 'Some Awesome Test This Is!';
         var base64string = typeof btoa !== 'undefined' ? btoa(orig) : Buffer.from(orig, 'binary').toString('base64');
         /* eslint-enable no-undef */

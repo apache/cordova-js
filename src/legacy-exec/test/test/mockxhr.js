@@ -19,8 +19,6 @@
  *
 */
 
-/* jshint -W020 */
-
 var utils = require('cordova/utils');
 var activeXhrs = [];
 var isInstalled = false;

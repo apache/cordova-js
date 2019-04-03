@@ -21,9 +21,9 @@
 
 describe('builder', function () {
 
-    var builder = require('cordova/builder');
+    var builder = cordova.require('cordova/builder');
 
-    it('includes the module into the target', function () {
+    it('Test#001 : includes the module into the target', function () {
 
         var target = {};
         var objects = {
@@ -34,10 +34,10 @@ describe('builder', function () {
 
         builder.buildIntoAndClobber(objects, target);
         expect(target.foo).toBeDefined();
-        expect(target.foo).toBe(require('cordova/builder'));
+        expect(target.foo).toBe(cordova.require('cordova/builder'));
     });
 
-    it('returns an empty object literal if no path', function () {
+    it('Test#002 : returns an empty object literal if no path', function () {
         var target = {};
         var objects = {cat: {}};
 
@@ -46,7 +46,7 @@ describe('builder', function () {
         expect(target.cat).toBeDefined();
     });
 
-    it('builds out the children', function () {
+    it('Test#003 : builds out the children', function () {
 
         var target = {};
         var objects = {
@@ -64,7 +64,7 @@ describe('builder', function () {
         builder.buildIntoButDoNotClobber(objects, target);
 
         expect(target.homer.bart).toBeDefined();
-        expect(target.homer.maggie).toBe(require('cordova/builder'));
+        expect(target.homer.maggie).toBe(cordova.require('cordova/builder'));
         expect(target.homer.lisa).toBeDefined();
     });
 });

@@ -19,25 +19,24 @@
  *
 */
 
+/* eslint-env jasmine */
+
 // Use this helper module to stub out properties within Jasmine tests.
 // Original values will be restored after each test.
 
-var curStubs = null;
+var stubs = [];
 
 function removeAllStubs () {
-    for (var i = curStubs.length - 1, stub; stub = curStubs[i]; --i) { // eslint-disable-line no-cond-assign
+    for (const stub of stubs) {
         stub.obj[stub.key] = stub.value;
     }
-    curStubs = null;
+    stubs = [];
 }
 
-exports.stub = function (obj, key, value) {
-    if (!curStubs) {
-        curStubs = [];
-        jasmine.getEnv().currentSpec.after(removeAllStubs); // eslint-disable-line no-undef
-    }
+afterEach(removeAllStubs);
 
-    curStubs.push({
+exports.stub = function (obj, key, value) {
+    stubs.push({
         obj: obj,
         key: key,
         value: obj[key]

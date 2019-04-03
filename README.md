@@ -23,11 +23,7 @@
 
 [![Build status](https://ci.appveyor.com/api/projects/status/github/apache/cordova-js?branch=master&svg=true)](https://ci.appveyor.com/project/Humbedooh/cordova-js/branch/master)
 
-
 A unified JavaScript layer for [Apache Cordova](http://cordova.apache.org/) projects.
-
-:warning: Report issues on the [Apache Cordova issue tracker](https://issues.apache.org/jira/issues/?jql=project%20%3D%20CB%20AND%20status%20in%20%28Open%2C%20%22In%20Progress%22%2C%20Reopened%29%20AND%20resolution%20%3D%20Unresolved%20AND%20component%20%3D%20%22CordovaJS%22%20ORDER%20BY%20priority%20DESC%2C%20summary%20ASC%2C%20updatedDate%20DESC)
-
 
 # Project Structure
 
@@ -74,19 +70,9 @@ To compile the js for just one platform, run:
 
     grunt compile:android --platformVersion=4.0.0
 
-To comiple the js for all platforms but pass in a custom path for your cordova-android and cordova-ios platforms, run:
+To compile the js for all platforms but pass in a custom path for your cordova-android and cordova-ios platforms, run:
 
     grunt compile --android='../custompath/cordova-android' --ios='../custompath/cordova-ios'
-
-To create the browserify version of the js, run:
-
-    grunt compile-browserify --platformVersion=4.0.0
-
-To compile the browserify version of the js for just one platform, run:
-
-    grunt compile-browserify:android --platformVersion=4.0.0
-
-NOTE: browserify method does not support custom paths for platform repos.
 
 For integration, see the 'Integration' section below.
 
@@ -106,7 +92,7 @@ The `tasks/lib/packager.js` tool is a node.js script that concatenates all of th
 
 The **Cordova** *native-to-webview* bridge is initialized in `src/scripts/bootstrap.js`. This file attaches the `boot` function to the `channel.onNativeReady` event - fired by native with a call to:
 
-    cordova.require('cordova/channel).onNativeReady.fire()
+    cordova.require('cordova/channel').onNativeReady.fire()
 
 The `boot` method does all the work.  First, it grabs the common platform definition (under `src/common/common.js`) and injects all of the objects defined there onto `window` and other global namespaces. Next, it grabs all of the platform-specific object definitions (as defined under `src/<platform>/platform.js`) and overrides those onto `window`. Finally, it calls the platform-specific `initialize` function (located in the platform definition). At this point, Cordova is fully initialized and ready to roll. Last thing we do is wait for the `DOMContentLoaded` event to fire to make sure the page has loaded properly. Once that is done, Cordova fires the `deviceready` event where you can safely attach functions that consume the Cordova APIs.
 

@@ -20,11 +20,10 @@
 */
 
 describe('pluginloader', function () {
-    var pluginloader = require('cordova/pluginloader');
+    const { define } = cordova;
+    var pluginloader = cordova.require('cordova/pluginloader');
     var injectScript;
     var cdvScript;
-    var done;
-    var success;
     beforeEach(function () {
         injectScript = spyOn(pluginloader, 'injectScript');
         var el = document.createElement('script');
@@ -32,26 +31,18 @@ describe('pluginloader', function () {
         el.src = 'foo/cordova.js?bar';
         document.body.appendChild(el);
         cdvScript = el;
-        done = false;
-        success = false;
     });
     afterEach(function () {
         if (cdvScript) {
             cdvScript.parentNode.removeChild(cdvScript);
             cdvScript = null;
         }
-        /* eslint-disable no-undef */
         define.remove('cordova/plugin_list');
         define.remove('some.id');
-        /* eslint-enable no-undef */
     });
 
-    function setDone () {
-        done = true;
-    }
-
-    it('should inject cordova_plugins.js when it is not already there', function () {
-        injectScript.andCallFake(function (url, onload, onerror) {
+    it('Test#001 : should inject cordova_plugins.js when it is not already there', function (done) {
+        injectScript.and.callFake(function (url, onload, onerror) {
             // jsdom deficiencies:
             if (typeof location !== 'undefined') {
                 expect(url).toBe(window.location.href.replace(/\/[^\/]*?$/, '/foo/cordova_plugins.js')); // eslint-disable-line no-useless-escape
@@ -62,34 +53,30 @@ describe('pluginloader', function () {
             define('cordova/plugin_list', function (require, exports, module) {
                 module.exports = [];
             });
-            success = true;
             onload();
         });
 
-        pluginloader.load(setDone);
-        waitsFor(function () { return done; });
-        runs(function () {
-            expect(success).toBe(true);
-        });
+        pluginloader.load(done);
     });
 
-    it('should not inject cordova_plugins.js when it is already there', function () {
+    it('Test#002 : should not inject cordova_plugins.js when it is already there', function (done) {
         define('cordova/plugin_list', function (require, exports, module) {
             module.exports = [];
         });
-        pluginloader.load(setDone);
-        waitsFor(function () { return done; });
-        runs(function () {
+
+        pluginloader.load(() => {
             expect(injectScript).not.toHaveBeenCalled();
+            done();
         });
     });
-    it('should inject plugin scripts when they are not already there', function () {
+
+    it('Test#003 : should inject plugin scripts when they are not already there', function (done) {
         define('cordova/plugin_list', function (require, exports, module) {
             module.exports = [
                 { 'file': 'some/path.js', 'id': 'some.id' }
             ];
         });
-        injectScript.andCallFake(function (url, onload, onerror) {
+        injectScript.and.callFake(function (url, onload, onerror) {
             // jsdom deficiencies:
             if (typeof location !== 'undefined') {
                 expect(url).toBe(window.location.href.replace(/\/[^\/]*?$/, '/foo/some/path.js')); // eslint-disable-line no-useless-escape
@@ -98,17 +85,13 @@ describe('pluginloader', function () {
             }
             define('some.id', function (require, exports, module) {
             });
-            success = true;
             onload();
         });
-        pluginloader.load(setDone);
-        waitsFor(function () { return done; });
-        runs(function () {
-            expect(success).toBe(true);
-        });
+
+        pluginloader.load(done);
     });
 
-    it('should not inject plugin scripts when they are already there', function () {
+    it('Test#004 : should not inject plugin scripts when they are already there', function (done) {
         define('cordova/plugin_list', function (require, exports, module) {
             module.exports = [
                 { 'file': 'some/path.js', 'id': 'some.id' }
@@ -116,11 +99,10 @@ describe('pluginloader', function () {
         });
         define('some.id', function (require, exports, module) {
         });
-        /* eslint-enable no-undef */
-        pluginloader.load(setDone);
-        waitsFor(function () { return done; });
-        runs(function () {
+
+        pluginloader.load(() => {
             expect(injectScript).not.toHaveBeenCalled();
+            done();
         });
     });
 });

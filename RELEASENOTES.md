@@ -20,6 +20,36 @@
 -->
 ## Release Notes for Cordova JS ##
 
+### 5.0.0 (Dec 20, 2018)
+* Remove test & cover tasks + orphaned dependencies
+* Run tests in **Browser** using Karma
+* Fix access to Cordova's define & require in tests
+* Fix test cleanup to not break other tests
+* Jasmine 3: Replace usage of Spec#after
+* Jasmine 3: Replace usage of `waitsFor` and `runs`
+* Jasmine 3: Use Spy#calls to access call data
+* Jasmine 3: Use Spy#and to access SpyStrategy
+* Jasmine 3: Use `toThrowError` to match error messages
+* Remove unused task whitespace-check
+* Remove unused dependency `express`
+* Remove unused jasmine suite template
+* Remove unused util for drawing require-graph
+* Remove unused module `modulereplacer`
+* Remove unused vendor/jasmine folder
+* Remove leftover JSHint stuff
+* Remove support for deprecated platforms
+* Add test labels from #140 that were missed in #172 (#174)
+* Remove task that depended on **Browser**ify (#173)
+* add test labels (GH-140) (#172)
+* Remove **Browser**ify instructions from `README`.md
+* Remove module to write license header for **Browser**ify build
+* Remove dependency on **Browser**ify
+* Remove **Browser**ify sources src/**/*_b.js
+* Remove **Browser**ify tasks tasks/**/*--browserify.js
+* Remove **Browser**ify tasks from Gruntfile & scripts
+* [CB-14071](https://issues.apache.org/jira/browse/CB-14071) Drop Node 4 Support
+* `README` fixes (#166)
+
 ### 4.2.4 (Jun 21, 2018)
 * [CB-9366](https://issues.apache.org/jira/browse/CB-9366) log error.stack
 * [CB-14145](https://issues.apache.org/jira/browse/CB-14145) `package.json` resolve `npm audit` warnings in devDependencies
