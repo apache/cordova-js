@@ -17,28 +17,27 @@
  * under the License.
  */
 var childProcess = require('child_process');
-var fs           = require('fs');
-var path         = require('path');
+var fs = require('fs');
+var path = require('path');
 
-
-module.exports = function computeCommitId(callback, cachedGitVersion) {
+module.exports = function computeCommitId (callback, cachedGitVersion) {
 
     if (cachedGitVersion) {
         callback(cachedGitVersion);
         return;
     }
-    
+
     var cordovaJSDir = path.join(__dirname, '../../');
-    
-    //make sure .git directory exists in cordova.js repo
+
+    // make sure .git directory exists in cordova.js repo
     if (fs.existsSync(path.join(__dirname, '../../.git'))) {
         var gitPath = 'git';
         var args = 'rev-list HEAD --max-count=1';
-        childProcess.exec(gitPath + ' ' + args, {cwd:cordovaJSDir}, function(err, stdout, stderr) {
-            var isWindows = process.platform.slice(0, 3) == 'win';
+        childProcess.exec(gitPath + ' ' + args, {cwd: cordovaJSDir}, function (err, stdout, stderr) {
+            var isWindows = process.platform.slice(0, 3) === 'win';
             if (err && isWindows) {
                 gitPath = '"' + path.join(process.env['ProgramFiles'], 'Git', 'bin', 'git.exe') + '"';
-                childProcess.exec(gitPath + ' ' + args, function(err, stdout, stderr) {
+                childProcess.exec(gitPath + ' ' + args, function (err, stdout, stderr) {
                     if (err) {
                         console.warn('Error during git describe: ' + err);
                         done('???');
@@ -54,14 +53,14 @@ module.exports = function computeCommitId(callback, cachedGitVersion) {
             }
         });
     } else {
-        //console.log('no git');
-        //Can't compute commit ID
+        // console.log('no git');
+        // Can't compute commit ID
         done('???');
-    } 
+    }
 
-    function done(stdout) {
+    function done (stdout) {
         var version = stdout.trim();
         cachedGitVersion = version;
         callback(version);
-    };
-}
+    }
+};
