@@ -16,41 +16,40 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-var fs           = require('fs');
-var path         = require('path');
+var fs = require('fs');
+var path = require('path');
 var collectFiles = require('./collect-files');
-var copyProps    = require('./copy-props');
-var writeModule  = require('./write-module');
-var writeScript  = require('./write-script');
-var licensePath  = path.join(__dirname, '..', 'templates', 'LICENSE-for-js-file.txt');
-var pkgJson      = require('../../package.json');
+var copyProps = require('./copy-props');
+var writeModule = require('./write-module');
+var writeScript = require('./write-script');
+var licensePath = path.join(__dirname, '..', 'templates', 'LICENSE-for-js-file.txt');
+var pkgJson = require('../../package.json');
 
-module.exports = function bundle(platform, debug, commitId, platformVersion, platformPath) {
+module.exports = function bundle (platform, debug, commitId, platformVersion, platformPath) {
     var modules = collectFiles(path.join('src', 'common'));
     var scripts = collectFiles(path.join('src', 'scripts'));
-    var platformDep;
     modules[''] = path.join('src', 'cordova.js');
-   
-    //check to see if platform has cordova-js-src directory
-    if(fs.existsSync(platformPath) && fs.existsSync(path.join(platformPath, 'cordova-js-src'))) {
+
+    // check to see if platform has cordova-js-src directory
+    if (fs.existsSync(platformPath) && fs.existsSync(path.join(platformPath, 'cordova-js-src'))) {
         copyProps(modules, collectFiles(path.join(platformPath, 'cordova-js-src')));
     } else {
         // for platforms that don't have a release with cordova-js-src yet
         // or if platform === test
-        if(platform === 'test') {
+        if (platform === 'test') {
             copyProps(modules, collectFiles(path.join('src', 'legacy-exec', platform)));
         } else {
-            console.log('Your version of '  + platform + ' does not contain cordova-js-src. Update to a newer version of ' + platform + '.');
+            console.log('Your version of ' + platform + ' does not contain cordova-js-src. Update to a newer version of ' + platform + '.');
             throw 'Stopped process';
         }
     }
-    //test doesn't support custom paths
+    // test doesn't support custom paths
     if (platform === 'test') {
         var androidPath = path.resolve(pkgJson['cordova-platforms']['cordova-android']);
         var iosPath = path.resolve(pkgJson['cordova-platforms']['cordova-ios']);
         var testFilesPath = path.resolve(androidPath, 'cordova-js-src', 'android');
         // Add android platform-specific modules that have tests to the test bundle.
-        if(fs.existsSync(androidPath)) {
+        if (fs.existsSync(androidPath)) {
             modules['android/exec'] = path.resolve(androidPath, 'cordova-js-src', 'exec.js');
         } else {
             // testFilesPath = path.resolve('src', 'legacy-exec', 'android', 'android');
@@ -60,11 +59,11 @@ module.exports = function bundle(platform, debug, commitId, platformVersion, pla
         }
         copyProps(modules, collectFiles(testFilesPath, 'android'));
 
-        //Add iOS platform-specific modules that have tests for the test bundle.
-        if(fs.existsSync(iosPath)) {
+        // Add iOS platform-specific modules that have tests for the test bundle.
+        if (fs.existsSync(iosPath)) {
             modules['ios/exec'] = path.join(iosPath, 'cordova-js-src', 'exec.js');
         } else {
-            //modules['ios/exec'] = path.join('src', 'legacy-exec', 'ios', 'exec.js');
+            // modules['ios/exec'] = path.join('src', 'legacy-exec', 'ios', 'exec.js');
             console.log('Couldn\'t add iOS test files.');
             throw 'Stopped process';
         }
@@ -72,14 +71,14 @@ module.exports = function bundle(platform, debug, commitId, platformVersion, pla
 
     var output = [];
 
-    output.push("// Platform: " + platform);
-    output.push("// "  + commitId);
+    output.push('// Platform: ' + platform);
+    output.push('// ' + commitId);
 
     // write header
     output.push('/*', fs.readFileSync(licensePath, 'utf8'), '*/');
     output.push(';(function() {');
 
-    output.push("var PLATFORM_VERSION_BUILD_LABEL = '"  + platformVersion + "';");
+    output.push("var PLATFORM_VERSION_BUILD_LABEL = '" + platformVersion + "';");
 
     // write initial scripts
     if (!scripts['require']) {
@@ -92,7 +91,7 @@ module.exports = function bundle(platform, debug, commitId, platformVersion, pla
     var moduleIds = Object.keys(modules);
     moduleIds.sort();
 
-    for (var i=0; i<moduleIds.length; i++) {
+    for (var i = 0; i < moduleIds.length; i++) {
         var moduleId = moduleIds[i];
 
         writeModule(output, modules[moduleId], moduleId, debug);
@@ -117,4 +116,3 @@ module.exports = function bundle(platform, debug, commitId, platformVersion, pla
 
     return output.join('\n');
 };
-

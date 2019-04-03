@@ -9,7 +9,7 @@
  *
  *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to 
+ * Unless required by applicable law or agreed to
  * software distributed under the License is distr
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS
  * KIND, either express or implied.  See the Licen
@@ -17,12 +17,12 @@
  * under the License.
  */
 // FIXME should just use underscore or lodash for this
-module.exports = function copyProps(target, source) {
+module.exports = function copyProps (target, source) {
 
     for (var key in source) {
-        if (!source.hasOwnProperty(key)) continue    
-        target[key] = source[key]
+        if (!source.hasOwnProperty(key)) continue;
+        target[key] = source[key];
     }
-    
-    return target
-}
+
+    return target;
+};

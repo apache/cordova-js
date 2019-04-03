@@ -9,7 +9,7 @@
  *
  *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to 
+ * Unless required by applicable law or agreed to
  * software distributed under the License is distr
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS
  * KIND, either express or implied.  See the Licen
@@ -17,22 +17,20 @@
  * under the License.
  */
 
-// Strips the license header. 
+// Strips the license header.
 // Basically only the first multi-line comment up to to the closing */
-module.exports = function stripHeader(contents, fileName) {
+module.exports = function stripHeader (contents, fileName) {
     var ls = contents.split(/\r?\n/);
     while (ls[0]) {
         if (ls[0].match(/^\s*\/\*/) || ls[0].match(/^\s*\*/)) {
             ls.shift();
-        }
-        else if (ls[0].match(/^\s*\*\//)) {
+        } else if (ls[0].match(/^\s*\*\//)) {
             ls.shift();
             break;
+        } else {
+            console.log('WARNING: file name ' + fileName + ' is missing the license header');
+            break;
         }
-        else {
-        	console.log("WARNING: file name " + fileName + " is missing the license header");
-        	break;
-    	}
     }
     return ls.join('\n');
-}
+};

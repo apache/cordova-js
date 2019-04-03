@@ -16,23 +16,22 @@
  * specific language governing permissions and limitations
  * under the License.
 */
-var fs              = require('fs');
-var path            = require('path');
-var bundle          = require('./bundle');
+var fs = require('fs');
+var path = require('path');
+var bundle = require('./bundle');
 var computeCommitId = require('./compute-commit-id');
 
-
-module.exports = function generate(platform, useWindowsLineEndings, platformVersion, platformPath, callback) {
-    computeCommitId(function(commitId) {
+module.exports = function generate (platform, useWindowsLineEndings, platformVersion, platformPath, callback) {
+    computeCommitId(function (commitId) {
         var outFile;
         var time = new Date().valueOf();
 
         var libraryRelease = bundle(platform, false, commitId, platformVersion, platformPath);
         // if we are using windows line endings, we will also add the BOM
-        if(useWindowsLineEndings) {
-            libraryRelease = "\ufeff" + libraryRelease.split(/\r?\n/).join("\r\n");
+        if (useWindowsLineEndings) {
+            libraryRelease = '\ufeff' + libraryRelease.split(/\r?\n/).join('\r\n');
         }
-        
+
         time = new Date().valueOf() - time;
         if (!fs.existsSync('pkg')) {
             fs.mkdirSync('pkg');
@@ -41,8 +40,7 @@ module.exports = function generate(platform, useWindowsLineEndings, platformVers
         outFile = path.join('pkg', 'cordova.' + platform + '.js');
         fs.writeFileSync(outFile, libraryRelease, 'utf8');
 
-
         console.log('generated cordova.' + platform + '.js @ ' + commitId + ' in ' + time + 'ms');
         callback();
     });
-}
+};

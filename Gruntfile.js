@@ -16,20 +16,20 @@
  * specific language governing permissions and limitations
  * under the License.
 */
-module.exports = function(grunt) {
+module.exports = function (grunt) {
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         compile: {
-            "android": {},
-            "ios": {},
-            "osx": {},
-            "test": {},
-            "windows": { useWindowsLineEndings: true },
-            "browser": {},
-            "electron": {}
+            'android': {},
+            'ios': {},
+            'osx': {},
+            'test': {},
+            'windows': { useWindowsLineEndings: true },
+            'browser': {},
+            'electron': {}
         },
-        clean: ['pkg'],
+        clean: ['pkg']
     });
 
     // external tasks

@@ -9,49 +9,45 @@
  *
  *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to 
+ * Unless required by applicable law or agreed to
  * software distributed under the License is distr
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS
  * KIND, either express or implied.  See the Licen
  * specific language governing permissions and lim
  * under the License.
  */
-var fs          = require('fs');
-var path        = require('path');
-var copyProps   = require('./copy-props');
+var fs = require('fs');
+var path = require('path');
+var copyProps = require('./copy-props');
 var getModuleId = require('./get-module-id');
 
+function collectFiles (dir, id) {
+    if (!id) id = '';
 
-function collectFiles(dir, id) {
-    if (!id) id = ''
+    var result = {};
+    var entries = fs.readdirSync(dir);
 
-    var result = {}    
-    var entries = fs.readdirSync(dir)
+    entries = entries.filter(function (entry) {
+        if (entry.match(/\.js$/)) { return true; }
 
-    entries = entries.filter(function(entry) {
-        if (entry.match(/\.js$/)) 
-            return true
-        
-        var stat = fs.statSync(path.join(dir, entry))
+        var stat = fs.statSync(path.join(dir, entry));
 
-        if (stat.isDirectory())  
-            return true
-    })
+        if (stat.isDirectory()) { return true; }
+    });
 
-    entries.forEach(function(entry) {
+    entries.forEach(function (entry) {
         var moduleId = (id ? id + '/' : '') + entry;
-        var fileName = path.join(dir, entry)
-        
-        var stat = fs.statSync(fileName)
+        var fileName = path.join(dir, entry);
+
+        var stat = fs.statSync(fileName);
         if (stat.isDirectory()) {
-            copyProps(result, collectFiles(fileName, moduleId))
+            copyProps(result, collectFiles(fileName, moduleId));
+        } else {
+            moduleId = getModuleId(moduleId);
+            result[moduleId] = fileName;
         }
-        else {
-            moduleId         = getModuleId(moduleId)
-            result[moduleId] = fileName
-        }
-    })
-    return copyProps({}, result)
+    });
+    return copyProps({}, result);
 }
 
 module.exports = collectFiles;
