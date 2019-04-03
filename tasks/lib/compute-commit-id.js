@@ -33,7 +33,7 @@ module.exports = function computeCommitId (callback, cachedGitVersion) {
     if (fs.existsSync(path.join(__dirname, '../../.git'))) {
         var gitPath = 'git';
         var args = 'rev-list HEAD --max-count=1';
-        childProcess.exec(gitPath + ' ' + args, {cwd: cordovaJSDir}, function (err, stdout, stderr) {
+        childProcess.exec(gitPath + ' ' + args, { cwd: cordovaJSDir }, function (err, stdout, stderr) {
             var isWindows = process.platform.slice(0, 3) === 'win';
             if (err && isWindows) {
                 gitPath = '"' + path.join(process.env['ProgramFiles'], 'Git', 'bin', 'git.exe') + '"';
