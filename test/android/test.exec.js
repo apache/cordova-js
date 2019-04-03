@@ -169,7 +169,7 @@ describe('android exec.processMessages', function () {
         it('Test#008 : should handle payloads of JSON objects', function () {
             var messages = createCallbackMessage(true, true, 1, 'id', '{"a":1}');
             return performExecAndAwaitSingleCallback(messages).then(() => {
-                expect(callbackSpy).toHaveBeenCalledWith('id', true, 1, [{a: 1}], true);
+                expect(callbackSpy).toHaveBeenCalledWith('id', true, 1, [{ a: 1 }], true);
             });
         });
         it('Test#009 : should handle payloads of JSON arrays', function () {

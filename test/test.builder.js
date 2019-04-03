@@ -39,7 +39,7 @@ describe('builder', function () {
 
     it('Test#002 : returns an empty object literal if no path', function () {
         var target = {};
-        var objects = {cat: {}};
+        var objects = { cat: {} };
 
         builder.buildIntoButDoNotClobber(objects, target);
 

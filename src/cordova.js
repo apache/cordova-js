@@ -128,8 +128,8 @@ var cordova = {
      * @return object
      */
     getOriginalHandlers: function () {
-        return {'document': {'addEventListener': m_document_addEventListener, 'removeEventListener': m_document_removeEventListener},
-            'window': {'addEventListener': m_window_addEventListener, 'removeEventListener': m_window_removeEventListener}};
+        return { 'document': { 'addEventListener': m_document_addEventListener, 'removeEventListener': m_document_removeEventListener },
+            'window': { 'addEventListener': m_window_addEventListener, 'removeEventListener': m_window_removeEventListener } };
     },
     /**
      * Method to fire event from native code

@@ -83,7 +83,7 @@ describe('utils', function () {
 
     describe('when cloning', function () {
         it('Test#013 : can clone an array', function () {
-            var orig = [1, 2, 3, {four: 4}, '5'];
+            var orig = [1, 2, 3, { four: 4 }, '5'];
 
             expect(utils.clone(orig)).toEqual(orig);
             expect(utils.clone(orig)).not.toBe(orig);

@@ -52,11 +52,11 @@ describe('channel', function () {
             }).not.toThrow();
 
             expect(function () {
-                multiChannel.subscribe({handleEvent: function () {}});
+                multiChannel.subscribe({ handleEvent: function () {} });
             }).not.toThrow();
 
             expect(function () {
-                multiChannel.subscribe({apply: function () {}, call: function () {}});
+                multiChannel.subscribe({ apply: function () {}, call: function () {} });
             }).toThrow();
         });
         it('Test#003 : should not change number of handlers if no function is provided', function () {
@@ -103,11 +103,11 @@ describe('channel', function () {
             }).not.toThrow();
 
             expect(function () {
-                multiChannel.unsubscribe({handleEvent: function () {}});
+                multiChannel.unsubscribe({ handleEvent: function () {} });
             }).not.toThrow();
 
             expect(function () {
-                multiChannel.unsubscribe({apply: function () {}, call: function () {}});
+                multiChannel.unsubscribe({ apply: function () {}, call: function () {} });
             }).toThrow();
         });
         it('Test#007 : should not decrement numHandlers if unsubscribing something that does not exist', function () {
