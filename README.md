@@ -90,19 +90,11 @@ The `boot` method does all the work.  First, it grabs the common platform defini
 
 # Testing
 
-Tests run in node or the browser. To run the tests in node:
+Tests run in a bundled headless Chromium instance. They can be run with:
 
-    grunt test --platformVersion=3.6.0
-
-To run them in the browser:
-
-    grunt btest
+    npm test
 
 Final testing should always be done with the [Mobile Spec test application](https://github.com/apache/cordova-mobile-spec).
-
-To get current tests coverage:
-
-    grunt cover --platformVersion=3.6.0
 
 # Integration
 
