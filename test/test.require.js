@@ -136,18 +136,6 @@ describe('require + define', function () {
             define.remove('a');
         });
 
-        it('Test#012 : has the id and exports values but not the factory on the module object', function () {
-            var factory = function (require, exports, module) {
-                expect(module.id).toBe('a');
-                expect(module.exports).toBeDefined();
-                expect(module.factory).not.toBeDefined();
-            };
-
-            define('a', factory);
-            require('a');
-            define.remove('a');
-        });
-
         it("can handle multiple defined modules that use cordova's unique handling of relative require paths", function () {
             define('plugin.ios.foo', function (require, exports, module) {
                 module.exports = require('./bar') * 2;
