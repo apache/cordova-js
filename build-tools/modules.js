@@ -29,12 +29,6 @@ const {
 } = require('./common');
 
 module.exports = function modules (config) {
-    for (const m of values(config.extraModules)) {
-        if (m.path.startsWith('../')) {
-            m.path = path.resolve(m.path);
-        }
-    }
-
     const commonModules = collectCommonModules();
     const modules = values(Object.assign(commonModules, config.extraModules));
     modules.sort((a, b) => a.moduleId.localeCompare(b.moduleId));
@@ -45,7 +39,7 @@ function collectCommonModules () {
     const modules = collectModules(path.join(pkgRoot, 'src/common'));
     modules[''] = {
         moduleId: '',
-        path: path.relative(pkgRoot, path.join(pkgRoot, 'src/cordova.js'))
+        path: path.join(pkgRoot, 'src/cordova.js')
     };
     return modules;
 }
