@@ -57,7 +57,7 @@ describe('require + define', function () {
             }).not.toThrow();
         });
 
-        it('Test#003 : throws an error the module already exists', function () {
+        it('Test#003 : throws an error if the module already exists', function () {
             define('cordova', function () {});
             expect(function () {
                 define('cordova', function () {});
@@ -137,7 +137,7 @@ describe('require + define', function () {
             expect(v.b).toBe('b');
         });
 
-        it('Test#011 : returns was is assigned to module.exports', function () {
+        it('Test#011 : returns what is assigned to module.exports', function () {
             const Foo = {};
             define('a', function (require, exports, module) {
                 module.exports = Foo;
@@ -146,7 +146,7 @@ describe('require + define', function () {
             expect(require('a')).toBe(Foo);
         });
 
-        it("can handle multiple defined modules that use cordova's unique handling of relative require paths", function () {
+        it('Test#012 : supports a unique, namespace-based flavor of relative require paths', function () {
             define('plugin.ios.foo', function (require, exports, module) {
                 module.exports = require('./bar') * 2;
             });
