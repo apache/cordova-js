@@ -85,6 +85,7 @@ describe('require + define', function () {
             define('ModuleB', function (require, exports, module) {
                 require('ModuleA');
             });
+
             expect(function () {
                 require('ModuleA');
             }).toThrow('Cycle in require graph: ModuleA->ModuleB->ModuleA');
@@ -100,6 +101,7 @@ describe('require + define', function () {
             define('ModuleC', function (require, exports, module) {
                 require('ModuleA');
             });
+
             expect(function () {
                 require('ModuleA');
             }).toThrow('Cycle in require graph: ModuleA->ModuleB->ModuleC->ModuleA');
@@ -122,8 +124,7 @@ describe('require + define', function () {
                 exports.stuff = 'asdf';
             });
 
-            var v = require('a');
-            expect(v.stuff).toBe('asdf');
+            expect(require('a').stuff).toBe('asdf');
         });
 
         it('Test#010 : can use both the exports and module.exports object', function () {
@@ -132,9 +133,7 @@ describe('require + define', function () {
                 module.exports.b = 'b';
             });
 
-            var v = require('a');
-            expect(v.a).toBe('a');
-            expect(v.b).toBe('b');
+            expect(require('a')).toEqual({ a: 'a', b: 'b' });
         });
 
         it('Test#011 : returns what is assigned to module.exports', function () {
