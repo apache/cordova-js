@@ -76,14 +76,6 @@ To compile the js for all platforms but pass in a custom path for your cordova-a
 
 For integration, see the 'Integration' section below.
 
-## Known Issues
-
-- On Windows, when you run `npm install`, you may get errors regarding
-  contextify. This is necessary for running the tests. Make sure you
-  are running `node` **0.10.1** at the least (and `npm` **1.2.15** which should
-  come bundled with `node` **0.10.1**). Also, install [Python 2.7.x](http://python.org/download/releases/2.7.3) and [Visual C++ 2010 Express](http://www.microsoft.com/visualstudio/en-us/products/2010-editions/visual-cpp-express). When that is done, run `npm install` again and it should build
-  contextify natively on Windows.
-
 # How It Works
 
 The `tasks/lib/packager.js` tool is a node.js script that concatenates all of the core Cordova plugins in this repository into a `cordova.<platform>.js` file under the `pkg/` folder. It also wraps the plugins with a RequireJS-compatible module syntax that works in both browser and node environments. We end up with a `cordova.js` file that wraps each **Cordova** *plugin* into its own module.
