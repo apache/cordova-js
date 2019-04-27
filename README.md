@@ -56,33 +56,21 @@ Make sure you have [node.js](http://nodejs.org) installed. It should come pre-in
 
     npm install
 
-All of the build tasks can be run via the `grunt` node module. Install it globally first by running:
-
-    sudo npm install -g grunt-cli
-
-`grunt compile` task assumes that users have cordova-platforms as siblings to this cordova.js directory. When generating cordova.js, `grunt compile` will grab platform specific files from these directories if they exist. The default locations are defined in `package.json`.
+The build script assumes that users have cordova-platforms as siblings to this `cordova-js` directory. When generating `cordova.js`, `grunt compile` will grab platform specific files from these directories if they exist. The default locations are defined in `package.json`.
 
 Then from the repository root run:
 
-    grunt
+    npm run build
 
 To compile the js for just one platform, run:
 
-    grunt compile:android --platformVersion=4.0.0
+    npx grunt compile:android --platformVersion=4.0.0
 
 To compile the js for all platforms but pass in a custom path for your cordova-android and cordova-ios platforms, run:
 
-    grunt compile --android='../custompath/cordova-android' --ios='../custompath/cordova-ios'
+    npx grunt compile --android='../custompath/cordova-android' --ios='../custompath/cordova-ios'
 
 For integration, see the 'Integration' section below.
-
-## Known Issues
-
-- On Windows, when you run `npm install`, you may get errors regarding
-  contextify. This is necessary for running the tests. Make sure you
-  are running `node` **0.10.1** at the least (and `npm` **1.2.15** which should
-  come bundled with `node` **0.10.1**). Also, install [Python 2.7.x](http://python.org/download/releases/2.7.3) and [Visual C++ 2010 Express](http://www.microsoft.com/visualstudio/en-us/products/2010-editions/visual-cpp-express). When that is done, run `npm install` again and it should build
-  contextify natively on Windows.
 
 # How It Works
 
@@ -98,19 +86,11 @@ The `boot` method does all the work.  First, it grabs the common platform defini
 
 # Testing
 
-Tests run in node or the browser. To run the tests in node:
+Tests run in a bundled headless Chromium instance. They can be run with:
 
-    grunt test --platformVersion=3.6.0
-
-To run them in the browser:
-
-    grunt btest
+    npm test
 
 Final testing should always be done with the [Mobile Spec test application](https://github.com/apache/cordova-mobile-spec).
-
-To get current tests coverage:
-
-    grunt cover --platformVersion=3.6.0
 
 # Integration
 
