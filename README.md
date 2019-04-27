@@ -56,23 +56,19 @@ Make sure you have [node.js](http://nodejs.org) installed. It should come pre-in
 
     npm install
 
-All of the build tasks can be run via the `grunt` node module. Install it globally first by running:
-
-    sudo npm install -g grunt-cli
-
-`grunt compile` task assumes that users have cordova-platforms as siblings to this cordova.js directory. When generating cordova.js, `grunt compile` will grab platform specific files from these directories if they exist. The default locations are defined in `package.json`.
+The build script assumes that users have cordova-platforms as siblings to this `cordova-js` directory. When generating `cordova.js`, `grunt compile` will grab platform specific files from these directories if they exist. The default locations are defined in `package.json`.
 
 Then from the repository root run:
 
-    grunt
+    npm run build
 
 To compile the js for just one platform, run:
 
-    grunt compile:android --platformVersion=4.0.0
+    npx grunt compile:android --platformVersion=4.0.0
 
 To compile the js for all platforms but pass in a custom path for your cordova-android and cordova-ios platforms, run:
 
-    grunt compile --android='../custompath/cordova-android' --ios='../custompath/cordova-ios'
+    npx grunt compile --android='../custompath/cordova-android' --ios='../custompath/cordova-ios'
 
 For integration, see the 'Integration' section below.
 
