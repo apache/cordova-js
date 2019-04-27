@@ -22,6 +22,21 @@
 describe('require + define', function () {
     const { require, define } = cordova;
 
+    function clearModules () {
+        Object.keys(define.moduleMap).forEach(m => define.remove(m));
+    }
+
+    // Restore our actual modules (cordova etc.) after all tests have finished
+    const originalModules = {};
+    beforeAll(() => Object.assign(originalModules, define.moduleMap));
+    afterAll(() => {
+        clearModules();
+        Object.assign(define.moduleMap, originalModules);
+    });
+
+    // Begin each test on a clean slate
+    beforeEach(clearModules);
+
     it('exists off of cordova', function () {
         expect(require).toBeDefined();
         expect(define).toBeDefined();
@@ -38,6 +53,7 @@ describe('require + define', function () {
         });
 
         it('Test#003 : throws an error the module already exists', function () {
+            define('cordova', function () {});
             expect(function () {
                 define('cordova', function () {});
             }).toThrow('module cordova already defined');
@@ -67,8 +83,6 @@ describe('require + define', function () {
             expect(function () {
                 require('ModuleA');
             }).toThrow('Cycle in require graph: ModuleA->ModuleB->ModuleA');
-            define.remove('ModuleA');
-            define.remove('ModuleB');
         });
 
         it('Test#007 : throws an exception when a cycle of requires occurs', function () {
@@ -84,9 +98,6 @@ describe('require + define', function () {
             expect(function () {
                 require('ModuleA');
             }).toThrow('Cycle in require graph: ModuleA->ModuleB->ModuleC->ModuleA');
-            define.remove('ModuleA');
-            define.remove('ModuleB');
-            define.remove('ModuleC');
         });
 
         it('Test#008 : calls the factory method when requiring', function () {
@@ -99,8 +110,6 @@ describe('require + define', function () {
                     id: 'dino',
                     exports: {}
                 });
-
-            define.remove('dino');
         });
 
         it('Test#009 : returns the exports object', function () {
@@ -110,7 +119,6 @@ describe('require + define', function () {
 
             var v = require('a');
             expect(v.stuff).toBe('asdf');
-            define.remove('a');
         });
 
         it('Test#010 : can use both the exports and module.exports object', function () {
@@ -122,7 +130,6 @@ describe('require + define', function () {
             var v = require('a');
             expect(v.a).toBe('a');
             expect(v.b).toBe('b');
-            define.remove('a');
         });
 
         it('Test#011 : returns was is assigned to module.exports', function () {
@@ -133,7 +140,6 @@ describe('require + define', function () {
 
             var v = require('a');
             expect(v instanceof Foo).toBe(true);
-            define.remove('a');
         });
 
         it("can handle multiple defined modules that use cordova's unique handling of relative require paths", function () {
