@@ -45,11 +45,16 @@ describe('require + define', function () {
     describe('when defining', function () {
         it('Test#001 : can define and remove module', function () {
             define('a', jasmine.createSpy());
+            expect(define.moduleMap.a).toBeDefined();
+
             define.remove('a');
+            expect(define.moduleMap.a).toBeUndefined();
         });
 
         it("Test#002 : can remove a module that doesn't exist", function () {
-            define.remove("can't touch this");
+            expect(() => {
+                define.remove("can't touch this");
+            }).not.toThrow();
         });
 
         it('Test#003 : throws an error the module already exists', function () {
@@ -104,12 +109,12 @@ describe('require + define', function () {
             var factory = jasmine.createSpy();
             define('dino', factory);
             require('dino');
+            expect(factory).toHaveBeenCalledTimes(1);
 
-            expect(factory).toHaveBeenCalledWith(jasmine.any(Function),
-                {}, {
-                    id: 'dino',
-                    exports: {}
-                });
+            const [req, exports, module] = factory.calls.argsFor(0);
+            expect(req).toEqual(jasmine.any(Function));
+            expect(module).toEqual({ id: 'dino', exports: {} });
+            expect(exports).toBe(module.exports);
         });
 
         it('Test#009 : returns the exports object', function () {
@@ -133,13 +138,12 @@ describe('require + define', function () {
         });
 
         it('Test#011 : returns was is assigned to module.exports', function () {
-            var Foo = function () { };
+            const Foo = {};
             define('a', function (require, exports, module) {
-                module.exports = new Foo();
+                module.exports = Foo;
             });
 
-            var v = require('a');
-            expect(v instanceof Foo).toBe(true);
+            expect(require('a')).toBe(Foo);
         });
 
         it("can handle multiple defined modules that use cordova's unique handling of relative require paths", function () {
