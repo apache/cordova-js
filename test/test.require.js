@@ -22,6 +22,21 @@
 describe('require + define', function () {
     const { require, define } = cordova;
 
+    function clearModules () {
+        Object.keys(define.moduleMap).forEach(m => define.remove(m));
+    }
+
+    // Restore our actual modules (cordova etc.) after all tests have finished
+    const originalModules = {};
+    beforeAll(() => Object.assign(originalModules, define.moduleMap));
+    afterAll(() => {
+        clearModules();
+        Object.assign(define.moduleMap, originalModules);
+    });
+
+    // Begin each test on a clean slate
+    beforeEach(clearModules);
+
     it('exists off of cordova', function () {
         expect(require).toBeDefined();
         expect(define).toBeDefined();
@@ -30,14 +45,20 @@ describe('require + define', function () {
     describe('when defining', function () {
         it('Test#001 : can define and remove module', function () {
             define('a', jasmine.createSpy());
+            expect(define.moduleMap.a).toBeDefined();
+
             define.remove('a');
+            expect(define.moduleMap.a).toBeUndefined();
         });
 
         it("Test#002 : can remove a module that doesn't exist", function () {
-            define.remove("can't touch this");
+            expect(() => {
+                define.remove("can't touch this");
+            }).not.toThrow();
         });
 
-        it('Test#003 : throws an error the module already exists', function () {
+        it('Test#003 : throws an error if the module already exists', function () {
+            define('cordova', function () {});
             expect(function () {
                 define('cordova', function () {});
             }).toThrow('module cordova already defined');
@@ -64,11 +85,10 @@ describe('require + define', function () {
             define('ModuleB', function (require, exports, module) {
                 require('ModuleA');
             });
+
             expect(function () {
                 require('ModuleA');
             }).toThrow('Cycle in require graph: ModuleA->ModuleB->ModuleA');
-            define.remove('ModuleA');
-            define.remove('ModuleB');
         });
 
         it('Test#007 : throws an exception when a cycle of requires occurs', function () {
@@ -81,26 +101,22 @@ describe('require + define', function () {
             define('ModuleC', function (require, exports, module) {
                 require('ModuleA');
             });
+
             expect(function () {
                 require('ModuleA');
             }).toThrow('Cycle in require graph: ModuleA->ModuleB->ModuleC->ModuleA');
-            define.remove('ModuleA');
-            define.remove('ModuleB');
-            define.remove('ModuleC');
         });
 
         it('Test#008 : calls the factory method when requiring', function () {
             var factory = jasmine.createSpy();
             define('dino', factory);
             require('dino');
+            expect(factory).toHaveBeenCalledTimes(1);
 
-            expect(factory).toHaveBeenCalledWith(jasmine.any(Function),
-                {}, {
-                    id: 'dino',
-                    exports: {}
-                });
-
-            define.remove('dino');
+            const [req, exports, module] = factory.calls.argsFor(0);
+            expect(req).toEqual(jasmine.any(Function));
+            expect(module).toEqual({ id: 'dino', exports: {} });
+            expect(exports).toBe(module.exports);
         });
 
         it('Test#009 : returns the exports object', function () {
@@ -108,9 +124,7 @@ describe('require + define', function () {
                 exports.stuff = 'asdf';
             });
 
-            var v = require('a');
-            expect(v.stuff).toBe('asdf');
-            define.remove('a');
+            expect(require('a').stuff).toBe('asdf');
         });
 
         it('Test#010 : can use both the exports and module.exports object', function () {
@@ -119,36 +133,19 @@ describe('require + define', function () {
                 module.exports.b = 'b';
             });
 
-            var v = require('a');
-            expect(v.a).toBe('a');
-            expect(v.b).toBe('b');
-            define.remove('a');
+            expect(require('a')).toEqual({ a: 'a', b: 'b' });
         });
 
-        it('Test#011 : returns was is assigned to module.exports', function () {
-            var Foo = function () { };
+        it('Test#011 : returns what is assigned to module.exports', function () {
+            const Foo = {};
             define('a', function (require, exports, module) {
-                module.exports = new Foo();
+                module.exports = Foo;
             });
 
-            var v = require('a');
-            expect(v instanceof Foo).toBe(true);
-            define.remove('a');
+            expect(require('a')).toBe(Foo);
         });
 
-        it('Test#012 : has the id and exports values but not the factory on the module object', function () {
-            var factory = function (require, exports, module) {
-                expect(module.id).toBe('a');
-                expect(module.exports).toBeDefined();
-                expect(module.factory).not.toBeDefined();
-            };
-
-            define('a', factory);
-            require('a');
-            define.remove('a');
-        });
-
-        it("can handle multiple defined modules that use cordova's unique handling of relative require paths", function () {
+        it('Test#012 : supports a unique, namespace-based flavor of relative require paths', function () {
             define('plugin.ios.foo', function (require, exports, module) {
                 module.exports = require('./bar') * 2;
             });
