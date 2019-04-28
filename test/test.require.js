@@ -154,5 +154,91 @@ describe('require + define', function () {
             });
             expect(require('plugin.ios.foo')).toEqual(4);
         });
+
+        // Adapted version of CommonJS test `determinism`
+        it('Test#013 : does not fall back to relative modules when absolutes are not available', () => {
+            define('submodule.a', function (require, exports, module) {
+                expect(() => {
+                    require('a');
+                }).toThrow('module a not found');
+            });
+
+            require('submodule.a');
+        });
+
+        // Adapted version of CommonJS test `absolute`
+        it('Test#014 : correctly handles non-trivial dependecy graphs', () => {
+            define('submodule/a', function (require, exports, module) {
+                exports.foo = () => require('b');
+            });
+            define('b', function (require, exports, module) {
+                exports.foo = () => {};
+            });
+
+            const a = require('submodule/a');
+            const b = require('b');
+            expect(a.foo().foo).toBe(b.foo);
+        });
+
+        // Adapted version of CommonJS test `transitive`
+        it('Test#015 : correctly handles transitive dependecies', () => {
+            define('a', function (require, exports, module) {
+                exports.foo = require('b').foo;
+            });
+            define('b', function (require, exports, module) {
+                exports.foo = require('c').foo;
+            });
+            define('c', function (require, exports, module) {
+                exports.foo = () => 1;
+            });
+
+            expect(require('a').foo()).toBe(1);
+        });
+
+        // Adapted version of CommonJS test `method`
+        it('Test#016 : does not bind members of `exports` implicitly', () => {
+            define('a', function (require, exports, module) {
+                module.exports = {
+                    foo () { return this; },
+                    set (x) { this.x = x; },
+                    get () { return this.x; },
+                    getClosed () { return module.exports.x; }
+                };
+            });
+
+            const a = require('a');
+            const { foo, getClosed } = a;
+
+            expect(a.foo()).toBe(a);
+            expect(foo()).toBe((function () { return this; })());
+
+            a.set(10);
+            expect(a.get()).toBe(10);
+            expect(getClosed()).toBe(10);
+        });
+
+        // Adapted version of CommonJS test `nested`
+        it('Test#017 : allows any strings as module names', () => {
+            define('a/b/c/d', function (require, exports, module) {
+                exports.foo = () => 1;
+            });
+            define('ラーメン', function (require, exports, module) {
+                exports.foo = () => 2;
+            });
+
+            expect(require('a/b/c/d').foo()).toBe(1);
+            expect(require('ラーメン').foo()).toBe(2);
+        });
+
+        // Adapted version of CommonJS test `hasOwnProperty`
+        xit('Test#018 : allows properties of Object.prototype as module names', () => {
+            expect(() => {
+                define('hasOwnProperty', jasmine.createSpy());
+            }).not.toThrow();
+
+            expect(() => {
+                define('toString', jasmine.createSpy());
+            }).not.toThrow();
+        });
     });
 });
