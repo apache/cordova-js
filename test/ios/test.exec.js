@@ -36,7 +36,7 @@ describe('iOS exec', function () {
         });
     });
 
-    function simulateNativeBehaviour (codes) { // eslint-disable-line no-unused-vars
+    function simulateNativeBehaviour (codes) {
         var execPayload = JSON.parse(exec.nativeFetchMessages());
         while (execPayload.length && codes.length) {
             var curPayload = execPayload.shift();

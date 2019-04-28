@@ -35,12 +35,11 @@ describe('android exec.processMessages', function () {
         // Avoid a log message warning about the lack of _nativeApi.
         exec.setJsToNativeBridgeMode(exec.jsToNativeModes.PROMPT);
         nativeApiProvider.set(nativeApi);
-        /* eslint-disable no-undef */
-        var origPrompt = typeof prompt === 'undefined' ? undefined : prompt;
-        prompt = function () { return 1234; };
+
+        var origPrompt = window.prompt;
+        window.prompt = function () { return 1234; };
         exec.init();
-        prompt = origPrompt;
-        /* eslint-enable no-undef */
+        window.prompt = origPrompt;
     });
 
     afterEach(function () {
