@@ -67,7 +67,7 @@ var define;
     };
 
     define = function (id, factory) {
-        if (modules[id]) {
+        if (Object.prototype.hasOwnProperty.call(modules, id)) {
             throw 'module ' + id + ' already defined';
         }
 

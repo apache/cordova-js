@@ -231,7 +231,7 @@ describe('require + define', function () {
         });
 
         // Adapted version of CommonJS test `hasOwnProperty`
-        xit('Test#018 : allows properties of Object.prototype as module names', () => {
+        it('Test#018 : allows properties of Object.prototype as module names', () => {
             expect(() => {
                 define('hasOwnProperty', jasmine.createSpy());
             }).not.toThrow();
