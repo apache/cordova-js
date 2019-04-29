@@ -27,7 +27,7 @@ base64.fromArrayBuffer = function (arrayBuffer) {
 };
 
 base64.toArrayBuffer = function (str) {
-    var decodedStr = typeof atob !== 'undefined' ? atob(str) : Buffer.from(str, 'base64').toString('binary');
+    var decodedStr = atob(str);
     var arrayBuffer = new ArrayBuffer(decodedStr.length);
     var array = new Uint8Array(arrayBuffer);
     for (var i = 0, len = decodedStr.length; i < len; i++) {

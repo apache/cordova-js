@@ -55,7 +55,7 @@ describe('base64', function () {
 
     it('Test#003 : can base64 encode an text string in an ArrayBuffer', function () {
         var orig = 'Some Awesome Test This Is!';
-        var base64string = typeof btoa !== 'undefined' ? btoa(orig) : Buffer.from('Some Awesome Test This Is!', 'binary').toString('base64');
+        var base64string = btoa(orig);
         var arrayBuffer = new ArrayBuffer(orig.length);
         var view = new Uint8Array(arrayBuffer);
 
@@ -68,7 +68,7 @@ describe('base64', function () {
 
     it('Test#004 : can decode a base64-encoded text string into an ArrayBuffer', function () {
         var orig = 'Some Awesome Test This Is!';
-        var base64string = typeof btoa !== 'undefined' ? btoa(orig) : Buffer.from(orig, 'binary').toString('base64');
+        var base64string = btoa(orig);
 
         var arrayBuffer = base64.toArrayBuffer(base64string);
 
