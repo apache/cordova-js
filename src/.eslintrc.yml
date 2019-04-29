@@ -1,0 +1,8 @@
+env:
+    node: false
+    commonjs: true
+    browser: true
+
+globals:
+    define: false
+    PLATFORM_VERSION_BUILD_LABEL: false
