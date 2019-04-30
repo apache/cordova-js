@@ -87,12 +87,10 @@ function checkArgs (spec, functionName, args, callee) {
 
         // arg is invalid, throw error
         const paramName = extractParamName(callee || args.callee, i);
-        const errMsg = `Wrong type for parameter "${paramName}" of ${functionName}: Expected ${requiredType}, but got ${actualType}.`;
-        // Don't log when running unit tests.
-        if (typeof jasmine === 'undefined') {
-            console.error(errMsg);
-        }
-        throw new TypeError(errMsg);
+        throw new TypeError(
+            `Wrong type for parameter "${paramName}" of ${functionName}: ` +
+            `Expected ${requiredType}, but got ${actualType}.`
+        );
     }
 }
 
