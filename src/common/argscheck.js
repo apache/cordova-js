@@ -19,7 +19,7 @@
  *
 */
 
-var utils = require('cordova/utils');
+const utils = require('cordova/utils');
 
 module.exports = { checkArgs, getValue, enableChecks: true };
 
@@ -68,10 +68,10 @@ function extractParamName (callee, argIndex) {
 function checkArgs (spec, functionName, args, callee) {
     if (!module.exports.enableChecks) return;
 
-    for (var i = 0; i < spec.length; ++i) {
-        var c = spec.charAt(i);
-        var cUpper = c.toUpperCase();
-        var arg = args[i];
+    for (let i = 0; i < spec.length; ++i) {
+        const c = spec.charAt(i);
+        const cUpper = c.toUpperCase();
+        const arg = args[i];
 
         // Pass if any type is allowed
         if (c === '*') continue;
