@@ -33,7 +33,7 @@ var typeMap = {
 };
 
 function extractParamName (callee, argIndex) {
-    return (/.*?\((.*?)\)/).exec(callee)[1].split(', ')[argIndex];
+    return (/\(\s*([^)]*?)\s*\)/).exec(callee)[1].split(/\s*,\s*/)[argIndex];
 }
 
 function checkArgs (spec, functionName, args, opt_callee) {

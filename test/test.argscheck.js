@@ -78,4 +78,22 @@ describe('argscheck', function () {
         argscheck.enableChecks = false;
         testFunc();
     });
+    it('Test#012 : should be able to extract from all kinds of parameter formats', () => {
+        const check = args => argscheck.checkArgs('ss', 'testFn', args);
+
+        function sparse (
+            a,
+            b
+        ) { check(arguments); }
+        expect(() => sparse(null, '')).toThrowError(/parameter "a"/);
+        expect(() => sparse('', null)).toThrowError(/parameter "b"/);
+
+        // eslint-disable-next-line comma-spacing
+        function dense (a,b) { check(arguments); }
+        expect(() => dense('', null)).toThrowError(/parameter "b"/);
+
+        // eslint-disable-next-line comma-spacing, space-in-parens
+        function funky ( a ,b ) { check(arguments); }
+        expect(() => funky(null, '')).toThrowError(/parameter "a"/);
+    });
 });
