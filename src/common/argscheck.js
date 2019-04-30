@@ -21,15 +21,15 @@
 
 var utils = require('cordova/utils');
 
-var moduleExports = module.exports;
+module.exports = { checkArgs, getValue, enableChecks: true };
 
-var typeMap = {
-    'A': 'Array',
-    'D': 'Date',
-    'N': 'Number',
-    'S': 'String',
-    'F': 'Function',
-    'O': 'Object'
+const typeMap = {
+    A: 'Array',
+    D: 'Date',
+    N: 'Number',
+    S: 'String',
+    F: 'Function',
+    O: 'Object'
 };
 
 function extractParamName (callee, argIndex) {
@@ -61,48 +61,41 @@ function extractParamName (callee, argIndex) {
  * @param {String} functionName - full name of the callee.
  * Used in the error message
  * @param {Array|arguments} args - the arguments to be checked against `spec`
- * @param {Function} [opt_callee=args.callee] - the recipient of `args`.
+ * @param {Function} [callee=args.callee] - the recipient of `args`.
  * Used to extract parameter names for the error message
  * @throws {TypeError} if args do not satisfy spec
  */
-function checkArgs (spec, functionName, args, opt_callee) {
-    if (!moduleExports.enableChecks) {
-        return;
-    }
-    var errMsg = null;
-    var typeName;
+function checkArgs (spec, functionName, args, callee) {
+    if (!module.exports.enableChecks) return;
+
     for (var i = 0; i < spec.length; ++i) {
         var c = spec.charAt(i);
         var cUpper = c.toUpperCase();
         var arg = args[i];
-        // Asterix means allow anything.
-        if (c === '*') {
-            continue;
-        }
-        typeName = utils.typeName(arg);
-        if ((arg === null || arg === undefined) && c === cUpper) {
-            continue;
-        }
-        if (typeName !== typeMap[cUpper]) {
-            errMsg = 'Expected ' + typeMap[cUpper];
-            break;
-        }
-    }
-    if (errMsg) {
-        errMsg += ', but got ' + typeName + '.';
-        errMsg = 'Wrong type for parameter "' + extractParamName(opt_callee || args.callee, i) + '" of ' + functionName + ': ' + errMsg;
+
+        // Pass if any type is allowed
+        if (c === '*') continue;
+
+        // Pass if arg is optional and missing
+        const isOptional = c === cUpper;
+        if (isOptional && (arg === null || arg === undefined)) continue;
+
+        // Pass if arg has the required type
+        const requiredType = typeMap[cUpper];
+        const actualType = utils.typeName(arg);
+        if (actualType === requiredType) continue;
+
+        // arg is invalid, throw error
+        const paramName = extractParamName(callee || args.callee, i);
+        const errMsg = `Wrong type for parameter "${paramName}" of ${functionName}: Expected ${requiredType}, but got ${actualType}.`;
         // Don't log when running unit tests.
         if (typeof jasmine === 'undefined') {
             console.error(errMsg);
         }
-        throw TypeError(errMsg);
+        throw new TypeError(errMsg);
     }
 }
 
 function getValue (value, defaultValue) {
     return value === undefined ? defaultValue : value;
 }
-
-moduleExports.checkArgs = checkArgs;
-moduleExports.getValue = getValue;
-moduleExports.enableChecks = true;
