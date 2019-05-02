@@ -65,7 +65,7 @@ function extractParamName (callee, argIndex) {
  * Used to extract parameter names for the error message
  * @throws {TypeError} if args do not satisfy spec
  */
-function checkArgs (spec, functionName, args, callee) {
+function checkArgs (spec, functionName, args, callee = args.callee) {
     if (!module.exports.enableChecks) return;
 
     [...spec].forEach((c, i) => {
@@ -85,7 +85,7 @@ function checkArgs (spec, functionName, args, callee) {
         if (actualType === requiredType) return;
 
         // arg is invalid, throw error
-        const paramName = extractParamName(callee || args.callee, i);
+        const paramName = extractParamName(callee, i);
         throw new TypeError(
             `Wrong type for parameter "${paramName}" of ${functionName}: ` +
             `Expected ${requiredType}, but got ${actualType}.`
