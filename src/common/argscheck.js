@@ -68,22 +68,21 @@ function extractParamName (callee, argIndex) {
 function checkArgs (spec, functionName, args, callee) {
     if (!module.exports.enableChecks) return;
 
-    for (let i = 0; i < spec.length; ++i) {
-        const c = spec.charAt(i);
+    [...spec].forEach((c, i) => {
         const cUpper = c.toUpperCase();
         const arg = args[i];
 
         // Pass if any type is allowed
-        if (c === '*') continue;
+        if (c === '*') return;
 
         // Pass if arg is optional and missing
         const isOptional = c === cUpper;
-        if (isOptional && (arg === null || arg === undefined)) continue;
+        if (isOptional && (arg === null || arg === undefined)) return;
 
         // Pass if arg has the required type
         const requiredType = typeMap[cUpper];
         const actualType = utils.typeName(arg);
-        if (actualType === requiredType) continue;
+        if (actualType === requiredType) return;
 
         // arg is invalid, throw error
         const paramName = extractParamName(callee || args.callee, i);
@@ -91,7 +90,7 @@ function checkArgs (spec, functionName, args, callee) {
             `Wrong type for parameter "${paramName}" of ${functionName}: ` +
             `Expected ${requiredType}, but got ${actualType}.`
         );
-    }
+    });
 }
 
 function getValue (value, defaultValue) {
