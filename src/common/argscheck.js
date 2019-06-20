@@ -37,7 +37,7 @@ function extractParamName (callee, argIndex) {
 }
 
 /**
- * Throws TypeError if the provided arguments do not have the expected types.
+ * Checks the given arguments' types and throws if they are not as expected.
  *
  * `spec` is a string where each character stands for the required type of the
  * argument at the same position. In other words: the character at `spec[i]`
