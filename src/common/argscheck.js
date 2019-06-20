@@ -36,6 +36,35 @@ function extractParamName (callee, argIndex) {
     return (/\(\s*([^)]*?)\s*\)/).exec(callee)[1].split(/\s*,\s*/)[argIndex];
 }
 
+/**
+ * Checks the given arguments' types and throws if they are not as expected.
+ *
+ * `spec` is a string where each character stands for the required type of the
+ * argument at the same position. In other words: the character at `spec[i]`
+ * specifies the required type for `args[i]`. The characters in `spec` are the
+ * first letter of the required type's name. The supported types are:
+ *
+ *     Array, Date, Number, String, Function, Object
+ *
+ * Lowercase characters specify arguments that must not be `null` or `undefined`
+ * while uppercase characters allow those values to be passed.
+ *
+ * Finally, `*` can be used to allow any type at the corresponding position.
+ *
+ * @example
+ * function foo (arr, opts) {
+ *     // require `arr` to be an Array and `opts` an Object, null or undefined
+ *     checkArgs('aO', 'my.package.foo', arguments);
+ *     // ...
+ * }
+ * @param {String} spec - the type specification for `args` as described above
+ * @param {String} functionName - full name of the callee.
+ * Used in the error message
+ * @param {Array|arguments} args - the arguments to be checked against `spec`
+ * @param {Function} [opt_callee=args.callee] - the recipient of `args`.
+ * Used to extract parameter names for the error message
+ * @throws {TypeError} if args do not satisfy spec
+ */
 function checkArgs (spec, functionName, args, opt_callee) {
     if (!moduleExports.enableChecks) {
         return;
