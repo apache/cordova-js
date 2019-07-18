@@ -17,6 +17,7 @@
  * under the License.
  */
 
+const babel = require('@babel/core');
 const execa = require('execa');
 const bundle = require('./bundle');
 const scripts = require('./scripts');
@@ -34,9 +35,28 @@ module.exports = function build (userConfig) {
         .then(([ scripts, modules, commitId ]) => {
             Object.assign(config, { commitId });
             return bundle(scripts, modules, config);
-        });
+        })
+        .then(babelTransform(config));
 };
 
 function getCommitId () {
     return execa.stdout('git', ['rev-parse', 'HEAD'], { cwd: pkgRoot });
+}
+
+function babelTransform (config) {
+    const targets = (config.babel || {}).targets;
+    if (!targets) return x => x;
+
+    const babelOpts = {
+        retainLines: true,
+        presets: [
+            ['@babel/preset-env', {
+                targets,
+                // Do not force strict mode as that breaks some platforms
+                modules: false
+            }]
+        ]
+    };
+    return inputCode => babel.transformAsync(inputCode, babelOpts)
+        .then(result => result.code);
 }

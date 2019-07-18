@@ -25,12 +25,28 @@ module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         compile: {
-            'android': {},
-            'ios': {},
-            'osx': {},
-            'windows': { useWindowsLineEndings: true },
-            'browser': {},
-            'electron': {}
+            android: {
+                targets: 'Android >= 4.4, ChromeAndroid >= 30'
+            },
+            ios: {
+                targets: 'iOS >= 9'
+            },
+            osx: {
+                // TODO: add actual targets based on platform support
+                // {} means transform any ES2015+ code to ES5
+                targets: {}
+            },
+            windows: {
+                targets: 'Explorer >= 11',
+                useWindowsLineEndings: true
+            },
+            browser: {
+                // {} means transform any ES2015+ code to ES5
+                targets: {}
+            },
+            electron: {
+                targets: 'Electron >= 4'
+            }
         },
         clean: ['pkg']
     });
@@ -45,6 +61,7 @@ module.exports = function (grunt) {
 
         build({
             platformName: this.target,
+            babel: { targets: this.data.targets },
             platformVersion: grunt.option('platformVersion') ||
                              require(platformPkgPath).version,
             extraModules: collectModules(platformModulesPath)

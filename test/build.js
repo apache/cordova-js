@@ -25,6 +25,8 @@ function buildCordovaJsTestBundle (bundlePath) {
         platformName: 'test',
         platformVersion: 'N/A',
         extraModules: collectTestBuildModules(),
+        // {} means transform any ES2015+ code to ES5
+        babel: { targets: {} },
         preprocess (f) {
             // Do not instrument our test dummies
             if (f.path.includes('src/legacy-exec/test/')) return f;

@@ -69,6 +69,8 @@
     }
   ],
   "dependencies": {
+    "@babel/core": "^7.6.4",
+    "@babel/preset-env": "^7.6.3",
     "execa": "^1.0.0",
     "fs-extra": "^8.0.1",
     "globby": "^9.2.0"
