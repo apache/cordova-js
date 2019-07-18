@@ -16,6 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
 */
+
+const path = require('path');
+const { build, collectModules } = require('./build-tools');
+
 module.exports = function (grunt) {
 
     grunt.initConfig({
@@ -24,7 +28,6 @@ module.exports = function (grunt) {
             'android': {},
             'ios': {},
             'osx': {},
-            'test': {},
             'windows': { useWindowsLineEndings: true },
             'browser': {},
             'electron': {}
@@ -32,11 +35,38 @@ module.exports = function (grunt) {
         clean: ['pkg']
     });
 
+    // custom tasks
+    grunt.registerMultiTask('compile', 'Packages cordova.js', function () {
+        const done = this.async();
+
+        const platformPath = path.resolve(`../cordova-${this.target}`);
+        const platformPkgPath = path.join(platformPath, 'package');
+        const platformModulesPath = path.join(platformPath, 'cordova-js-src');
+
+        build({
+            platformName: this.target,
+            platformVersion: grunt.option('platformVersion') ||
+                             require(platformPkgPath).version,
+            extraModules: collectModules(platformModulesPath)
+        })
+            .then(cordovaJs => {
+                // if we are using windows line endings, we will also add the BOM
+                if (this.data.useWindowsLineEndings) {
+                    cordovaJs = '\ufeff' + cordovaJs.split(/\r?\n/).join('\r\n');
+                }
+
+                // Write out the bundle
+                const baseName = `cordova.${this.target}.js`;
+                const fileName = path.join('pkg', baseName);
+                grunt.file.write(fileName, cordovaJs);
+
+                console.log(`Generated ${fileName}`);
+            })
+            .then(done, done);
+    });
+
     // external tasks
     grunt.loadNpmTasks('grunt-contrib-clean');
-
-    // custom tasks
-    grunt.loadTasks('tasks');
 
     // defaults
     grunt.registerTask('default', ['compile']);
