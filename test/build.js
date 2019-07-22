@@ -35,11 +35,6 @@ function collectTestBuildModules () {
         const moduleId = path.posix.join(platform, 'exec');
         modules[moduleId] = Object.assign({}, modules.exec, { moduleId });
 
-        // Remove plugin/* modules to minimize diff to old build
-        Object.keys(modules)
-            .filter(k => k.startsWith('plugin/'))
-            .forEach(k => delete modules[k]);
-
         return modules;
     });
 

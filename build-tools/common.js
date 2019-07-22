@@ -45,7 +45,9 @@ module.exports = {
 
     // TODO format path relative to pkg.json
     prependFileComment (f) {
-        const comment = `// file: ${f.path}`;
+        const relativePath = path.relative(pkgRoot, f.path);
+        const normalizedPath = path.posix.normalize(relativePath);
+        const comment = `// file: ${normalizedPath}`;
         const contents = [comment, f.contents].join('\n');
         return Object.assign({}, f, { contents });
     },
@@ -53,7 +55,7 @@ module.exports = {
     collectModules (dir) {
         return globby.sync(['**/*.js'], { cwd: dir })
             .map(fileName => ({
-                path: path.relative(pkgRoot, path.join(dir, fileName)),
+                path: path.join(dir, fileName),
                 moduleId: fileName.slice(0, -3)
             }))
             .map(file => ({ [file.moduleId]: file }))

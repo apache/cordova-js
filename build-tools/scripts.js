@@ -47,12 +47,7 @@ function scriptPipeline (config) {
         .then(readContents)
         .then(config.preprocess)
         .then(stripLicenseHeader)
-        .then(prependEmptyLine)
         .then(prependFileComment);
-}
-
-function prependEmptyLine (f) {
-    return Object.assign({}, f, { contents: '\n' + f.contents });
 }
 
 function indexByModuleId (files) {
