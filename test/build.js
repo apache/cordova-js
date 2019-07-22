@@ -4,6 +4,9 @@ const fs = require('fs-extra');
 const path = require('path');
 const { build, collectModules } = require('../build-tools');
 
+// Istanbul is provided by karma-coverage
+const { Instrumenter } = require('istanbul');
+
 if (require.main === module) {
     buildCordovaJsTestBundle(process.argv[2])
         .catch(err => {
@@ -16,10 +19,19 @@ module.exports = buildCordovaJsTestBundle;
 
 // Writes the cordova-js test build bundle to bundlePath
 function buildCordovaJsTestBundle (bundlePath) {
+    const instrumenter = new Instrumenter();
+
     return build({
         platformName: 'test',
         platformVersion: 'N/A',
-        extraModules: collectTestBuildModules()
+        extraModules: collectTestBuildModules(),
+        preprocess (f) {
+            // Do not instrument our test dummies
+            if (f.path.includes('src/legacy-exec/test/')) return f;
+
+            const contents = instrumenter.instrumentSync(f.contents, f.path);
+            return Object.assign({}, f, { contents });
+        }
     })
         .then(testBundle => fs.outputFile(bundlePath, testBundle));
 }
