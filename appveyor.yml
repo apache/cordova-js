@@ -8,13 +8,6 @@ environment:
 
 install:
   - ps: Install-Product node $env:nodejs_version
-
-  - cd ..
-  - git clone https://github.com/apache/cordova-android --depth 10
-  - git clone https://github.com/apache/cordova-ios --depth 10
-  - git clone https://github.com/apache/cordova-windows --depth 10
-  - git clone https://github.com/apache/cordova-browser --depth 10
-  - cd cordova-js
   - npm install
 
 build: off
