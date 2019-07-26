@@ -53,11 +53,11 @@ const bundleTemplate = ({
  specific language governing permissions and limitations
  under the License.
 */
-;(function() {
+;(function(requireNodejs) {
 var PLATFORM_VERSION_BUILD_LABEL = '${platformVersion}';
 ${includeScript('require')}
 ${modules}
 window.cordova = require('cordova');
 ${includeScript('bootstrap')}
-})();
+})(typeof require === 'function' ? require : null);
 `.trimLeft();

@@ -22,7 +22,7 @@
 var require;
 var define;
 
-(function () {
+(function (requireNodejs) {
     var modules = {};
     // Stack of moduleIds currently being built.
     var requireStack = [];
@@ -48,7 +48,11 @@ var define;
 
     require = function (id) {
         if (!modules[id]) {
-            throw 'module ' + id + ' not found';
+            if (requireNodejs) {
+                return requireNodejs(id);
+            } else {
+                throw 'module ' + id + ' not found';
+            }
         } else if (id in inProgressModules) {
             var cycle = requireStack.slice(inProgressModules[id]).join('->') + '->' + id;
             throw 'Cycle in require graph: ' + cycle;
@@ -82,7 +86,8 @@ var define;
     };
 
     define.moduleMap = modules;
-})();
+// eslint-disable-next-line no-undef
+})(requireNodejs);
 
 // Export for use in node
 if (typeof module === 'object' && typeof require === 'function') {
