@@ -22,21 +22,6 @@
 describe('utils', function () {
     var utils = cordova.require('cordova/utils');
 
-    describe('utils.arrayIndexOf', function () {
-        it('Test#001 : should return -1 when not found', function () {
-            expect(utils.arrayIndexOf([1, 2, 3], 4)).toBe(-1);
-        });
-        it('Test#002 : should return 0 for first item', function () {
-            expect(utils.arrayIndexOf([1, 2, 3], 1)).toBe(0);
-        });
-        it('Test#003 : should return 2 for last item', function () {
-            expect(utils.arrayIndexOf([1, 2, 3], 3)).toBe(2);
-        });
-        it('Test#004 : should return index of first occurance', function () {
-            expect(utils.arrayIndexOf([1, 2, 1], 1)).toBe(0);
-        });
-    });
-
     describe('utils.arrayRemove', function () {
         it('Test#005 : should return true when removed.', function () {
             var a = [1, 2, 3];

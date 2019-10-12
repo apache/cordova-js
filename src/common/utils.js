@@ -47,24 +47,11 @@ utils.defineGetterSetter = function (obj, key, getFunc, opt_setFunc) {
  */
 utils.defineGetter = utils.defineGetterSetter;
 
-utils.arrayIndexOf = function (a, item) {
-    if (a.indexOf) {
-        return a.indexOf(item);
-    }
-    var len = a.length;
-    for (var i = 0; i < len; ++i) {
-        if (a[i] === item) {
-            return i;
-        }
-    }
-    return -1;
-};
-
 /**
  * Returns whether the item was found in the array.
  */
 utils.arrayRemove = function (a, item) {
-    var index = utils.arrayIndexOf(a, item);
+    var index = a.indexOf(item);
     if (index !== -1) {
         a.splice(index, 1);
     }
