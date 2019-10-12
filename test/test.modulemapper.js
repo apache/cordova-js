@@ -20,11 +20,20 @@
 
 describe('modulemapper', function () {
     var modulemapper = cordova.require('cordova/modulemapper');
-    var testmodule = cordova.require('cordova/test/testmodule');
     var utils = cordova.require('cordova/utils');
-    var context;
+    var context, testmodule;
 
     beforeEach(function () {
+        testmodule = {
+            func: function () {},
+            num: 2,
+            obj: { str: 'hello' },
+            subObj: { str: 'testSubObj' }
+        };
+        cordova.define('cordova/test/testmodule', (r, e, module) => {
+            module.exports = testmodule;
+        });
+
         function TestClass () {}
         TestClass.prototype.method1 = function () { return 'orig'; };
 
@@ -39,6 +48,7 @@ describe('modulemapper', function () {
 
     afterEach(function () {
         modulemapper.reset();
+        cordova.define.remove('cordova/test/testmodule');
     });
 
     it('Test#001 : should throw in module does not exist', function () {
