@@ -107,33 +107,6 @@ describe('utils', function () {
         });
     });
 
-    describe('when closing around a function', function () {
-        it('Test#021 : calls the original function when calling the closed function', function () {
-            var f = jasmine.createSpy();
-            utils.close(null, f)();
-            expect(f).toHaveBeenCalled();
-        });
-
-        it('Test#022 : uses the correct context for the closed function', function () {
-            var context = {};
-            utils.close(context, function () {
-                expect(this).toBe(context);
-            })();
-        });
-
-        it('Test#023 : passes the arguments to the closed function', function () {
-            utils.close(null, function (arg) {
-                expect(arg).toBe(1);
-            })(1);
-        });
-
-        it('Test#024 : overrides the arguments when provided', function () {
-            utils.close(null, function (arg) {
-                expect(arg).toBe(42);
-            }, [42])(16);
-        });
-    });
-
     it('Test#025 : can create a uuid', function () {
         var uuid = utils.createUUID();
         expect(uuid).toMatch(/^(\{{0,1}([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){12}\}{0,1})$/);

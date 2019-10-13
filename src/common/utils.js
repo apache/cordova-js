@@ -95,16 +95,6 @@ utils.clone = function (obj) {
     return retVal;
 };
 
-/**
- * Returns a wrapped version of the function
- */
-utils.close = function (context, func, params) {
-    return function () {
-        var args = params || arguments;
-        return func.apply(context, args);
-    };
-};
-
 // ------------------------------------------------------------------------------
 function UUIDcreatePart (length) {
     var uuidpart = '';
