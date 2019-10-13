@@ -119,15 +119,25 @@ var cordova = {
     removeDocumentEventHandler: function (event) {
         delete documentEventHandlers[event];
     },
+
     /**
      * Retrieve original event handlers that were replaced by Cordova
      *
      * @return object
      */
     getOriginalHandlers: function () {
-        return { 'document': { 'addEventListener': m_document_addEventListener, 'removeEventListener': m_document_removeEventListener },
-            'window': { 'addEventListener': m_window_addEventListener, 'removeEventListener': m_window_removeEventListener } };
+        return {
+            document: {
+                addEventListener: m_document_addEventListener,
+                removeEventListener: m_document_removeEventListener
+            },
+            window: {
+                addEventListener: m_window_addEventListener,
+                removeEventListener: m_window_removeEventListener
+            }
+        };
     },
+
     /**
      * Method to fire event from native code
      * bNoDetach is required for events which cause an exception which needs to be caught in native code
@@ -150,6 +160,7 @@ var cordova = {
             document.dispatchEvent(evt);
         }
     },
+
     fireWindowEvent: function (type, data) {
         var evt = createEvent(type, data);
         if (typeof windowEventHandlers[type] !== 'undefined') {
@@ -229,6 +240,7 @@ var cordova = {
             throw err;
         }
     },
+
     addConstructor: function (func) {
         channel.onCordovaReady.subscribe(function () {
             try {
