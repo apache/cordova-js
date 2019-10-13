@@ -20,11 +20,9 @@
 */
 
 describe('builder', function () {
-
     var builder = cordova.require('cordova/builder');
 
     it('Test#001 : includes the module into the target', function () {
-
         var target = {};
         var objects = {
             foo: {
@@ -47,7 +45,6 @@ describe('builder', function () {
     });
 
     it('Test#003 : builds out the children', function () {
-
         var target = {};
         var objects = {
             homer: {

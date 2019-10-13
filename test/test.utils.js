@@ -117,7 +117,6 @@ describe('utils', function () {
         });
 
         it('Test#020 : can clone an object', function () {
-
             var orig = {
                 a: {
                     b: {
@@ -173,5 +172,4 @@ describe('utils', function () {
         expect(uuid).toMatch(/^(\{{0,1}([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){12}\}{0,1})$/);
         expect(uuid).not.toEqual(utils.createUUID());
     });
-
 });

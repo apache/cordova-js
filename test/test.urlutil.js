@@ -66,5 +66,4 @@ describe('urlutil', function () {
         var rootUrl = window.location.href.replace(/:.*/, '');
         expect(urlutil.makeAbsolute('//www.foo.com/baz%20?foo#bar')).toBe(rootUrl + '://www.foo.com/baz%20?foo#bar');
     });
-
 });

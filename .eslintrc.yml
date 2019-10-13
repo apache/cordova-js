@@ -5,4 +5,3 @@ rules:
     - error
     - 4
   camelcase: off
-  padded-blocks: off
