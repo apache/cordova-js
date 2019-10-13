@@ -38,17 +38,6 @@ describe('utils', function () {
         });
     });
 
-    describe('isDate', function () {
-        it('Test#011 : should return true for new Date().', function () {
-            var isDate = utils.isDate(new Date());
-            expect(isDate).toBe(true);
-        });
-        it('Test#012 : should return false for {}.', function () {
-            var isDate = utils.isDate({});
-            expect(isDate).toBe(false);
-        });
-    });
-
     describe('when cloning', function () {
         it('Test#013 : can clone an array', function () {
             var orig = [1, 2, 3, { four: 4 }, '5'];

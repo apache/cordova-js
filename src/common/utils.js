@@ -58,17 +58,10 @@ utils.isArray = Array.isArray ||
                 function (a) { return utils.typeName(a) === 'Array'; };
 
 /**
- * Returns an indication of whether the argument is a Date or not
- */
-utils.isDate = function (d) {
-    return (d instanceof Date);
-};
-
-/**
  * Does a deep clone of the object.
  */
 utils.clone = function (obj) {
-    if (!obj || typeof obj === 'function' || utils.isDate(obj) || typeof obj !== 'object') {
+    if (!obj || typeof obj === 'function' || obj instanceof Date || typeof obj !== 'object') {
         return obj;
     }
 
