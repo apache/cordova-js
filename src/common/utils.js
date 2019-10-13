@@ -52,12 +52,6 @@ utils.typeName = function (val) {
 };
 
 /**
- * Returns an indication of whether the argument is an array or not
- */
-utils.isArray = Array.isArray ||
-                function (a) { return utils.typeName(a) === 'Array'; };
-
-/**
  * Does a deep clone of the object.
  */
 utils.clone = function (obj) {
@@ -67,7 +61,7 @@ utils.clone = function (obj) {
 
     var retVal, i;
 
-    if (utils.isArray(obj)) {
+    if (Array.isArray(obj)) {
         retVal = [];
         for (i = 0; i < obj.length; ++i) {
             retVal.push(utils.clone(obj[i]));

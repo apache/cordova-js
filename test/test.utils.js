@@ -22,22 +22,6 @@
 describe('utils', function () {
     var utils = cordova.require('cordova/utils');
 
-    describe('isArray', function () {
-        it('Test#008 : should return true for [].', function () {
-            var isArray = utils.isArray([]);
-            expect(isArray).toBe(true);
-        });
-        it('Test#009 : should return true for new Array().', function () {
-            // eslint-disable-next-line no-array-constructor
-            var isArray = utils.isArray(new Array());
-            expect(isArray).toBe(true);
-        });
-        it('Test#010 : should return false for {}.', function () {
-            var isArray = utils.isArray({});
-            expect(isArray).toBe(false);
-        });
-    });
-
     describe('when cloning', function () {
         it('Test#013 : can clone an array', function () {
             var orig = [1, 2, 3, { four: 4 }, '5'];
