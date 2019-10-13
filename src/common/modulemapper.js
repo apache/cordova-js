@@ -47,10 +47,6 @@ exports.merges = function (moduleName, symbolPath, opt_deprecationMessage) {
     addEntry('m', moduleName, symbolPath, opt_deprecationMessage);
 };
 
-exports.defaults = function (moduleName, symbolPath, opt_deprecationMessage) {
-    addEntry('d', moduleName, symbolPath, opt_deprecationMessage);
-};
-
 exports.runs = function (moduleName) {
     addEntry('r', moduleName, null);
 };
@@ -86,7 +82,7 @@ exports.mapModules = function (context) {
 
         if (strategy === 'm' && target) {
             builder.recursiveMerge(target, module);
-        } else if ((strategy === 'd' && !target) || (strategy !== 'd')) {
+        } else {
             if (!(symbolPath in origSymbols)) {
                 origSymbols[symbolPath] = target;
             }
