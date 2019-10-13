@@ -27,7 +27,7 @@ function buildCordovaJsTestBundle (bundlePath) {
         extraModules: collectTestBuildModules(),
         preprocess (f) {
             // Do not instrument our test dummies
-            if (f.path.includes('src/legacy-exec/test/')) return f;
+            if (f.path.includes('/test/test-platform-modules/')) return f;
 
             const contents = instrumenter.instrumentSync(f.contents, f.path);
             return Object.assign({}, f, { contents });
@@ -51,6 +51,6 @@ function collectTestBuildModules () {
     });
 
     // Finally, add modules provided by test platform
-    const testModulesPath = path.join(__dirname, '../src/legacy-exec/test');
+    const testModulesPath = path.join(__dirname, 'test-platform-modules');
     return Object.assign(...platformModules, collectModules(testModulesPath));
 }
