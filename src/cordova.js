@@ -237,16 +237,6 @@ var cordova = {
             cordova.fireWindowEvent('cordovacallbackerror', { 'message': msg, 'error': err });
             throw err;
         }
-    },
-
-    addConstructor: function (func) {
-        channel.onCordovaReady.subscribe(function () {
-            try {
-                func();
-            } catch (e) {
-                console.log('Failed to run constructor: ' + e);
-            }
-        });
     }
 };
 
