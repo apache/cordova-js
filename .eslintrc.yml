@@ -6,4 +6,3 @@ rules:
     - 4
   camelcase: off
   padded-blocks: off
-  operator-linebreak: off
