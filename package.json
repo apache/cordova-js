@@ -19,7 +19,7 @@
     "pretest": "npm run build:test",
     "test": "npm run eslint && karma start",
     "build": "grunt compile",
-    "build:test": "node test/build.js pkg/cordova.test.js"
+    "build:test": "node build-tools/test-build pkg/cordova.test.js"
   },
   "license": "Apache-2.0",
   "contributors": [
