@@ -2,7 +2,7 @@
 
 const fs = require('fs-extra');
 const path = require('path');
-const { build, collectModules } = require('../build-tools');
+const { build, collectModules } = require('.');
 
 // Istanbul is provided by karma-coverage
 const { Instrumenter } = require('istanbul');
@@ -51,6 +51,6 @@ function collectTestBuildModules () {
     });
 
     // Finally, add modules provided by test platform
-    const testModulesPath = path.join(__dirname, 'test-platform-modules');
+    const testModulesPath = path.join(__dirname, '../test/test-platform-modules');
     return Object.assign(...platformModules, collectModules(testModulesPath));
 }

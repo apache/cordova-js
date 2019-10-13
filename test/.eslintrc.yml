@@ -1,4 +1,6 @@
 env:
+    node: false
+    browser: true
     jasmine: true
 
 globals:

@@ -19,4 +19,5 @@
  *
 */
 
-module.exports = jasmine.createSpy(); // eslint-disable-line no-undef
+/* eslint-env jasmine */
+module.exports = jasmine.createSpy();

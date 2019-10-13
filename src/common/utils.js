@@ -108,10 +108,11 @@ utils.clone = function (obj) {
 
     retVal = {};
     for (i in obj) {
-        // https://issues.apache.org/jira/browse/CB-11522 'unknown' type may be returned in
-        // custom protocol activation case on Windows Phone 8.1 causing "No such interface supported" exception
-        // on cloning.
-        if ((!(i in retVal) || retVal[i] !== obj[i]) && typeof obj[i] !== 'undefined' && typeof obj[i] !== 'unknown') { // eslint-disable-line valid-typeof
+        // 'unknown' type may be returned in custom protocol activation case on
+        // Windows Phone 8.1 causing "No such interface supported" exception on
+        // cloning (https://issues.apache.org/jira/browse/CB-11522)
+        // eslint-disable-next-line valid-typeof
+        if ((!(i in retVal) || retVal[i] !== obj[i]) && typeof obj[i] !== 'undefined' && typeof obj[i] !== 'unknown') {
             retVal[i] = utils.clone(obj[i]);
         }
     }

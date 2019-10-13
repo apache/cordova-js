@@ -61,7 +61,8 @@ describe('utils', function () {
             expect(isArray).toBe(true);
         });
         it('Test#009 : should return true for new Array().', function () {
-            var isArray = utils.isArray(new Array()); // eslint-disable-line no-array-constructor
+            // eslint-disable-next-line no-array-constructor
+            var isArray = utils.isArray(new Array());
             expect(isArray).toBe(true);
         });
         it('Test#010 : should return false for {}.', function () {

@@ -45,11 +45,11 @@ describe('pluginloader', function () {
         injectScript.and.callFake(function (url, onload, onerror) {
             // jsdom deficiencies:
             if (typeof location !== 'undefined') {
-                expect(url).toBe(window.location.href.replace(/\/[^\/]*?$/, '/foo/cordova_plugins.js')); // eslint-disable-line no-useless-escape
+                expect(url).toBe(window.location.href.replace(/\/[^/]*?$/, '/foo/cordova_plugins.js'));
             } else {
                 expect(url).toBe('foo/cordova_plugins.js');
             }
-            /* eslint-disable no-undef */
+
             define('cordova/plugin_list', function (require, exports, module) {
                 module.exports = [];
             });
@@ -79,7 +79,7 @@ describe('pluginloader', function () {
         injectScript.and.callFake(function (url, onload, onerror) {
             // jsdom deficiencies:
             if (typeof location !== 'undefined') {
-                expect(url).toBe(window.location.href.replace(/\/[^\/]*?$/, '/foo/some/path.js')); // eslint-disable-line no-useless-escape
+                expect(url).toBe(window.location.href.replace(/\/[^/]*?$/, '/foo/some/path.js'));
             } else {
                 expect(url).toBe('foo/some/path.js');
             }

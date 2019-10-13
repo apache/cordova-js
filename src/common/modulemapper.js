@@ -19,7 +19,7 @@
 */
 
 var builder = require('cordova/builder');
-var moduleMap = define.moduleMap; // eslint-disable-line no-undef
+var moduleMap = define.moduleMap;
 var symbolList;
 var deprecationMap;
 
@@ -59,12 +59,9 @@ function prepareNamespace (symbolPath, context) {
     if (!symbolPath) {
         return context;
     }
-    var parts = symbolPath.split('.');
-    var cur = context;
-    for (var i = 0, part; part = parts[i]; ++i) { // eslint-disable-line no-cond-assign
-        cur = cur[part] = cur[part] || {};
-    }
-    return cur;
+    return symbolPath.split('.').reduce(function (cur, part) {
+        return (cur[part] = cur[part] || {});
+    }, context);
 }
 
 exports.mapModules = function (context) {

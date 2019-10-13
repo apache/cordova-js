@@ -43,7 +43,7 @@ describe('urlutil', function () {
     });
 
     it('Test#003 : can handle relative URLs', function () {
-        var rootUrl = window.location.href.replace(/[?#].*/, '').replace(/[^\/]*$/, ''); // eslint-disable-line no-useless-escape
+        var rootUrl = window.location.href.replace(/[?#].*/, '').replace(/[^/]*$/, '');
         expect(urlutil.makeAbsolute('foo?a#b')).toBe(rootUrl + 'foo?a#b');
         expect(urlutil.makeAbsolute('foo/b%20ar')).toBe(rootUrl + 'foo/b%20ar');
     });

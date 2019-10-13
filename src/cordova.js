@@ -21,7 +21,7 @@
 
 // Workaround for Windows 10 in hosted environment case
 // http://www.w3.org/html/wg/drafts/html/master/browsers.html#named-access-on-the-window-object
-if (window.cordova && !(window.cordova instanceof HTMLElement)) { // eslint-disable-line no-undef
+if (window.cordova && !(window.cordova instanceof HTMLElement)) {
     throw new Error('cordova already defined');
 }
 
@@ -94,15 +94,12 @@ function createEvent (type, data) {
     return event;
 }
 
-/* eslint-disable no-undef */
 var cordova = {
     define: define,
     require: require,
     version: PLATFORM_VERSION_BUILD_LABEL,
     platformVersion: PLATFORM_VERSION_BUILD_LABEL,
     platformId: platform.id,
-
-    /* eslint-enable no-undef */
 
     /**
      * Methods to add/remove your own addEventListener hijacking on document + window.

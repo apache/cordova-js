@@ -36,19 +36,6 @@ describe('iOS exec', function () {
         });
     });
 
-    function simulateNativeBehaviour (codes) { // eslint-disable-line no-unused-vars
-        var execPayload = JSON.parse(exec.nativeFetchMessages());
-        while (execPayload.length && codes.length) {
-            var curPayload = execPayload.shift();
-            var callbackId = curPayload[0];
-            var moreResults = exec.nativeCallback(callbackId, codes.shift(), 'payload', false);
-            if (moreResults) {
-                execPayload.push.apply(execPayload, JSON.parse(moreResults));
-            }
-        }
-        expect(codes.length).toBe(0, 'Wrong number of results.');
-    }
-
     describe('exec', function () {
         it('Test#001 : should return "" from nativeFetchMessages work when nothing is pending.', function () {
             var execPayload = exec.nativeFetchMessages();

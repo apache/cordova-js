@@ -39,19 +39,23 @@ describe('base64', function () {
     it('Test#002 : can base64 encode a binary string in an ArrayBuffer', function () {
         var arrayBuffer = new ArrayBuffer(256);
         var view = new Uint8Array(arrayBuffer);
-        /* eslint-disable no-undef */
-        base64string = 'AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8gISIjJCUmJygpKissLS4vMDEyMzQ1Njc4OTo7PD0+P0BBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWltcXV5fYGFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6e3x9fn+AgYKDhIWGh4iJiouMjY6PkJGSk5SVlpeYmZqbnJ2en6ChoqOkpaanqKmqq6ytrq+wsbKztLW2t7i5uru8vb6/wMHCw8TFxsfIycrLzM3Oz9DR0tPU1dbX2Nna29zd3t/g4eLj5OXm5+jp6uvs7e7v8PHy8/T19vf4+fr7/P3+/w==';
-
         for (var i = 0; i < view.length; i++) {
             view[i] = i;
         }
 
-        expect(base64.fromArrayBuffer(arrayBuffer)).toBe(base64string);
+        expect(base64.fromArrayBuffer(arrayBuffer)).toBe(
+            'AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8gISIjJCUmJygpKissLS4v' +
+            'MDEyMzQ1Njc4OTo7PD0+P0BBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWltcXV5f' +
+            'YGFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6e3x9fn+AgYKDhIWGh4iJiouMjY6P' +
+            'kJGSk5SVlpeYmZqbnJ2en6ChoqOkpaanqKmqq6ytrq+wsbKztLW2t7i5uru8vb6/' +
+            'wMHCw8TFxsfIycrLzM3Oz9DR0tPU1dbX2Nna29zd3t/g4eLj5OXm5+jp6uvs7e7v' +
+            '8PHy8/T19vf4+fr7/P3+/w=='
+        );
     });
 
     it('Test#003 : can base64 encode an text string in an ArrayBuffer', function () {
         var orig = 'Some Awesome Test This Is!';
-        var base64string = typeof btoa !== 'undefined' ? btoa(orig) : Buffer.from('Some Awesome Test This Is!', 'binary').toString('base64');
+        var base64string = btoa(orig);
         var arrayBuffer = new ArrayBuffer(orig.length);
         var view = new Uint8Array(arrayBuffer);
 
@@ -64,8 +68,8 @@ describe('base64', function () {
 
     it('Test#004 : can decode a base64-encoded text string into an ArrayBuffer', function () {
         var orig = 'Some Awesome Test This Is!';
-        var base64string = typeof btoa !== 'undefined' ? btoa(orig) : Buffer.from(orig, 'binary').toString('base64');
-        /* eslint-enable no-undef */
+        var base64string = btoa(orig);
+
         var arrayBuffer = base64.toArrayBuffer(base64string);
 
         var testString = '';

@@ -93,14 +93,14 @@ var channel = {
         }
         if (!len) h();
     },
-    /* eslint-disable no-return-assign */
+
     create: function (type) {
-        return channel[type] = new Channel(type, false);
+        return (channel[type] = new Channel(type, false));
     },
     createSticky: function (type) {
-        return channel[type] = new Channel(type, true);
+        return (channel[type] = new Channel(type, true));
     },
-    /* eslint-enable no-return-assign */
+
     /**
      * cordova Channels that must fire before "deviceready" is fired.
      */
@@ -221,7 +221,6 @@ Channel.prototype.unsubscribe = function (eventListenerOrFunction) {
  * Calls all functions subscribed to this channel.
  */
 Channel.prototype.fire = function (e) {
-    var fail = false; // eslint-disable-line no-unused-vars
     var fireArgs = Array.prototype.slice.call(arguments);
     // Apply stickiness.
     if (this.state === 1) {
