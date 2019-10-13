@@ -22,24 +22,6 @@
 describe('utils', function () {
     var utils = cordova.require('cordova/utils');
 
-    describe('utils.arrayRemove', function () {
-        it('Test#005 : should return true when removed.', function () {
-            var a = [1, 2, 3];
-            expect(utils.arrayRemove(a, 2)).toBe(true);
-            expect(a).toEqual([1, 3]);
-        });
-        it('Test#006 : should return false when item was not there.', function () {
-            var a = [1, 2, 3];
-            expect(utils.arrayRemove(a, 4)).toBe(false);
-            expect(a).toEqual([1, 2, 3]);
-        });
-        it('Test#007 : should remove only first occurance', function () {
-            var a = [1, 2, 1];
-            expect(utils.arrayRemove(a, 1)).toBe(true);
-            expect(a).toEqual([2, 1]);
-        });
-    });
-
     describe('isArray', function () {
         it('Test#008 : should return true for [].', function () {
             var isArray = utils.isArray([]);

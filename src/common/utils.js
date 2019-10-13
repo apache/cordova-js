@@ -47,17 +47,6 @@ utils.defineGetterSetter = function (obj, key, getFunc, opt_setFunc) {
  */
 utils.defineGetter = utils.defineGetterSetter;
 
-/**
- * Returns whether the item was found in the array.
- */
-utils.arrayRemove = function (a, item) {
-    var index = a.indexOf(item);
-    if (index !== -1) {
-        a.splice(index, 1);
-    }
-    return index !== -1;
-};
-
 utils.typeName = function (val) {
     return Object.prototype.toString.call(val).slice(8, -1);
 };
