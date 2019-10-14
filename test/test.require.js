@@ -61,7 +61,7 @@ describe('require + define', function () {
             define('cordova', function () {});
             expect(function () {
                 define('cordova', function () {});
-            }).toThrow('module cordova already defined');
+            }).toThrowError('module cordova already defined');
         });
 
         it("Test#004 : doesn't call the factory method when defining", function () {
@@ -75,7 +75,7 @@ describe('require + define', function () {
         it("Test#005 : throws an exception when module doesn't exist", function () {
             expect(function () {
                 require('your mom');
-            }).toThrow('module your mom not found');
+            }).toThrowError('module your mom not found');
         });
 
         it('Test#006 : throws an exception when modules depend on each other', function () {
@@ -88,7 +88,7 @@ describe('require + define', function () {
 
             expect(function () {
                 require('ModuleA');
-            }).toThrow('Cycle in require graph: ModuleA->ModuleB->ModuleA');
+            }).toThrowError('Cycle in require graph: ModuleA->ModuleB->ModuleA');
         });
 
         it('Test#007 : throws an exception when a cycle of requires occurs', function () {
@@ -104,7 +104,7 @@ describe('require + define', function () {
 
             expect(function () {
                 require('ModuleA');
-            }).toThrow('Cycle in require graph: ModuleA->ModuleB->ModuleC->ModuleA');
+            }).toThrowError('Cycle in require graph: ModuleA->ModuleB->ModuleC->ModuleA');
         });
 
         it('Test#008 : calls the factory method when requiring', function () {
@@ -160,7 +160,7 @@ describe('require + define', function () {
             define('submodule.a', function (require, exports, module) {
                 expect(() => {
                     require('a');
-                }).toThrow('module a not found');
+                }).toThrowError('module a not found');
             });
 
             require('submodule.a');
