@@ -5,7 +5,7 @@
   "engines": {
     "node": ">=8.0.0"
   },
-  "version": "5.0.1-dev",
+  "version": "6.0.0-dev",
   "homepage": "http://cordova.apache.org",
   "repository": {
     "type": "git",
