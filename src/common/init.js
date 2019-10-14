@@ -24,7 +24,6 @@ var cordova = require('cordova');
 var modulemapper = require('cordova/modulemapper');
 var platform = require('cordova/platform');
 var pluginloader = require('cordova/pluginloader');
-var utils = require('cordova/utils');
 
 var platformInitChannelsArray = [channel.onNativeReady, channel.onPluginsReady];
 
@@ -43,34 +42,6 @@ window.setTimeout(function () {
         logUnfiredChannels(channel.deviceReadyChannelsArray);
     }
 }, 5000);
-
-// Replace navigator before any modules are required(), to ensure it happens as soon as possible.
-// We replace it so that properties that can't be clobbered can instead be overridden.
-function replaceNavigator (origNavigator) {
-    var CordovaNavigator = function () {};
-    CordovaNavigator.prototype = origNavigator;
-    var newNavigator = new CordovaNavigator();
-    // This work-around really only applies to new APIs that are newer than Function.bind.
-    // Without it, APIs such as getGamepads() break.
-    if (CordovaNavigator.bind) {
-        for (var key in origNavigator) {
-            if (typeof origNavigator[key] === 'function') {
-                newNavigator[key] = origNavigator[key].bind(origNavigator);
-            } else {
-                (function (k) {
-                    utils.defineGetterSetter(newNavigator, key, function () {
-                        return origNavigator[k];
-                    });
-                })(key);
-            }
-        }
-    }
-    return newNavigator;
-}
-
-if (window.navigator) {
-    window.navigator = replaceNavigator(window.navigator);
-}
 
 if (!window.console) {
     window.console = {
