@@ -36,7 +36,7 @@ describe('cordova', function () {
 
             expect(cordova.fireWindowEvent).toHaveBeenCalledWith('cordovacallbackerror', {
                 message: jasmine.stringMatching('Error in Success callbackId: ' + id),
-                original: testError
+                error: testError
             });
         });
     });

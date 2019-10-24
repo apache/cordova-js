@@ -226,7 +226,7 @@ var cordova = {
             }
         } catch (err) {
             var msg = 'Error in ' + (isSuccess ? 'Success' : 'Error') + ' callbackId: ' + callbackId + ' : ' + err;
-            cordova.fireWindowEvent('cordovacallbackerror', { 'message': msg, 'original': err });
+            cordova.fireWindowEvent('cordovacallbackerror', { 'message': msg, 'error': err });
             throw err;
         }
     },
