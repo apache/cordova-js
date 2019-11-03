@@ -47,58 +47,21 @@ utils.defineGetterSetter = function (obj, key, getFunc, opt_setFunc) {
  */
 utils.defineGetter = utils.defineGetterSetter;
 
-utils.arrayIndexOf = function (a, item) {
-    if (a.indexOf) {
-        return a.indexOf(item);
-    }
-    var len = a.length;
-    for (var i = 0; i < len; ++i) {
-        if (a[i] === item) {
-            return i;
-        }
-    }
-    return -1;
-};
-
-/**
- * Returns whether the item was found in the array.
- */
-utils.arrayRemove = function (a, item) {
-    var index = utils.arrayIndexOf(a, item);
-    if (index !== -1) {
-        a.splice(index, 1);
-    }
-    return index !== -1;
-};
-
 utils.typeName = function (val) {
     return Object.prototype.toString.call(val).slice(8, -1);
-};
-
-/**
- * Returns an indication of whether the argument is an array or not
- */
-utils.isArray = Array.isArray ||
-                function (a) { return utils.typeName(a) === 'Array'; };
-
-/**
- * Returns an indication of whether the argument is a Date or not
- */
-utils.isDate = function (d) {
-    return (d instanceof Date);
 };
 
 /**
  * Does a deep clone of the object.
  */
 utils.clone = function (obj) {
-    if (!obj || typeof obj === 'function' || utils.isDate(obj) || typeof obj !== 'object') {
+    if (!obj || typeof obj === 'function' || obj instanceof Date || typeof obj !== 'object') {
         return obj;
     }
 
     var retVal, i;
 
-    if (utils.isArray(obj)) {
+    if (Array.isArray(obj)) {
         retVal = [];
         for (i = 0; i < obj.length; ++i) {
             retVal.push(utils.clone(obj[i]));
@@ -117,16 +80,6 @@ utils.clone = function (obj) {
         }
     }
     return retVal;
-};
-
-/**
- * Returns a wrapped version of the function
- */
-utils.close = function (context, func, params) {
-    return function () {
-        var args = params || arguments;
-        return func.apply(context, args);
-    };
 };
 
 // ------------------------------------------------------------------------------
@@ -168,14 +121,3 @@ utils.extend = (function () {
         Child.prototype.constructor = Child;
     };
 }());
-
-/**
- * Alerts a message in any available way: alert or console.log.
- */
-utils.alert = function (msg) {
-    if (window.alert) {
-        window.alert(msg);
-    } else if (console && console.log) {
-        console.log(msg);
-    }
-};

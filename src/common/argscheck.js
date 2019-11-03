@@ -66,9 +66,6 @@ function extractParamName (callee, argIndex) {
  * @throws {TypeError} if args do not satisfy spec
  */
 function checkArgs (spec, functionName, args, opt_callee) {
-    if (!moduleExports.enableChecks) {
-        return;
-    }
     var errMsg = null;
     var typeName;
     for (var i = 0; i < spec.length; ++i) {
@@ -105,4 +102,3 @@ function getValue (value, defaultValue) {
 
 moduleExports.checkArgs = checkArgs;
 moduleExports.getValue = getValue;
-moduleExports.enableChecks = true;

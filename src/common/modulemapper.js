@@ -18,7 +18,7 @@
  *
 */
 
-var builder = require('cordova/builder');
+var utils = require('cordova/utils');
 var moduleMap = define.moduleMap;
 var symbolList;
 var deprecationMap;
@@ -47,10 +47,6 @@ exports.merges = function (moduleName, symbolPath, opt_deprecationMessage) {
     addEntry('m', moduleName, symbolPath, opt_deprecationMessage);
 };
 
-exports.defaults = function (moduleName, symbolPath, opt_deprecationMessage) {
-    addEntry('d', moduleName, symbolPath, opt_deprecationMessage);
-};
-
 exports.runs = function (moduleName) {
     addEntry('r', moduleName, null);
 };
@@ -62,6 +58,58 @@ function prepareNamespace (symbolPath, context) {
     return symbolPath.split('.').reduce(function (cur, part) {
         return (cur[part] = cur[part] || {});
     }, context);
+}
+
+function clobber (obj, key, value) {
+    var needsProperty = false;
+    try {
+        obj[key] = value;
+    } catch (e) {
+        needsProperty = true;
+    }
+    // Getters can only be overridden by getters.
+    if (needsProperty || obj[key] !== value) {
+        utils.defineGetter(obj, key, function () {
+            return value;
+        });
+    }
+}
+
+function assignOrWrapInDeprecateGetter (obj, key, value, message) {
+    if (message) {
+        utils.defineGetter(obj, key, function () {
+            console.log(message);
+            delete obj[key];
+            clobber(obj, key, value);
+            return value;
+        });
+    } else {
+        clobber(obj, key, value);
+    }
+}
+
+/**
+ * Merge properties from one object onto another recursively.  Properties from
+ * the src object will overwrite existing target property.
+ *
+ * @param target Object to merge properties into.
+ * @param src Object to merge properties from.
+ */
+function recursiveMerge (target, src) {
+    for (var prop in src) {
+        if (src.hasOwnProperty(prop)) {
+            if (target.prototype && target.prototype.constructor === target) {
+                // If the target object is a constructor override off prototype.
+                clobber(target.prototype, prop, src[prop]);
+            } else {
+                if (typeof src[prop] === 'object' && typeof target[prop] === 'object') {
+                    recursiveMerge(target[prop], src[prop]);
+                } else {
+                    clobber(target, prop, src[prop]);
+                }
+            }
+        }
+    }
 }
 
 exports.mapModules = function (context) {
@@ -85,12 +133,12 @@ exports.mapModules = function (context) {
         var target = parentObj[lastName];
 
         if (strategy === 'm' && target) {
-            builder.recursiveMerge(target, module);
-        } else if ((strategy === 'd' && !target) || (strategy !== 'd')) {
+            recursiveMerge(target, module);
+        } else {
             if (!(symbolPath in origSymbols)) {
                 origSymbols[symbolPath] = target;
             }
-            builder.assignOrWrapInDeprecateGetter(parentObj, lastName, module, deprecationMsg);
+            assignOrWrapInDeprecateGetter(parentObj, lastName, module, deprecationMsg);
         }
     }
 };

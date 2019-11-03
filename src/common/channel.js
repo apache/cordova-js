@@ -19,7 +19,6 @@
  *
 */
 
-var utils = require('cordova/utils');
 var nextGuid = 1;
 
 /**
@@ -171,7 +170,7 @@ Channel.prototype.subscribe = function (eventListenerOrFunction, eventListener) 
 
     guid = eventListenerOrFunction.observer_guid;
     if (typeof eventListener === 'object') {
-        handleEvent = utils.close(eventListener, handleEvent);
+        handleEvent = handleEvent.bind(eventListener);
     }
 
     if (!guid) {

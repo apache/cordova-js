@@ -73,11 +73,6 @@ describe('argscheck', function () {
         var testFunc = createTestFunc(true);
         expect(function () { testFunc(null, null, null, null, null, new Date()); }).toThrowError('Wrong type for parameter "func" of testFunc: Expected Function, but got Date.');
     });
-    it('Test#011 : should not throw when checking is disabled', function () {
-        var testFunc = createTestFunc(false);
-        argscheck.enableChecks = false;
-        testFunc();
-    });
     it('Test#012 : should be able to extract from all kinds of parameter formats', () => {
         const check = args => argscheck.checkArgs('ss', 'testFn', args);
 

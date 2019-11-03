@@ -22,66 +22,6 @@
 describe('utils', function () {
     var utils = cordova.require('cordova/utils');
 
-    describe('utils.arrayIndexOf', function () {
-        it('Test#001 : should return -1 when not found', function () {
-            expect(utils.arrayIndexOf([1, 2, 3], 4)).toBe(-1);
-        });
-        it('Test#002 : should return 0 for first item', function () {
-            expect(utils.arrayIndexOf([1, 2, 3], 1)).toBe(0);
-        });
-        it('Test#003 : should return 2 for last item', function () {
-            expect(utils.arrayIndexOf([1, 2, 3], 3)).toBe(2);
-        });
-        it('Test#004 : should return index of first occurance', function () {
-            expect(utils.arrayIndexOf([1, 2, 1], 1)).toBe(0);
-        });
-    });
-
-    describe('utils.arrayRemove', function () {
-        it('Test#005 : should return true when removed.', function () {
-            var a = [1, 2, 3];
-            expect(utils.arrayRemove(a, 2)).toBe(true);
-            expect(a).toEqual([1, 3]);
-        });
-        it('Test#006 : should return false when item was not there.', function () {
-            var a = [1, 2, 3];
-            expect(utils.arrayRemove(a, 4)).toBe(false);
-            expect(a).toEqual([1, 2, 3]);
-        });
-        it('Test#007 : should remove only first occurance', function () {
-            var a = [1, 2, 1];
-            expect(utils.arrayRemove(a, 1)).toBe(true);
-            expect(a).toEqual([2, 1]);
-        });
-    });
-
-    describe('isArray', function () {
-        it('Test#008 : should return true for [].', function () {
-            var isArray = utils.isArray([]);
-            expect(isArray).toBe(true);
-        });
-        it('Test#009 : should return true for new Array().', function () {
-            // eslint-disable-next-line no-array-constructor
-            var isArray = utils.isArray(new Array());
-            expect(isArray).toBe(true);
-        });
-        it('Test#010 : should return false for {}.', function () {
-            var isArray = utils.isArray({});
-            expect(isArray).toBe(false);
-        });
-    });
-
-    describe('isDate', function () {
-        it('Test#011 : should return true for new Date().', function () {
-            var isDate = utils.isDate(new Date());
-            expect(isDate).toBe(true);
-        });
-        it('Test#012 : should return false for {}.', function () {
-            var isDate = utils.isDate({});
-            expect(isDate).toBe(false);
-        });
-    });
-
     describe('when cloning', function () {
         it('Test#013 : can clone an array', function () {
             var orig = [1, 2, 3, { four: 4 }, '5'];
@@ -137,33 +77,6 @@ describe('utils', function () {
             };
 
             expect(utils.clone(orig)).toEqual(expected);
-        });
-    });
-
-    describe('when closing around a function', function () {
-        it('Test#021 : calls the original function when calling the closed function', function () {
-            var f = jasmine.createSpy();
-            utils.close(null, f)();
-            expect(f).toHaveBeenCalled();
-        });
-
-        it('Test#022 : uses the correct context for the closed function', function () {
-            var context = {};
-            utils.close(context, function () {
-                expect(this).toBe(context);
-            })();
-        });
-
-        it('Test#023 : passes the arguments to the closed function', function () {
-            utils.close(null, function (arg) {
-                expect(arg).toBe(1);
-            })(1);
-        });
-
-        it('Test#024 : overrides the arguments when provided', function () {
-            utils.close(null, function (arg) {
-                expect(arg).toBe(42);
-            }, [42])(16);
         });
     });
 
