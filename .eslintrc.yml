@@ -21,14 +21,15 @@ extends: '@cordova/eslint-config/node'
 overrides:
   - files: [test/**/*.js]
     extends: '@cordova/eslint-config/browser-tests'
-    globals:
-      cordova: false
 
-  - files: [src/**/*.js, test/test-platform-modules/**/**.js]
+  - files: [test/test-platform-modules/**/*.js]
+    extends: '@cordova/eslint-config/browser'
+
+  - files: [src/**/*.js]
     extends:
-        - '@cordova/eslint-config/browser'
-        - plugin:es5/no-es2015
-        - plugin:es5/no-es2016
+      - '@cordova/eslint-config/browser'
+      - plugin:es5/no-es2015
+      - plugin:es5/no-es2016
     globals:
       define: false
       PLATFORM_VERSION_BUILD_LABEL: false
