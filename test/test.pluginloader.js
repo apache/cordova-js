@@ -73,7 +73,7 @@ describe('pluginloader', function () {
     it('Test#003 : should inject plugin scripts when they are not already there', function (done) {
         define('cordova/plugin_list', function (require, exports, module) {
             module.exports = [
-                { 'file': 'some/path.js', 'id': 'some.id' }
+                { file: 'some/path.js', id: 'some.id' }
             ];
         });
         injectScript.and.callFake(function (url, onload, onerror) {
@@ -94,7 +94,7 @@ describe('pluginloader', function () {
     it('Test#004 : should not inject plugin scripts when they are already there', function (done) {
         define('cordova/plugin_list', function (require, exports, module) {
             module.exports = [
-                { 'file': 'some/path.js', 'id': 'some.id' }
+                { file: 'some/path.js', id: 'some.id' }
             ];
         });
         define('some.id', function (require, exports, module) {

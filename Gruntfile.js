@@ -24,12 +24,12 @@ module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         compile: {
-            'android': {},
-            'ios': {},
-            'osx': {},
-            'windows': { useWindowsLineEndings: true },
-            'browser': {},
-            'electron': {}
+            android: {},
+            ios: {},
+            osx: {},
+            windows: { useWindowsLineEndings: true },
+            browser: {},
+            electron: {}
         },
         clean: ['pkg']
     });

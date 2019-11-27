@@ -31,7 +31,7 @@ module.exports = function build (userConfig) {
         modules(config),
         getCommitId()
     ])
-        .then(([ scripts, modules, commitId ]) => {
+        .then(([scripts, modules, commitId]) => {
             Object.assign(config, { commitId });
             return bundle(scripts, modules, config);
         });

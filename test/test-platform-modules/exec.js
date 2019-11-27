@@ -19,5 +19,4 @@
  *
 */
 
-/* eslint-env jasmine */
 module.exports = jasmine.createSpy();

@@ -24,12 +24,12 @@ var utils = require('cordova/utils');
 var moduleExports = module.exports;
 
 var typeMap = {
-    'A': 'Array',
-    'D': 'Date',
-    'N': 'Number',
-    'S': 'String',
-    'F': 'Function',
-    'O': 'Object'
+    A: 'Array',
+    D: 'Date',
+    N: 'Number',
+    S: 'String',
+    F: 'Function',
+    O: 'Object'
 };
 
 function extractParamName (callee, argIndex) {
