@@ -184,7 +184,7 @@ describe('channel', function () {
 
             testChannel.subscribe(handler);
             testChannel.fire(1, 2, 3);
-            expect(handler.calls.argsFor(0)).toEqual([ 1, 2, 3 ]);
+            expect(handler.calls.argsFor(0)).toEqual([1, 2, 3]);
         });
         it('Test#013 : should not fire a handler that was unsubscribed', function () {
             var testChannel = multi ? multiChannel : stickyChannel;
@@ -247,7 +247,7 @@ describe('channel', function () {
 
             expectCallCount(before, 1);
             expectCallCount(after, 1);
-            expect(after.calls.argsFor(0)).toEqual([ 1, 2, 3 ]);
+            expect(after.calls.argsFor(0)).toEqual([1, 2, 3]);
         });
         it('Test#018 : should instantly trigger the callback if the event is currently being fired.', function () {
             var handler1 = jasmine.createSpy().and.callFake(function () { stickyChannel.subscribe(handler2); });
