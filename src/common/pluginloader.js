@@ -42,7 +42,7 @@ function injectIfNecessary (id, url, onload, onerror) {
             if (id in define.moduleMap) {
                 onload();
             } else {
-                onerror();
+                onerror("Module not inserted to module map.");
             }
         }, onerror);
     }
@@ -79,19 +79,65 @@ function onScriptLoadingComplete (moduleList, finishPluginLoading) {
 function handlePluginsObject (path, moduleList, finishPluginLoading) {
     // Now inject the scripts.
     var scriptCounter = moduleList.length;
+    var modulesWithProblems = [];
 
     if (!scriptCounter) {
         finishPluginLoading();
         return;
     }
+
+    function callOnScriptLoadingComplete(){
+        modulesWithProblems.forEach(function(elem){
+
+            var foundIndex = -1;
+            var modulesLength = moduleList.length;
+            var i = 0;
+            // find module with load problems in module list. Use while loop to exit iteration early.
+            while(i < modulesLength && foundIndex === -1) {
+                if(moduleList[i].id === elem) {
+                    foundIndex = i;
+                }
+                i++;
+            }
+            if(foundIndex !== -1) {
+                // delete module with load problem from module list
+                moduleList.splice(foundIndex, 1);
+            }
+
+        } );
+        onScriptLoadingComplete(moduleList, finishPluginLoading);
+    }
+
     function scriptLoadedCallback () {
         if (!--scriptCounter) {
-            onScriptLoadingComplete(moduleList, finishPluginLoading);
+            callOnScriptLoadingComplete();
+        }
+    }
+
+    function scriptLoadedErrorCallback(id, message, source, lineno, colno, error) {
+        modulesWithProblems.push(id);
+        if(typeof message !== "undefined") {
+            var messageString = message;
+            if(typeof message !== "string") {
+                messageString = JSON.stringify(message);
+            }
+            messageString = "Could not load all functions. Please confirm or restart your application. \n \n"+
+            "Details: Error while loading module: '"+id+"'. Module will be skipped. " + messageString;
+            console.error(messageString);
+            alert(messageString);
+        }
+        if (!--scriptCounter) {
+            callOnScriptLoadingComplete();
         }
     }
 
     for (var i = 0; i < moduleList.length; i++) {
-        injectIfNecessary(moduleList[i].id, path + moduleList[i].file, scriptLoadedCallback);
+        var moduleId = moduleList[i].id;
+        var me = this;
+        // bound function to have the module id when the error occurs.
+        var boundErrorCallback = scriptLoadedErrorCallback.bind(me, moduleId);
+        injectIfNecessary(moduleId, path + moduleList[i].file, 
+            scriptLoadedCallback, boundErrorCallback);
     }
 }
 
