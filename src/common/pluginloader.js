@@ -42,7 +42,7 @@ function injectIfNecessary (id, url, onload, onerror) {
             if (id in define.moduleMap) {
                 onload();
             } else {
-                onerror("Module not inserted to module map.");
+                onerror('Module not inserted to module map.');
             }
         }, onerror);
     }
@@ -86,25 +86,23 @@ function handlePluginsObject (path, moduleList, finishPluginLoading) {
         return;
     }
 
-    function callOnScriptLoadingComplete(){
-        modulesWithProblems.forEach(function(elem){
-
+    function callOnScriptLoadingComplete () {
+        modulesWithProblems.forEach(function (elem) {
             var foundIndex = -1;
             var modulesLength = moduleList.length;
             var i = 0;
             // find module with load problems in module list. Use while loop to exit iteration early.
-            while(i < modulesLength && foundIndex === -1) {
-                if(moduleList[i].id === elem) {
+            while (i < modulesLength && foundIndex === -1) {
+                if (moduleList[i].id === elem) {
                     foundIndex = i;
                 }
                 i++;
             }
-            if(foundIndex !== -1) {
+            if (foundIndex !== -1) {
                 // delete module with load problem from module list
                 moduleList.splice(foundIndex, 1);
             }
-
-        } );
+        });
         onScriptLoadingComplete(moduleList, finishPluginLoading);
     }
 
@@ -114,15 +112,15 @@ function handlePluginsObject (path, moduleList, finishPluginLoading) {
         }
     }
 
-    function scriptLoadedErrorCallback(id, message, source, lineno, colno, error) {
+    function scriptLoadedErrorCallback (id, message, source, lineno, colno, error) {
         modulesWithProblems.push(id);
-        if(typeof message !== "undefined") {
+        if (typeof message !== 'undefined') {
             var messageString = message;
-            if(typeof message !== "string") {
+            if (typeof message !== 'string') {
                 messageString = JSON.stringify(message);
             }
-            messageString = "Could not load all functions. Please confirm or restart your application. \n \n"+
-            "Details: Error while loading module: '"+id+"'. Module will be skipped. " + messageString;
+            messageString = 'Could not load all functions. Please confirm or restart your application. \n \n' +
+            'Details: Error while loading module: "' + id + '". Module will be skipped. ' + messageString;
             console.error(messageString);
             alert(messageString);
         }
@@ -136,7 +134,7 @@ function handlePluginsObject (path, moduleList, finishPluginLoading) {
         var me = this;
         // bound function to have the module id when the error occurs.
         var boundErrorCallback = scriptLoadedErrorCallback.bind(me, moduleId);
-        injectIfNecessary(moduleId, path + moduleList[i].file, 
+        injectIfNecessary(moduleId, path + moduleList[i].file,
             scriptLoadedCallback, boundErrorCallback);
     }
 }
