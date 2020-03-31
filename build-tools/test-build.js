@@ -4,8 +4,8 @@ const fs = require('fs-extra');
 const path = require('path');
 const { build, collectModules } = require('.');
 
-// Istanbul is provided by karma-coverage
-const Instrumenter = require('istanbul-lib-instrument');
+// istanbul-lib-instrument is provided by karma-coverage
+const { createInstrumenter } = require('istanbul-lib-instrument');
 
 if (require.main === module) {
     buildCordovaJsTestBundle(process.argv[2])
@@ -19,7 +19,7 @@ module.exports = buildCordovaJsTestBundle;
 
 // Writes the cordova-js test build bundle to bundlePath
 function buildCordovaJsTestBundle (bundlePath) {
-    const instrumenter = Instrumenter.createInstrumenter();
+    const instrumenter = createInstrumenter();
 
     return build({
         platformName: 'test',
