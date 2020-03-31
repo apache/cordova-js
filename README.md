@@ -21,7 +21,7 @@
 
 # cordova-js
 
-[![Build Status](https://travis-ci.org/apache/cordova-js.svg?branch=master)](https://travis-ci.org/apache/cordova-js) [![Build status](https://ci.appveyor.com/api/projects/status/github/apache/cordova-js?branch=master&svg=true)](https://ci.appveyor.com/project/Humbedooh/cordova-js/branch/master)
+[![Node CI](https://github.com/apache/cordova-js/workflows/Node%20CI/badge.svg?branch=master)](https://github.com/apache/cordova-js/actions?query=branch%3Amaster)
 
 A unified JavaScript layer for [Apache Cordova](http://cordova.apache.org/) projects.
 
