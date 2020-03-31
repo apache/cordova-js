@@ -147,18 +147,15 @@ Once the new js file has been added, any new projects created will use the updat
 
 3. Define your platform definition object and name it `platform.js`. This file should be added into the `<platform-repo>/cordova-js-src` directory which was created from step 1.
 
-    This file should contain a **JSON** object with the following properties:
+    This file should export an object with the following properties:
 
      * `id`: a string representing the platform. This should match the name of the `.js` file.
-     * `objects`: the property names defined as children of this property are injected into `window`, and also *overrides any existing properties*. Each property can have the following child properties:
-       * `path`: a string representing the module ID that will define this object. For example, the file `lib/plugin/accelerometer.js` can be accessed as `"cordova/plugin/accelerometer"`. More details on how the module IDs are defined are above under the "How It Works" section.
-       * `children`: in a recursive fashion, can have `path` and `children` properties of its own that are defined as children of the parent property object
-     * `merges`: similar to the above `objects` property, this one will not clobber existing objects, instead it will recursively merge this object into the specific target
-     * `initialize`: a function that fires immediately after the `objects` (see above) are defined in the global scope
+     * `bootstrap`: A function that sets up the platform. Must fire the `onNativeReady` channel when done.
+     * `initialize`: an optional function that is called after the global scope setup is done (i.e. Cordova and all plugins are ready)
 
     The following is a simple example of a platform definition:
 
-    ```json
+    ```js
     {
       id: 'atari',
 
@@ -177,14 +174,6 @@ Once the new js file has been added, any new projects created will use the updat
       }
     }
     ```
-
-4. Make sure your native implementation executes the following JavaScript once all of the native side is initialized and ready:
-
-    ```javascript
-    require('cordova/channel').onNativeReady.fire()
-    ```
-
-5. The `deviceready` event is important. To make sure that the stock common JavaScript fires this event off, the device and network connection plugins must successfully be instantiated and return information about the connectivity and device information. The success callbacks for these plugins should include calls to `require('cordova/channel').onCordovaInfoReady.fire()` (for device information) and `require('cordova/channel').OnCordovaConnectionReady.fire()` (for network information).
 
 ### In `cordova-js` Repository
 
