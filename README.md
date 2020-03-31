@@ -97,7 +97,7 @@ The `build-tools/build.js` process is a Node.js script that concatenates all of 
 
 The **Cordova** *native-to-webview* bridge is initialized in `src/scripts/bootstrap.js`. This file attaches the `boot` function to the `channel.onNativeReady` event - fired by native with a call to:
 
-  ```javascript
+  ```js
   cordova.require('cordova/channel').onNativeReady.fire()
   ```
 
@@ -156,23 +156,12 @@ Once the new js file has been added, any new projects created will use the updat
     The following is a simple example of a platform definition:
 
     ```js
-    {
-      id: 'atari',
-
-      initialize: function(){
-        console.log('firing up Cordova in my Atari, yo.');
-      },
-      objects:{
-        cordova:{
-          path:"cordova",
-          children:{
-            joystick:{
-              path:"cordova/plugin/atari/joystick"
-            }
-          }
+    module.exports = {
+        id: 'atari',
+        bootstrap: function() {
+            require('cordova/channel').onNativeReady.fire();
         }
-      }
-    }
+    };
     ```
 
 ### In `cordova-js` Repository
