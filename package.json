@@ -68,9 +68,9 @@
     }
   ],
   "dependencies": {
-    "execa": "^1.0.0",
-    "fs-extra": "^8.0.1",
-    "globby": "^9.2.0"
+    "execa": "^4.0.0",
+    "fs-extra": "^9.0.0",
+    "globby": "^11.0.0"
   },
   "devDependencies": {
     "@cordova/eslint-config": "^3.0.0",
