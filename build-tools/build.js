@@ -38,5 +38,5 @@ module.exports = function build (userConfig) {
 };
 
 function getCommitId () {
-    return execa.stdout('git', ['rev-parse', 'HEAD'], { cwd: pkgRoot });
+    return execa('git', ['rev-parse', 'HEAD'], { cwd: pkgRoot }).then(data => data.stdout);
 }

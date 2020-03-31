@@ -68,22 +68,22 @@
     }
   ],
   "dependencies": {
-    "execa": "^1.0.0",
-    "fs-extra": "^8.0.1",
-    "globby": "^9.2.0"
+    "execa": "^4.0.0",
+    "fs-extra": "^9.0.0",
+    "globby": "^11.0.0"
   },
   "devDependencies": {
-    "@cordova/eslint-config": "^2.0.0",
-    "cordova-android": "^8.0.0",
-    "cordova-ios": "^5.0.0",
-    "eslint-plugin-es5": "^1.4.1",
-    "grunt": "^1.0.4",
+    "@cordova/eslint-config": "^3.0.0",
+    "cordova-android": "^8.1.0",
+    "cordova-ios": "^5.1.1",
+    "eslint-plugin-es5": "^1.5.0",
+    "grunt": "^1.1.0",
     "grunt-contrib-clean": "^2.0.0",
-    "jasmine-core": "^3.3.0",
-    "karma": "^4.0.1",
-    "karma-chrome-launcher": "^2.2.0",
-    "karma-coverage": "^1.1.2",
-    "karma-jasmine": "^2.0.1",
-    "puppeteer": "^1.14.0"
+    "jasmine-core": "^3.5.0",
+    "karma": "^4.4.1",
+    "karma-chrome-launcher": "^3.1.0",
+    "karma-coverage": "^2.0.1",
+    "karma-jasmine": "^3.1.1",
+    "puppeteer": "^2.1.1"
   }
 }

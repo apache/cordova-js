@@ -1,4 +1,5 @@
 .*
 appveyor.yml
+coverage
 pkg
 test
