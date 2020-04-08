@@ -20,6 +20,57 @@
 -->
 ## Release Notes for Cordova JS ##
 
+### 6.0.0 (Apr 08, 2020)
+
+* [GH-227](https://github.com/apache/cordova-js/pull/227) doc(README): update
+* [GH-225](https://github.com/apache/cordova-js/pull/225) breaking(npm): bump dependencies
+  * `@cordova/eslint-config@^3.0.0`
+  * `cordova-android@^8.1.0`
+  * `cordova-ios@^5.1.1`
+  * `eslint-plugin-es5@^1.5.0`
+  * `grunt@^1.1.0`
+  * `jasmine-core@^3.5.0`
+  * `karma@^4.4.1`
+  * `karma-chrome-launcher@^3.1.0`
+  * `karma-coverage@^2.0.1`
+  * `karma-jasmine@^3.1.1`
+  * `puppeteer@^2.1.1`
+  * `execa@^4.0.0`
+  * `fs-extra@^9.0.0`
+  * `globby@^11.0.0`
+* [GH-226](https://github.com/apache/cordova-js/pull/226) ci(github-actions): add workflow w/ supported changes
+* [GH-224](https://github.com/apache/cordova-js/pull/224) chore(npm): package cleanup
+* [GH-223](https://github.com/apache/cordova-js/pull/223) breaking: bump minimum `node` support `>=10`
+* [GH-221](https://github.com/apache/cordova-js/pull/221) refactor: eslint setup
+* [GH-220](https://github.com/apache/cordova-js/pull/220) fix: move `eslint-plugin-es5` to `devDependencies`
+* [GH-211](https://github.com/apache/cordova-js/pull/211) Improve callback error handling
+* [GH-215](https://github.com/apache/cordova-js/pull/215) Do not try to replace `window.navigator`
+* [GH-216](https://github.com/apache/cordova-js/pull/216) Re-enable ESLint rules
+* [GH-217](https://github.com/apache/cordova-js/pull/217) Target next major version 6.0.0
+* [GH-218](https://github.com/apache/cordova-js/pull/218) Minor formatting improvements in `cordova.js`
+* [GH-204](https://github.com/apache/cordova-js/pull/204) ESLint improvements
+* [GH-214](https://github.com/apache/cordova-js/pull/214) Drop unused test helpers
+* [GH-209](https://github.com/apache/cordova-js/pull/209) Collect & report test coverage for our browser code
+* [GH-208](https://github.com/apache/cordova-js/pull/208) Make built JS output a bit prettier
+* [GH-207](https://github.com/apache/cordova-js/pull/207) Add platforms used during tests as `devDependencies`
+* [GH-205](https://github.com/apache/cordova-js/pull/205) Completely refactor build system
+* [GH-199](https://github.com/apache/cordova-js/pull/199) Add Node.js 12 to CI Services
+* [GH-198](https://github.com/apache/cordova-js/pull/198) Document `argscheck.checkArgs`
+* [GH-201](https://github.com/apache/cordova-js/pull/201) Improve `README`
+* [GH-200](https://github.com/apache/cordova-js/pull/200) Fix parsing of some parameter formats in `argscheck.checkArgs`
+* [GH-197](https://github.com/apache/cordova-js/pull/197) Use `.gitgnore` as `.eslintignore`
+* [GH-196](https://github.com/apache/cordova-js/pull/196) Allow to define modules whose name appears on `Object.prototype`
+* [GH-195](https://github.com/apache/cordova-js/pull/195) Integrate unused CommonJS tests where applicable
+* [GH-194](https://github.com/apache/cordova-js/pull/194) Minor cleanup of require/define tests
+* [GH-193](https://github.com/apache/cordova-js/pull/193) Update `README`
+* [GH-192](https://github.com/apache/cordova-js/pull/192) Update dependencies & fix resulting ESLint violations
+  * Fix new ESLint `object-curly-spacing` violations
+* [GH-190](https://github.com/apache/cordova-js/pull/190) Drop build/test support for Node.js 6
+* [GH-191](https://github.com/apache/cordova-js/pull/191) Lint (almost) all JS files
+* [GH-189](https://github.com/apache/cordova-js/pull/189) Remove obsolete stuff from AppVeyor CI config
+* [GH-188](https://github.com/apache/cordova-js/pull/188) Add **Electron** Support
+* Add or update GitHub pull request and issue template
+
 ### 5.0.0 (Dec 20, 2018)
 * Remove test & cover tasks + orphaned dependencies
 * Run tests in **Browser** using Karma
