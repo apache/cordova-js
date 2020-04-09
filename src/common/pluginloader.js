@@ -131,9 +131,8 @@ function handlePluginsObject (path, moduleList, finishPluginLoading) {
 
     for (var i = 0; i < moduleList.length; i++) {
         var moduleId = moduleList[i].id;
-        var me = this;
         // bound function to have the module id when the error occurs.
-        var boundErrorCallback = scriptLoadedErrorCallback.bind(me, moduleId);
+        var boundErrorCallback = scriptLoadedErrorCallback.bind(null, moduleId);
         injectIfNecessary(moduleId, path + moduleList[i].file,
             scriptLoadedCallback, boundErrorCallback);
     }
