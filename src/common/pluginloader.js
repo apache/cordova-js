@@ -87,23 +87,10 @@ function handlePluginsObject (path, moduleList, finishPluginLoading) {
     }
 
     function callOnScriptLoadingComplete () {
-        modulesWithProblems.forEach(function (elem) {
-            var foundIndex = -1;
-            var modulesLength = moduleList.length;
-            var i = 0;
-            // find module with load problems in module list. Use while loop to exit iteration early.
-            while (i < modulesLength && foundIndex === -1) {
-                if (moduleList[i].id === elem) {
-                    foundIndex = i;
-                }
-                i++;
-            }
-            if (foundIndex !== -1) {
-                // delete module with load problem from module list
-                moduleList.splice(foundIndex, 1);
-            }
+        var loadedModules = moduleList.filter(function (m) {
+            return modulesWithProblems.indexOf(m.id) === -1;
         });
-        onScriptLoadingComplete(moduleList, finishPluginLoading);
+        onScriptLoadingComplete(loadedModules, finishPluginLoading);
     }
 
     function scriptLoadedCallback () {
