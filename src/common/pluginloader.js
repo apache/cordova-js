@@ -109,7 +109,8 @@ function handlePluginsObject (path, moduleList, finishPluginLoading) {
             messageString = 'Could not load all functions. Please confirm or restart your application. \n \n' +
             'Details: Error while loading module: "' + id + '". Module will be skipped. ' + messageString;
             console.error(messageString);
-            alert(messageString);
+            // use this comment as search & replace marker to insert a more app specific error handling in your after_platform_add hook.
+            // Decide if the app can start even if plugin loading of a specific plugin has failed.
         }
         if (!--scriptCounter) {
             callOnScriptLoadingComplete();
