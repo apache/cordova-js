@@ -105,4 +105,32 @@ describe('pluginloader', function () {
             done();
         });
     });
+    it('Test#005 : If injecting a module causes an error then the module is skipped and plugin loading continues', function (done) {
+        define('cordova/plugin_list', function (require, exports, module) {
+            module.exports = [
+                { file: 'some/pathToScriptWithErrors.js', id: 'some.id.whichWillNotLoad' },
+                { file: 'some/path.js', id: 'some.id' }
+            ];
+        });
+        spyOn(console, 'error');
+        injectScript.and.callFake(function (url, onload, onerror) {
+            if (url.indexOf('some/pathToScriptWithErrors.js') > -1) {
+                // fake a load error for one module.
+                onerror('An error message.');
+            } else {
+                // modules need to be inserted to the modulemap otherwise plugin loading will fail
+                define('some.id', function (require, exports, module) {
+                });
+                onload();
+            }
+        });
+
+        pluginloader.load(() => {
+            expect(console.error).toHaveBeenCalledWith('Could not load all functions. Error while loading module: "some.id.whichWillNotLoad". Module will be skipped. An error message.');
+            var moduleMap = define.moduleMap;
+            expect(moduleMap['some.id']).toBeDefined();
+            expect(moduleMap['some.id.whichWillNotLoad']).not.toBeDefined();
+            done();
+        });
+    });
 });
