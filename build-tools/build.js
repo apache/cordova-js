@@ -17,13 +17,41 @@
  * under the License.
  */
 
+const path = require('path');
 const bundle = require('./bundle');
 const scripts = require('./scripts');
 const modules = require('./modules');
 const getBuildId = require('./build-id');
+const { collectModules } = require('./common');
 
 module.exports = function build (userConfig) {
-    const config = Object.assign({ preprocess: x => x }, userConfig);
+    const defaults = { preprocess: x => x };
+
+    // Infer some defaults from platform package root if present
+    const { platformRoot } = userConfig;
+    if (platformRoot) {
+        const pkg = require(path.join(platformRoot, 'package'));
+        Object.assign(defaults, {
+            platformName: pkg.name,
+            platformVersion: pkg.version,
+            modulePath: path.join(platformRoot, 'cordova-js-src')
+        });
+    }
+
+    const config = { ...defaults, ...userConfig };
+
+    // Populate extraModules property if missing
+    const { extraModules, modulePath } = config;
+    config.extraModules = extraModules || collectModules(modulePath);
+
+    // Throw error on misconfigured modulePath
+    if (modulePath && Object.keys(config.extraModules).length === 0) {
+        throw new Error(`Could not find any modules in ${modulePath}`);
+    }
+
+    // Delete convenience config keys that are not used after this point
+    delete config.platformRoot;
+    delete config.modulePath;
 
     return Promise.all([
         scripts(config),
