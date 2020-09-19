@@ -27,14 +27,14 @@ module.exports = function bundle (scripts, modules, config) {
 };
 
 const bundleTemplate = ({
-    commitId,
+    buildId,
     platformName,
     platformVersion,
     includeScript,
     modules
 }) => `
 // Platform: ${platformName}
-// ${commitId}
+// cordova-js ${buildId}
 /*
  Licensed to the Apache Software Foundation (ASF) under one
  or more contributor license agreements.  See the NOTICE file

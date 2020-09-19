@@ -17,21 +17,21 @@
  * under the License.
  */
 
-const bundle = require('./bundle');
-const scripts = require('./scripts');
-const modules = require('./modules');
-const getBuildId = require('./build-id');
+const fs = require('fs');
+const path = require('path');
+const execa = require('execa');
+const { pkgRoot } = require('./common');
 
-module.exports = function build (userConfig) {
-    const config = Object.assign({ preprocess: x => x }, userConfig);
+async function getBuildId () {
+    // Use git describe if in cordova-js repo, else use package version
+    return fs.existsSync(path.join(pkgRoot, '.git'))
+        ? describeGitRepo()
+        : require('../package').version;
+}
 
-    return Promise.all([
-        scripts(config),
-        modules(config),
-        getBuildId()
-    ])
-        .then(([scripts, modules, buildId]) => {
-            Object.assign(config, { buildId });
-            return bundle(scripts, modules, config);
-        });
-};
+async function describeGitRepo () {
+    const gitArgs = ['describe', '--always', '--tags', '--match=rel/*', '--dirty'];
+    return (await execa('git', gitArgs, { cwd: pkgRoot })).stdout;
+}
+
+module.exports = getBuildId;
