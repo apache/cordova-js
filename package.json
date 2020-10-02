@@ -17,56 +17,6 @@
     "build:test": "node build-tools/test-build pkg/cordova.test.js"
   },
   "license": "Apache-2.0",
-  "contributors": [
-    {
-      "name": "Fil Maj",
-      "email": "filmaj@apache.org"
-    },
-    {
-      "name": "Jesse MacFadyen",
-      "email": "purplecabbage@apache.org"
-    },
-    {
-      "name": "Bryce Curtis",
-      "email": ""
-    },
-    {
-      "name": "Drew Walters",
-      "email": ""
-    },
-    {
-      "name": "Patrick Mueller",
-      "email": ""
-    },
-    {
-      "name": "Simon MacDonald",
-      "email": ""
-    },
-    {
-      "name": "Becky Gibson",
-      "email": ""
-    },
-    {
-      "name": "Anis Kadri",
-      "email": "anis@apache.org"
-    },
-    {
-      "name": "Dan Silivestru",
-      "email": "dansilivestru@apache.org"
-    },
-    {
-      "name": "Shazron Abdullah",
-      "email": "shazron@apache.org"
-    },
-    {
-      "name": "Steve Gill",
-      "email": "stevengill97@gmail.com"
-    },
-    {
-      "name": "Gord Tanner",
-      "email": "gtanner@gmail.com"
-    }
-  ],
   "dependencies": {
     "execa": "^4.0.0",
     "fs-extra": "^9.0.0",
