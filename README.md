@@ -55,42 +55,6 @@ A unified JavaScript layer for [Apache Cordova](http://cordova.apache.org/) proj
     '-tests/ ............... unit tests
   ```
 
-## Setup for Building
-
-* Make sure you have [Node.js](https://nodejs.org/) and [npm](https://www.npmjs.com/) installed.
-
-  `npm` should come pre-installed with `Node.js`. If `Node.js` installed but can not run `npm`, please follow the npm doc: [Downloading and installing Node.js and npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm).
-
-* Install all the node dependencies by running the following command from the repository root:
-
-  ```bash
-  npm install
-  ```
-
-## Building
-
-The build script assumes that users have the cordova-platforms checked out as siblings to this `cordova-js` directory. When generating `cordova.js`, `npm run build` will grab platform specific files from these directories if they exist.
-
-Then from the repository root run:
-
-  ```bash
-  npm run build
-  ```
-
-To compile the js for just one platform, run:
-
-  ```bash
-  npx grunt compile:android --platformVersion=4.0.0
-  ```
-
-To compile the js for all platforms but pass in a custom path for your cordova-android and cordova-ios platforms, run:
-
-  ```bash
-  npm run build -- --android='../custompath/cordova-android' --ios='../custompath/cordova-ios'
-  ```
-
-For integration, see the 'Integration' section below.
-
 ## How It Works
 
 The `build-tools/build.js` process is a Node.js script that concatenates all of the core Cordova plugins in this repository into a `cordova.<platform>.js` file under the `pkg/` folder. It also wraps the plugins with a RequireJS-compatible module syntax that works in both browser and node environments. We end up with a `cordova.js` file that wraps each **Cordova** *plugin* into its own module.
@@ -117,19 +81,9 @@ Tests run in a bundled headless Chromium instance. They can be run with:
 
 Final testing should always be done with the [Mobile Spec test application](https://github.com/apache/cordova-mobile-spec).
 
-## Integration
+## Creating a New Platform
 
-### Cordova
-
-Build the js files by running **grunt** as described above. Update each platform independently. For a given platform:
-
-Replace the `cordova.js` file in the cordova <platform>platform_www/cordova.js directory with the newly generated `cordova.js` file. If necessary, change the name of the new file to match that of the overwritten one.
-
-Once the new js file has been added, any new projects created will use the updated js. To update an already existing project, directly replace the cordova.js file within the project's `www/` folder with the generated `cordova.PLATFORM.js`. Make sure to change the file name to match the original.
-
-## Adding a New Platform
-
-### In Your Platform Repository
+In your platform repository:
 
 1. Create the `cordova-js-src` directory.
 
@@ -167,7 +121,3 @@ Once the new js file has been added, any new projects created will use the updat
         }
     };
     ```
-
-### In `cordova-js` Repository
-
-1. Add a `<platform>: {}` entry to the `Gruntfile.js` `compile` arrays.
