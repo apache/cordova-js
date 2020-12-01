@@ -121,3 +121,14 @@ In your platform repository:
         }
     };
     ```
+
+4. Bundle the modules from `cordova-js/src` and `<platform-repo>/cordova-js-src` into a file that ends up in `<platform-project>/platform_www/cordova.js`. This can be done in various ways. The following is recommended:
+    - Add `cordova-js` as a `devDependency`: `npm i -D cordova-js`
+    - Build `cordova.js` when preparing your platform's npm package. You can do that by adding the NPM `prepare` hook script to your `package.json`:
+      ```json
+      "scripts": {
+        "prepare": "cordova-js build > project-template/platform_www/cordova.js",
+        // ...
+      }
+      ```
+    - During project creation, make sure that the `cordova.js` file created by the `prepare` script ends up where your platform expects it
