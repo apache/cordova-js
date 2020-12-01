@@ -33,8 +33,10 @@ A unified JavaScript layer for [Apache Cordova](http://cordova.apache.org/) proj
   ./
     |-build-tools/ ......... custom bundler for our CommonJS-like modules
     |-pkg/ ................. generated platform cordova.js files
-    |-src/
+    |
+    |-src/ ................. the code that makes up Cordova's JavaScript runtime
     |  |-cordova.js ........ common Cordova stuff
+    |  |
     |  |-common/ ........... base modules shared across platfoms
     |  |  |-argscheck.js ... utility for type-checking arguments during runtime
     |  |  |-base64.js ...... base64 utilites (toArrayBuffer & fromArrayBuffer)
@@ -43,12 +45,12 @@ A unified JavaScript layer for [Apache Cordova](http://cordova.apache.org/) proj
     |  |  |-init.js ........ bootstraps the Cordova platform, inject APIs and fire events
     |  |  |-utils.js ....... closures, uuids, object, cloning, extending prototypes
     |  |  |
-    |  |  |-exec/ .......... exec methods
-    |  |  |  '-proxy.js .... utility for adding and removing exec proxy methods
+    |  |  '-exec/ .......... exec methods
+    |  |     '-proxy.js .... utility for adding and removing exec proxy methods
     |  |
-    |  |-scripts/ .......... non-module JS that gets concatenated to cordova.<platform>.js
-    |  |  |-bootstrap.js ... bootstrap the Cordova platform, inject APIs and fire events
-    |  |  '-require.js ..... module definition and require() implementation
+    |  '-scripts/ .......... non-module JS that gets concatenated to cordova.<platform>.js
+    |     |-bootstrap.js ... bootstrap the Cordova platform, inject APIs and fire events
+    |     '-require.js ..... module definition and require() implementation
     |
     '-tests/ ............... unit tests
   ```
