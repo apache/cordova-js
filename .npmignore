@@ -1,5 +1,6 @@
 .*
-appveyor.yml
+*.tgz
 coverage
 pkg
 test
+karma.conf.js
