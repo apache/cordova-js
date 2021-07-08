@@ -18,22 +18,22 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "execa": "^4.0.0",
-    "fs-extra": "^9.0.0",
-    "globby": "^11.0.0"
+    "execa": "^5.1.1",
+    "fs-extra": "^9.1.0",
+    "globby": "^11.0.4"
   },
   "devDependencies": {
     "@cordova/eslint-config": "^3.0.0",
     "cordova-android": "^8.1.0",
     "cordova-ios": "^5.1.1",
     "eslint-plugin-es5": "^1.5.0",
-    "grunt": "^1.1.0",
+    "grunt": "^1.4.1",
     "grunt-contrib-clean": "^2.0.0",
-    "jasmine-core": "^3.5.0",
-    "karma": "^4.4.1",
+    "jasmine-core": "^3.8.0",
+    "karma": "^6.3.4",
     "karma-chrome-launcher": "^3.1.0",
-    "karma-coverage": "^2.0.1",
-    "karma-jasmine": "^3.1.1",
-    "puppeteer": "^2.1.1"
+    "karma-coverage": "^2.0.3",
+    "karma-jasmine": "^4.0.1",
+    "puppeteer": "^10.1.0"
   }
 }
