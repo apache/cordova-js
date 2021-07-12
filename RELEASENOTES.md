@@ -20,6 +20,20 @@
 -->
 ## Release Notes for Cordova JS ##
 
+### 6.1.0 (Jul 12, 2021)
+
+* [GH-237](https://github.com/apache/cordova-js/pull/237) chore(npm): bump dev dependency `cordova-android@9.1.0`
+* [GH-236](https://github.com/apache/cordova-js/pull/236) chore: update `.npmignore`
+* [GH-235](https://github.com/apache/cordova-js/pull/235) chore: update dependencies
+* [GH-229](https://github.com/apache/cordova-js/pull/229) feat: export build-tools JS API & add CLI
+* [GH-234](https://github.com/apache/cordova-js/pull/234) docs: some minor improvements
+* [GH-230](https://github.com/apache/cordova-js/pull/230) build: improve `cordova-js` version ID in built file
+* [GH-233](https://github.com/apache/cordova-js/pull/233) ci: add node-14.x to workflow
+* [GH-232](https://github.com/apache/cordova-js/pull/232) fix(pkg): make `npm home` resolve to repo `README`
+* [GH-231](https://github.com/apache/cordova-js/pull/231) chore: clean up `package.json`
+* chore(asf): Update GitHub repo metadata
+* chore(asf): update git notification settings
+
 ### 6.0.0 (Apr 08, 2020)
 
 * [GH-227](https://github.com/apache/cordova-js/pull/227) doc(README): update
