@@ -5,7 +5,7 @@
   "engines": {
     "node": ">=10.0.0"
   },
-  "version": "6.1.0",
+  "version": "6.1.1-dev",
   "repository": "github:apache/cordova-js",
   "bugs": "https://github.com/apache/cordova-js/issues",
   "bin": "build-tools/cli.js",
