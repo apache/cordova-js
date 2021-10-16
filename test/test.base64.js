@@ -53,6 +53,14 @@ describe('base64', function () {
         );
     });
 
+    it('can base64 encode big files reasonably fast', function () {
+        var bytes = Uint8Array.from({ length: 1 << 24 }, (v, i) => i & 0xff);
+
+        var start = Date.now();
+        base64.fromArrayBuffer(bytes.buffer);
+        expect(Date.now() - start).toBeLessThan(1000);
+    });
+
     it('Test#003 : can base64 encode an text string in an ArrayBuffer', function () {
         var orig = 'Some Awesome Test This Is!';
         var base64string = btoa(orig);
