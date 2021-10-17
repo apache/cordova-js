@@ -22,21 +22,15 @@
 var base64 = exports;
 
 base64.fromArrayBuffer = function (arrayBuffer) {
-    var array = new Uint8Array(arrayBuffer);
-    return btoa(bytesToBinaryString(array));
+    return btoa(bufferToBinaryString(arrayBuffer));
 };
 
 base64.toArrayBuffer = function (str) {
-    var decodedStr = atob(str);
-    var arrayBuffer = new ArrayBuffer(decodedStr.length);
-    var array = new Uint8Array(arrayBuffer);
-    for (var i = 0, len = decodedStr.length; i < len; i++) {
-        array[i] = decodedStr.charCodeAt(i);
-    }
-    return arrayBuffer;
+    return binaryStringToBuffer(atob(str));
 };
 
-function bytesToBinaryString (bytes) {
+function bufferToBinaryString (buffer) {
+    var bytes = new Uint8Array(buffer);
     var CHUNK_SIZE = 1 << 15;
     var string = '';
     for (var i = 0; i < bytes.length; i += CHUNK_SIZE) {
@@ -44,4 +38,12 @@ function bytesToBinaryString (bytes) {
         string += String.fromCharCode.apply(null, chunk);
     }
     return string;
+}
+
+function binaryStringToBuffer (binaryString) {
+    var bytes = new Uint8Array(binaryString.length);
+    for (var i = 0; i < bytes.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+    }
+    return bytes.buffer;
 }
