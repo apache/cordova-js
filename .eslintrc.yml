@@ -21,6 +21,8 @@ extends: '@cordova/eslint-config/node'
 overrides:
   - files: [test/**/*.js]
     extends: '@cordova/eslint-config/browser-tests'
+    rules:
+      no-var: 0
 
   - files: [test/test-platform-modules/**/*.js]
     extends: '@cordova/eslint-config/browser'
@@ -33,3 +35,5 @@ overrides:
     globals:
       define: false
       PLATFORM_VERSION_BUILD_LABEL: false
+    rules:
+      no-var: 0
