@@ -19,7 +19,8 @@
  * under the License.
  */
 
-const fs = require('fs-extra');
+const fs = require('node:fs');
+const fsp = require('node:fs/promises');
 const path = require('path');
 const { build, collectModules } = require('.');
 
@@ -52,7 +53,15 @@ function buildCordovaJsTestBundle (bundlePath) {
             return Object.assign({}, f, { contents });
         }
     })
-        .then(testBundle => fs.outputFile(bundlePath, testBundle));
+        .then(testBundle => {
+            const dir = path.dirname(bundlePath);
+
+            if (!fs.existsSync(dir)) {
+                fs.mkdirSync(dir, { recursive: true });
+            }
+
+            return fsp.writeFile(bundlePath, testBundle, 'utf8');
+        });
 }
 
 function collectTestBuildModules () {

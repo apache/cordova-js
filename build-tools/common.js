@@ -17,7 +17,7 @@
  * under the License.
  */
 
-const fs = require('fs-extra');
+const fs = require('node:fs/promises');
 const path = require('path');
 const globby = require('globby');
 
