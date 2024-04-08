@@ -19,7 +19,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "execa": "^5.1.1",
-    "globby": "^11.0.4"
+    "globby": "^11.1.0"
   },
   "devDependencies": {
     "@cordova/eslint-config": "^5.1.0",
