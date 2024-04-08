@@ -22,7 +22,7 @@
     "globby": "^11.0.4"
   },
   "devDependencies": {
-    "@cordova/eslint-config": "^4.0.0",
+    "@cordova/eslint-config": "^5.1.0",
     "cordova-android": "^9.1.0",
     "cordova-ios": "^5.1.1",
     "eslint-plugin-es5": "^1.5.0",

@@ -23,6 +23,7 @@ overrides:
     extends: '@cordova/eslint-config/browser-tests'
     rules:
       no-var: 0
+      object-shorthand: 0
 
   - files: [test/test-platform-modules/**/*.js]
     extends: '@cordova/eslint-config/browser'
@@ -37,3 +38,4 @@ overrides:
       PLATFORM_VERSION_BUILD_LABEL: false
     rules:
       no-var: 0
+      object-shorthand: 0

@@ -80,7 +80,7 @@ exports.mapModules = function (context) {
         var namespace = symbolPath.substr(0, lastDot);
         var lastName = symbolPath.substr(lastDot + 1);
 
-        var deprecationMsg = symbolPath in deprecationMap ? 'Access made to deprecated symbol: ' + symbolPath + '. ' + deprecationMsg : null;
+        var deprecationMsg = symbolPath in deprecationMap ? 'Access made to deprecated symbol: ' + symbolPath + '.' : null;
         var parentObj = prepareNamespace(namespace, context);
         var target = parentObj[lastName];
 
