@@ -47,6 +47,8 @@ jobs:
           CI: true
 
       - uses: codecov/codecov-action@v4
+        if: success()
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+          name: ${{ runner.os }} node.js ${{ matrix.node-version }}
+          token: ${{ secrets.CORDOVA_CODECOV_TOKEN }}
           fail_ci_if_error: false
