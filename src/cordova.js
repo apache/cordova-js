@@ -85,7 +85,7 @@ var windowEventHandlers = {};
                 // Perform necessary checks or actions before invoking the handler
                 if (event && event.target) {
                     var allowedElements = ['button', 'a', 'div'];
-                    if (allowedElements.includes(event.target.tagName.toLowerCase())) {
+                    if (allowedElements.indexOf(event.target.tagName.toLowerCase()) > -1) {
                         handler(event);
                     } else {
                         console.warn('Click event handler ignored for disallowed element:', event.target.tagName);
