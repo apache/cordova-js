@@ -100,7 +100,7 @@ var windowEventHandlers = {};
 
     windowEventHandlers.resize = {
         subscribe: function (handler) {
-            var secureHandler = function(event) {
+            var secureHandler = function (event) {
                 // Perform necessary checks or actions before invoking the handler
                 if (event && event.target) {
                     if (event.target === window) {
