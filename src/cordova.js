@@ -43,6 +43,80 @@ var m_window_removeEventListener = window.removeEventListener;
 var documentEventHandlers = {};
 var windowEventHandlers = {};
 
+/**
+ * Mitigation for Event Listener Hijacking
+ */
+(function() {
+    var originalDocumentAddEventListener = document.addEventListener;
+    var originalWindowAddEventListener = window.addEventListener;
+    var documentEventHandlers = {};
+    var windowEventHandlers = {};
+
+    document.addEventListener = function (evt, handler, capture) {
+        var e = evt.toLowerCase();
+        if (typeof documentEventHandlers[e] !== 'undefined') {
+            if (typeof documentEventHandlers[e].subscribe === 'function') {
+                documentEventHandlers[e].subscribe(handler);
+            } else {
+                console.warn('No subscribe function defined for event:', e);
+            }
+        } else {
+            originalDocumentAddEventListener.call(document, evt, handler, capture);
+        }
+    };
+
+    window.addEventListener = function (evt, handler, capture) {
+        var e = evt.toLowerCase();
+        if (typeof windowEventHandlers[e] !== 'undefined') {
+            if (typeof windowEventHandlers[e].subscribe === 'function') {
+                windowEventHandlers[e].subscribe(handler);
+            } else {
+                console.warn('No subscribe function defined for event:', e);
+            }
+        } else {
+            originalWindowAddEventListener.call(window, evt, handler, capture);
+        }
+    };
+
+    // Securely define your event handlers
+    documentEventHandlers['click'] = {
+        subscribe: function(handler) {
+            var secureHandler = function(event) {
+                // Perform necessary checks or actions before invoking the handler
+                if (event && event.target) {
+                    var allowedElements = ['button', 'a', 'div'];
+                    if (allowedElements.includes(event.target.tagName.toLowerCase())) {
+                        handler(event);
+                    } else {
+                        console.warn('Click event handler ignored for disallowed element:', event.target.tagName);
+                    }
+                } else {
+                    console.warn('Invalid event object in secure handler.');
+                }
+            };
+            originalDocumentAddEventListener.call(document, 'click', secureHandler, false);
+        }
+    };
+
+    windowEventHandlers['resize'] = {
+        subscribe: function(handler) {
+            var secureHandler = function(event) {
+                // Perform necessary checks or actions before invoking the handler
+                if (event && event.target) {
+                    if (event.target === window) {
+                        handler(event);
+                    } else {
+                        console.warn('Resize event handler ignored for disallowed target:', event.target);
+                    }
+                } else {
+                    console.warn('Invalid event object in secure handler.');
+                }
+            };
+            originalWindowAddEventListener.call(window, 'resize', secureHandler, false);
+        }
+    };
+})();
+
 document.addEventListener = function (evt, handler, capture) {
     var e = evt.toLowerCase();
     if (typeof documentEventHandlers[e] !== 'undefined') {
