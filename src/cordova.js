@@ -79,7 +79,7 @@ var windowEventHandlers = {};
     };
 
     // Securely define your event handlers
-    documentEventHandlers['click'] = {
+    documentEventHandlers.click = {
         subscribe: function(handler) {
             var secureHandler = function(event) {
                 // Perform necessary checks or actions before invoking the handler
