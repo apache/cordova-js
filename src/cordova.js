@@ -38,10 +38,10 @@ var m_window_addEventListener = window.addEventListener;
 var m_window_removeEventListener = window.removeEventListener;
 
 /**
- * Houses custom event handlers to intercept on document + window event listeners.
+ * Globally accessible event handlers.
  */
-var documentEventHandlers = {};
-var windowEventHandlers = {};
+var documentEventHandlers;
+var windowEventHandlers;
 
 /**
  * Mitigation for Event Listener Hijacking
@@ -49,8 +49,9 @@ var windowEventHandlers = {};
 (function () {
     var originalDocumentAddEventListener = document.addEventListener;
     var originalWindowAddEventListener = window.addEventListener;
-    var documentEventHandlers = {};
-    var windowEventHandlers = {};
+    
+    documentEventHandlers = {};
+    windowEventHandlers = {};
 
     document.addEventListener = function (evt, handler, capture) {
         var e = evt.toLowerCase();
@@ -115,45 +116,30 @@ var windowEventHandlers = {};
             originalWindowAddEventListener.call(window, 'resize', secureHandler, false);
         }
     };
+
+    document.removeEventListener = function (evt, handler, capture) {
+        var e = evt.toLowerCase();
+        // If unsubscribing from an event that is handled by a plugin
+        if (typeof documentEventHandlers[e] !== 'undefined') {
+            documentEventHandlers[e].unsubscribe(handler);
+        } else {
+            m_document_removeEventListener.call(document, evt, handler, capture);
+        }
+    };
+    
+    window.removeEventListener = function (evt, handler, capture) {
+        var e = evt.toLowerCase();
+        // If unsubscribing from an event that is handled by a plugin
+        if (typeof windowEventHandlers[e] !== 'undefined') {
+            windowEventHandlers[e].unsubscribe(handler);
+        } else {
+            m_window_removeEventListener.call(window, evt, handler, capture);
+        }
+    }; 
+
 })();
 
-document.addEventListener = function (evt, handler, capture) {
-    var e = evt.toLowerCase();
-    if (typeof documentEventHandlers[e] !== 'undefined') {
-        documentEventHandlers[e].subscribe(handler);
-    } else {
-        m_document_addEventListener.call(document, evt, handler, capture);
-    }
-};
 
-window.addEventListener = function (evt, handler, capture) {
-    var e = evt.toLowerCase();
-    if (typeof windowEventHandlers[e] !== 'undefined') {
-        windowEventHandlers[e].subscribe(handler);
-    } else {
-        m_window_addEventListener.call(window, evt, handler, capture);
-    }
-};
-
-document.removeEventListener = function (evt, handler, capture) {
-    var e = evt.toLowerCase();
-    // If unsubscribing from an event that is handled by a plugin
-    if (typeof documentEventHandlers[e] !== 'undefined') {
-        documentEventHandlers[e].unsubscribe(handler);
-    } else {
-        m_document_removeEventListener.call(document, evt, handler, capture);
-    }
-};
-
-window.removeEventListener = function (evt, handler, capture) {
-    var e = evt.toLowerCase();
-    // If unsubscribing from an event that is handled by a plugin
-    if (typeof windowEventHandlers[e] !== 'undefined') {
-        windowEventHandlers[e].unsubscribe(handler);
-    } else {
-        m_window_removeEventListener.call(window, evt, handler, capture);
-    }
-};
 
 function createEvent (type, data) {
     var event = document.createEvent('Events');
