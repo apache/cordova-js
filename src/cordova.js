@@ -98,7 +98,7 @@ var windowEventHandlers = {};
         }
     };
 
-    windowEventHandlers['resize'] = {
+    windowEventHandlers.resize = {
         subscribe: function(handler) {
             var secureHandler = function(event) {
                 // Perform necessary checks or actions before invoking the handler
