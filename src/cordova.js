@@ -46,7 +46,7 @@ var windowEventHandlers = {};
 /**
  * Mitigation for Event Listener Hijacking
  */
-(function() {
+(function () {
     var originalDocumentAddEventListener = document.addEventListener;
     var originalWindowAddEventListener = window.addEventListener;
     var documentEventHandlers = {};
