@@ -85,12 +85,6 @@ var windowEventHandlers;
             var secureHandler = function (event) {
                 // Perform necessary checks or actions before invoking the handler
                 if (event && event.target) {
-                    var allowedElements = ['button', 'a', 'div'];
-                    if (allowedElements.indexOf(event.target.tagName.toLowerCase()) > -1) {
-                        handler(event);
-                    } else {
-                        console.warn('Click event handler ignored for disallowed element:', event.target.tagName);
-                    }
                 } else {
                     console.warn('Invalid event object in secure handler.');
                 }
