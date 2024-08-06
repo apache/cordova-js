@@ -80,7 +80,7 @@ var windowEventHandlers = {};
 
     // Securely define your event handlers
     documentEventHandlers.click = {
-        subscribe: function(handler) {
+        subscribe: function (handler) {
             var secureHandler = function(event) {
                 // Perform necessary checks or actions before invoking the handler
                 if (event && event.target) {
