@@ -64,7 +64,8 @@ module.exports = {
         return glob(['**/*.js'], { cwd: dir })
             .map(fileName => ({
                 path: path.join(dir, fileName),
-                moduleId: fileName.slice(0, -3)
+                // This is used as an identifier with URL-style (POSIX-style) path separators
+                moduleId: fileName.replaceAll(path.sep, path.posix.sep).slice(0, -3)
             }))
             .map(file => ({ [file.moduleId]: file }))
             .reduce((result, fragment) => Object.assign(result, fragment), {});
