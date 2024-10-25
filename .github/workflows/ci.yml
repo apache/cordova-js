@@ -47,10 +47,22 @@ jobs:
           node --version
           npm --version
 
+      - uses: github/codeql-action/init@v3
+        with:
+          languages: javascript
+          queries: security-and-quality
+          config: |
+            paths-ignore:
+              - pkg
+              - coverage
+              - node_modules
+
       - name: npm install and test
         run: npm cit
         env:
           CI: true
+
+      - uses: github/codeql-action/analyze@v3
 
       - uses: codecov/codecov-action@v4
         if: success()
