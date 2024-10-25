@@ -19,9 +19,8 @@
  * under the License.
  */
 
-const { resolve } = require('path');
-const { promisify } = require('util');
-const { pipeline, Readable } = require('stream');
+const { resolve } = require('node:path');
+const { pipeline } = require('node:stream/promises');
 const { build } = require('.');
 
 const USAGE = `
@@ -47,8 +46,8 @@ const commands = {
     async build (args) {
         const platformRoot = resolve(args[0] || process.cwd());
         const bundleCode = await build({ platformRoot });
-        return promisify(pipeline)(
-            Readable.from([bundleCode]),
+        return pipeline(
+            [bundleCode],
             process.stdout
         );
     }

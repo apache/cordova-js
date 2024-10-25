@@ -17,21 +17,21 @@
  * under the License.
  */
 
-const fs = require('fs');
-const path = require('path');
-const execa = require('execa');
+const fs = require('node:fs');
+const path = require('node:path');
+const child_process = require('node:child_process');
 const { pkgRoot } = require('./common');
 
-async function getBuildId () {
+function getBuildId () {
     // Use git describe if in cordova-js repo, else use package version
     return fs.existsSync(path.join(pkgRoot, '.git'))
         ? describeGitRepo()
         : require('../package').version;
 }
 
-async function describeGitRepo () {
+function describeGitRepo () {
     const gitArgs = ['describe', '--always', '--tags', '--match=rel/*', '--dirty'];
-    return (await execa('git', gitArgs, { cwd: pkgRoot })).stdout;
+    return child_process.spawnSync('git', gitArgs, { cwd: pkgRoot }).stdout;
 }
 
 module.exports = getBuildId;

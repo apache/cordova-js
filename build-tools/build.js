@@ -17,7 +17,7 @@
  * under the License.
  */
 
-const path = require('path');
+const path = require('node:path');
 const bundle = require('./bundle');
 const scripts = require('./scripts');
 const modules = require('./modules');
