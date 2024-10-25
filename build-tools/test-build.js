@@ -21,7 +21,7 @@
 
 const fs = require('node:fs');
 const fsp = require('node:fs/promises');
-const path = require('path');
+const path = require('node:path');
 const { build, collectModules } = require('.');
 
 // istanbul-lib-instrument is provided by karma-coverage

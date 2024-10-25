@@ -18,8 +18,7 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "execa": "^5.1.1",
-    "globby": "^11.1.0"
+    "fast-glob": "^3.3.2"
   },
   "devDependencies": {
     "@cordova/eslint-config": "^5.1.0",
@@ -32,7 +31,7 @@
     "karma": "^6.4.3",
     "karma-chrome-launcher": "^3.2.0",
     "karma-coverage": "^2.2.1",
-    "karma-jasmine": "^4.0.1",
-    "puppeteer": "^22.6.3"
+    "karma-jasmine": "^5.1.0",
+    "puppeteer": "^23.6.0"
   }
 }

@@ -17,11 +17,19 @@
  * under the License.
  */
 
-const fs = require('node:fs/promises');
-const path = require('path');
-const globby = require('globby');
+const fs = require('node:fs');
+const path = require('node:path');
 
 const pkgRoot = path.join(__dirname, '..');
+
+function glob (pattern, opts) {
+    if (fs.globSync) {
+        return fs.globSync(pattern, opts);
+    } else {
+        const fastGlob = require('fast-glob');
+        return fastGlob.sync(pattern, opts);
+    }
+}
 
 module.exports = {
     pkgRoot,
@@ -31,7 +39,7 @@ module.exports = {
     },
 
     readContents (f) {
-        return fs.readFile(f.path, 'utf8')
+        return fs.promises.readFile(f.path, 'utf8')
             .then(contents => Object.assign({}, f, { contents }));
     },
 
@@ -53,7 +61,7 @@ module.exports = {
     },
 
     collectModules (dir) {
-        return globby.sync(['**/*.js'], { cwd: dir })
+        return glob(['**/*.js'], { cwd: dir })
             .map(fileName => ({
                 path: path.join(dir, fileName),
                 moduleId: fileName.slice(0, -3)

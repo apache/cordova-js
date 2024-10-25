@@ -103,7 +103,9 @@ describe('android exec.processMessages', function () {
                 return createCallbackMessage(true, false, 1, callbackId, 'stwo');
             });
 
-            var winSpy = jasmine.createSpy('win').and.callFake(done);
+            var winSpy = jasmine.createSpy('win').and.callFake(() => {
+                done();
+            });
 
             exec(winSpy, null, 'Service', 'action', []);
             expect(winSpy).not.toHaveBeenCalled();
