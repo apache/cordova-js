@@ -1,1 +1,4 @@
-appveyor.yml
+\.(.*)
+coverage
+fixtures
+node_modules
