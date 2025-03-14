@@ -42,7 +42,7 @@ function injectIfNecessary (id, url, onload, onerror) {
             if (id in define.moduleMap) {
                 onload();
             } else {
-                onerror();
+                onerror('Module not inserted to module map.');
             }
         }, onerror);
     }
@@ -79,19 +79,49 @@ function onScriptLoadingComplete (moduleList, finishPluginLoading) {
 function handlePluginsObject (path, moduleList, finishPluginLoading) {
     // Now inject the scripts.
     var scriptCounter = moduleList.length;
+    var modulesWithProblems = [];
 
     if (!scriptCounter) {
         finishPluginLoading();
         return;
     }
+
+    function callOnScriptLoadingComplete () {
+        var loadedModules = moduleList.filter(function (m) {
+            return modulesWithProblems.indexOf(m.id) === -1;
+        });
+        onScriptLoadingComplete(loadedModules, finishPluginLoading);
+    }
+
     function scriptLoadedCallback () {
         if (!--scriptCounter) {
-            onScriptLoadingComplete(moduleList, finishPluginLoading);
+            callOnScriptLoadingComplete();
+        }
+    }
+
+    function scriptLoadedErrorCallback (id, message, source, lineno, colno, error) {
+        modulesWithProblems.push(id);
+        if (typeof message !== 'undefined') {
+            var messageString = message;
+            if (typeof message !== 'string') {
+                messageString = JSON.stringify(message);
+            }
+            messageString = 'Could not load all functions. Error while loading module: "' + id + '". Module will be skipped. ' + messageString;
+            console.error(messageString);
+            // use this comment as search & replace marker to insert a more app specific error handling in your after_platform_add hook.
+            // Decide if the app can start even if plugin loading of a specific plugin has failed.
+        }
+        if (!--scriptCounter) {
+            callOnScriptLoadingComplete();
         }
     }
 
     for (var i = 0; i < moduleList.length; i++) {
-        injectIfNecessary(moduleList[i].id, path + moduleList[i].file, scriptLoadedCallback);
+        var moduleId = moduleList[i].id;
+        // bound function to have the module id when the error occurs.
+        var boundErrorCallback = scriptLoadedErrorCallback.bind(null, moduleId);
+        injectIfNecessary(moduleId, path + moduleList[i].file,
+            scriptLoadedCallback, boundErrorCallback);
     }
 }
 
