@@ -85,7 +85,7 @@ module.exports = function (config) {
         concurrency: Infinity
     });
 
-    if (process.env.TRAVIS) {
+    if (process.env.CI) {
         config.set({
             browsers: ['ChromeHeadlessNoSandbox'],
             customLaunchers: {
