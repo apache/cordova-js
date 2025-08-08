@@ -41,7 +41,7 @@ describe('modulemapper', function () {
             func: function () {},
             num: 1,
             obj: { str: 'hello', num: 8, subObj: { num: 9 } },
-            TestClass: TestClass
+            TestClass
         };
         utils.defineGetter(context, 'getme', function () { return 'getter'; });
     });
