@@ -3,7 +3,7 @@
   "name": "cordova-js",
   "description": "Cordova JavaScript: a unified JavaScript layer for the Cordova suite of projects enabling cross-platform native mobile development of applications using HTML, CSS and JavaScript.",
   "engines": {
-    "node": ">=16.20.2"
+    "node": ">=18.0.0"
   },
   "version": "7.0.0-dev",
   "repository": "github:apache/cordova-js",
@@ -18,7 +18,7 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "fast-glob": "^3.3.2"
+    "fast-glob": "^3.3.3"
   },
   "devDependencies": {
     "@cordova/eslint-config": "^5.1.0",
@@ -27,11 +27,11 @@
     "eslint-plugin-es5": "^1.5.0",
     "grunt": "^1.6.1",
     "grunt-contrib-clean": "^2.0.1",
-    "jasmine-core": "^5.1.2",
-    "karma": "^6.4.3",
+    "jasmine-core": "^5.9.0",
+    "karma": "^6.4.4",
     "karma-chrome-launcher": "^3.2.0",
     "karma-coverage": "^2.2.1",
     "karma-jasmine": "^5.1.0",
-    "puppeteer": "^23.6.0"
+    "puppeteer": "^24.16.0"
   }
 }
