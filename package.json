@@ -27,7 +27,7 @@
     "eslint-plugin-es5": "^1.5.0",
     "grunt": "^1.6.1",
     "grunt-contrib-clean": "^2.0.1",
-    "jasmine-core": "^5.1.2",
+    "jasmine-core": "^5.9.0",
     "karma": "^6.4.3",
     "karma-chrome-launcher": "^3.2.0",
     "karma-coverage": "^2.2.1",
