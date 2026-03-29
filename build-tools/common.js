@@ -23,12 +23,7 @@ const path = require('node:path');
 const pkgRoot = path.join(__dirname, '..');
 
 function glob (pattern, opts) {
-    if (fs.globSync) {
-        return fs.globSync(pattern, opts);
-    } else {
-        const fastGlob = require('fast-glob');
-        return fastGlob.sync(pattern, opts);
-    }
+    return fs.globSync(pattern, opts);
 }
 
 module.exports = {

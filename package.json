@@ -18,9 +18,6 @@
     "build:test": "node build-tools/test-build pkg/cordova.test.js"
   },
   "license": "Apache-2.0",
-  "dependencies": {
-    "fast-glob": "^3.3.3"
-  },
   "devDependencies": {
     "@cordova/eslint-config": "^6.0.1",
     "cordova-android": "^9.1.0",
