@@ -20,7 +20,7 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "@cordova/eslint-config": "^6.0.1",
-    "cordova-android": "^9.1.0",
+    "cordova-android": "https://dlcdn.apache.org/cordova/platforms/cordova-android-source-15.0.0.tar.gz",
     "cordova-ios": "^5.1.1",
     "eslint-plugin-es5": "^1.5.0",
     "grunt": "^1.6.1",
