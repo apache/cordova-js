@@ -11,6 +11,7 @@
   "bin": "build-tools/cli.js",
   "scripts": {
     "lint": "eslint .",
+    "lint:fix": "npm run lint -- --fix",
     "pretest": "npm run build:test",
     "test": "npm run lint && karma start",
     "build": "grunt compile",
