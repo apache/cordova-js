@@ -22,10 +22,6 @@ const path = require('node:path');
 
 const pkgRoot = path.join(__dirname, '..');
 
-function glob (pattern, opts) {
-    return fs.globSync(pattern, opts);
-}
-
 module.exports = {
     pkgRoot,
 
@@ -56,7 +52,7 @@ module.exports = {
     },
 
     collectModules (dir) {
-        return glob(['**/*.js'], { cwd: dir })
+        return fs.globSync(['**/*.js'], { cwd: dir })
             .map(fileName => ({
                 path: path.join(dir, fileName),
                 // This is used as an identifier with URL-style (POSIX-style) path separators
