@@ -34,5 +34,10 @@
     "karma-coverage": "^2.2.1",
     "karma-jasmine": "^5.1.0",
     "puppeteer": "^24.40.0"
+  },
+  "overrides": {
+    "grunt": {
+        "minimatch": "^3.1.5"
+    }
   }
 }
