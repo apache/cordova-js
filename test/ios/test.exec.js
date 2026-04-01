@@ -17,27 +17,49 @@
     under the License.
 */
 
-describe('iOS exec', function () {
+describe('iOS exec', () => {
     var exec = cordova.require('cordova/ios/exec');
-    var winSpy = jasmine.createSpy('win');
-    var failSpy = jasmine.createSpy('fail');
-    var origUserAgent = navigator.userAgent;
+    var successSpy = jasmine.createSpy('success');
 
-    beforeEach(function () {
-        winSpy.calls.reset();
-        failSpy.calls.reset();
+    beforeEach(() => {
+        successSpy.calls.reset();
     });
 
-    afterEach(function () {
-        navigator.__defineGetter__('userAgent', function () {
-            return origUserAgent;
+    describe('exec', () => {
+        it('Test#001 : should successfully execute the provided function passed to nativeEvalAndFetch.', () => {
+            exec.nativeEvalAndFetch(() => {
+                successSpy();
+            });
+            expect(successSpy).toHaveBeenCalled();
         });
-    });
 
-    describe('exec', function () {
-        it('Test#001 : should return "" from nativeFetchMessages work when nothing is pending.', function () {
-            var execPayload = exec.nativeFetchMessages();
-            expect(execPayload).toBe('');
+        it('Test#002 : should show an error message in console, when the provided function to nativeEvalAndFetch has an error.', () => {
+            spyOn(console, 'log');
+
+            exec.nativeEvalAndFetch(function () {
+                throw new Error('An error was thrown.');
+            });
+
+            expect(console.log).toHaveBeenCalled();
+            expect(console.log).toHaveBeenCalledWith(jasmine.stringMatching(/An error was thrown\./));
+        });
+
+        it('Test#003 : should trigger the callbackFromNative method when calling nativeCallback.', () => {
+            const callbackId = 1;
+            const status = 0;
+            const message = 'it passed';
+            const keepCallback = false;
+
+            spyOn(cordova, 'callbackFromNative').and.callFake((...args) => {
+                expect(args).toEqual([
+                    callbackId,
+                    true,
+                    [message],
+                    keepCallback
+                ]);
+            });
+
+            exec.nativeCallback(callbackId, status, message, keepCallback);
         });
     });
 });
