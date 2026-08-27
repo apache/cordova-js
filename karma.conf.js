@@ -18,11 +18,12 @@
 */
 
 // Use Chrome executable installed through npm
-process.env.CHROME_BIN = require('puppeteer').executablePath();
+const puppeteer = require('puppeteer');
 
-module.exports = function (config) {
+module.exports = async function (config) {
+    process.env.CHROME_BIN = await puppeteer.executablePath();
+
     config.set({
-
         // base path that will be used to resolve all patterns (eg. files, exclude)
         basePath: '',
 
