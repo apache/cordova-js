@@ -20,21 +20,16 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "@cordova/eslint-config": "^6.0.1",
-    "cordova-android": "https://dlcdn.apache.org/cordova/platforms/cordova-android-source-15.0.0.tar.gz",
-    "cordova-ios": "https://dlcdn.apache.org/cordova/platforms/cordova-ios-source-8.0.1.tar.gz",
+    "cordova-android": "https://dlcdn.apache.org/cordova/platforms/cordova-android-source-15.1.0.tar.gz",
+    "cordova-ios": "https://dlcdn.apache.org/cordova/platforms/cordova-ios-source-8.1.1.tar.gz",
     "eslint-plugin-es5": "^1.5.0",
-    "grunt": "^1.6.1",
+    "grunt": "^1.6.3",
     "grunt-contrib-clean": "^2.0.1",
-    "jasmine-core": "^6.1.0",
+    "jasmine-core": "^7.0.2",
     "karma": "^6.4.4",
     "karma-chrome-launcher": "^3.2.0",
     "karma-coverage": "^2.2.1",
     "karma-jasmine": "^5.1.0",
-    "puppeteer": "^24.40.0"
-  },
-  "overrides": {
-    "grunt": {
-        "minimatch": "^3.1.5"
-    }
+    "puppeteer": "^25.9.0"
   }
 }
